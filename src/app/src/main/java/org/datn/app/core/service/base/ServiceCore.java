@@ -1,4 +1,4 @@
-package org.datn.app.core.service;
+package org.datn.app.core.service.base;
 
 import org.springframework.data.domain.Page;
 

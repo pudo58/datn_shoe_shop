@@ -24,6 +24,8 @@ public class Transaction implements Serializable {
 
     private String phoneNumber;
 
+    private Double total;
+
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Order.class)
     @JoinColumn(name = "order_id")
     private Order order;
