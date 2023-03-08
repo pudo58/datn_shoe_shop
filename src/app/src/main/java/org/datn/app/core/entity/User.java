@@ -27,6 +27,8 @@ public class User implements Serializable {
 
     private String phoneNumber;
 
+    private String accessToken;
+
     private String address;
 
     private String avatar;
