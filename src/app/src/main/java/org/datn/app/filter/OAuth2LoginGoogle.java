@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Date;
 @Component
 @RequiredArgsConstructor
@@ -45,6 +46,9 @@ public class OAuth2LoginGoogle extends SimpleUrlAuthenticationSuccessHandler {
             userService.doUpdateById(user1,user1.getId());
             log.info("New user {} created by method Google: ", user1.getFullName());
         }
+        // lưu người dùng vào principal
+        Principal principal = request.getUserPrincipal();
+        log.info("Principal: {}", principal);
         super.onAuthenticationSuccess(request, response, authentication);
     }
 

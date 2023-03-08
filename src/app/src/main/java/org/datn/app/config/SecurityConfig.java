@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -29,14 +30,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated()
                 .and()
-                .oauth2Login()
+                .oauth2Login().defaultSuccessUrl("/home", true)
                 .successHandler(loginOAuth2Process)
                 .and().logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                        .logoutUrl("/api/logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .clearAuthentication(true)
+                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                            .logoutSuccessUrl("/")
+                            .invalidateHttpSession(true)
+                            .deleteCookies("JSESSIONID")
+                            .clearAuthentication(true)
                 );
     }
     @Bean
