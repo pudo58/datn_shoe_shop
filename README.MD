@@ -23,3 +23,15 @@
 	 	- Tester : Đặng Thị Như Quỳnh
 	 	- Tester : Nguyễn Trung Hiếu
 ![...](https://miro.medium.com/max/800/1*gbbhNW12LiLdYNb1k0743g.jpeg)
+
+
+## 5. Cách build và chạy dự án
+
+	- Build
+		- chạy backend trong folder app, mở folder app bằng Eclipse, Intel...
+		
+		- chạy server trong folder server bằng cách nhấp đúp chuột vào nginx.exe
+
+		- Chạy frontend bằng npm : đầu tiên gõ **npm i**
+			- Tiếp theo gõ **npm run serve**
+		- Sau khi chạy xong lên trình duyệt bật localhost:8080
