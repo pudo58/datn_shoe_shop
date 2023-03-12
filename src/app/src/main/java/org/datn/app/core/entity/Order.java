@@ -30,6 +30,8 @@ public class Order implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Integer status;
+
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,targetEntity = OrderDetail.class)
     private List<OrderDetail> orderDetails;
 

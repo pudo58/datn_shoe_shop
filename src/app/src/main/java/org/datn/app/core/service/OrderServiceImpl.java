@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
+    private final OrderDetailService orderDetailService;
     private final OrderRepo orderRepo;
     @Override
     public Order doInsert(Order order) {

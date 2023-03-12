@@ -4,10 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.datn.app.core.entity.User;
 import org.datn.app.core.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -15,14 +14,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Date;
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class OAuth2LoginGoogle extends SimpleUrlAuthenticationSuccessHandler {
     private final UserService userService;
-    private final OAuth2AuthorizedClientService authorizedClientService;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
@@ -37,20 +34,11 @@ public class OAuth2LoginGoogle extends SimpleUrlAuthenticationSuccessHandler {
             user1.setCreated(new Date());
             user1.setAddress(user.getAttribute("address") == null ? "" : user.getAttribute("address"));
             user1.setRole("ROLE_USER");
+            user1.setUsername(email);
             userService.doInsert(user1);
-            OAuth2AccessToken accessToken = oauth2Token.getAuthorizedClientRegistrationId().equals("google") ?
-                    authorizedClientService.loadAuthorizedClient("google", oauth2Token.getName()).getAccessToken() :
-                    authorizedClientService.loadAuthorizedClient("facebook", oauth2Token.getName()).getAccessToken();
-            log.info("Access token: {}", accessToken.getTokenValue());
-            user1.setAccessToken(accessToken.getTokenValue());
-            userService.doUpdateById(user1,user1.getId());
             log.info("New user {} created by method Google: ", user1.getFullName());
         }
-        // lưu người dùng vào principal
-        Principal principal = request.getUserPrincipal();
-        log.info("Principal: {}", principal);
         super.onAuthenticationSuccess(request, response, authentication);
     }
-
 }
 
