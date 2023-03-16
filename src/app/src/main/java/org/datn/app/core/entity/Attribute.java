@@ -32,7 +32,7 @@ public class Attribute implements Serializable {
     @JsonIgnore
     private List<AttributeData> attributeData;
 
-    @OneToMany(mappedBy = "attribute",cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Category> categories;
+    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Category.class)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }

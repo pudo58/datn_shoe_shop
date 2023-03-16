@@ -1,6 +1,7 @@
 package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
+import org.datn.app.core.dto.ProductResponse;
 import org.datn.app.core.entity.Product;
 import org.datn.app.core.repo.ProductRepo;
 import org.springframework.data.domain.Page;
@@ -46,5 +47,10 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Page<Product> findAll(Integer page, Integer size) {
         return null;
+    }
+
+    @Override
+    public List<ProductResponse> findTop10Product() {
+        return productRepo.findTop10Product();
     }
 }

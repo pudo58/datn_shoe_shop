@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
+    private final OrderDetailService orderDetailService;
     private final OrderRepo orderRepo;
     @Override
     public Order doInsert(Order order) {
@@ -48,5 +49,15 @@ public class OrderServiceImpl implements OrderService{
     public Page<Order> findAll(Integer page, Integer size) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return orderRepo.findAll(pageable);
+    }
+
+    @Override
+    public Order findByCode(String code) {
+        return orderRepo.findByCode(code);
+    }
+
+    @Override
+    public Order findByCodeAndStatus(String code, String status) {
+        return orderRepo.findByCodeAndStatus(code,status);
     }
 }

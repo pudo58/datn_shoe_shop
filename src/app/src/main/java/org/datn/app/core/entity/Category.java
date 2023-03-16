@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "categories")
@@ -23,9 +24,12 @@ public class Category implements Serializable {
 
     private Boolean isTrash = Boolean.FALSE;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Attribute.class)
-    private Attribute attribute;
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    private List<Attribute> attributes;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
+
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    private List<Product> products;
 }

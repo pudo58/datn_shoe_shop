@@ -50,4 +50,9 @@ public class AttributeServiceImpl implements AttributeService{
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return attributeRepo.findAll(pageable);
     }
+
+    @Override
+    public Attribute findByName(String name) {
+        return attributeRepo.findByName(name);
+    }
 }

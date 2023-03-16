@@ -21,18 +21,16 @@ public class Product implements Serializable {
 
     private Double price;
 
-    private Boolean isTrash =Boolean.FALSE;
-
     private Double discount;
+
+    private String description;
+
+    private Integer status;
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Category.class)
     @JoinColumn(name = "category_id")
     private Category category;
 
-
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Size.class)
-    @JoinColumn(name = "size_id")
-    private Size size;
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Publisher.class)
     @JoinColumn(name = "publisher_id")
@@ -49,4 +47,9 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = Image.class)
     @JsonIgnore
     private List<Image> images;
+
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
+    @JsonIgnore
+    private List<ProductDetail> productDetails;
+
 }

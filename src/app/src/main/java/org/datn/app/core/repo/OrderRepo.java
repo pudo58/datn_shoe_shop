@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order,Long> {
+    Order findByCode(String code);
+    Order findByCodeAndStatus(String code, String status);
 }

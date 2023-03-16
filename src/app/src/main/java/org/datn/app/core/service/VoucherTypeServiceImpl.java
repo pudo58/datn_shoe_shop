@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
 @RequiredArgsConstructor
-public class VoucherTypeServiceImpl implements VoucherTypeService{
+public class VoucherTypeServiceImpl implements VoucherTypeService {
     private final VoucherTypeRepo voucherTypeRepo;
+
     @Override
     public VoucherType doInsert(VoucherType voucherType) {
         return voucherTypeRepo.save(voucherType);
