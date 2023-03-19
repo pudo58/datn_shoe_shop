@@ -70,6 +70,7 @@
 import { UserService } from '@/core/service/user.service';
 import router from '@/router';
 import { ref } from 'vue';
+import { toast } from "vue3-toastify";
 export default {
 	name: 'LoginView',
 	setup() {
@@ -81,11 +82,17 @@ export default {
 		});
 		const login = function (){
 			loading.value = true;
-			userService.login(user.value.username, user.value.password);
-			setTimeout(() => {
-				loading.value = false;
-			}, 1000);
-			router.push('/')
+			if(userService.login(user.value.username, user.value.password)){
+        setTimeout(() => {
+          loading.value = false;
+        }, 1000);
+        router.push('/')
+      }else{
+        setTimeout(() => {
+          loading.value = false;
+        }, 1000);
+        toast.error("Tài khoản hoặc mật khẩu không đúng");
+      }
 		}
 		return {
 			user,

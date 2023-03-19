@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="header">
 			<header-component v-if="$route.meta.showHeader == undefined ? true : $route.meta.showHeader"/>
 			<nav-component v-if="$route.meta.showNav == undefined ? true : $route.meta.showNav"/>

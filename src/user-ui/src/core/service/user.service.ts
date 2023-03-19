@@ -32,28 +32,28 @@ export class UserService {
 	login(username: string, password: string) {
 		if (username === null || username === undefined || username === "") {
 			toast.error("Tài khoản không được để trống");
-			return;
+			return false;
 		}
 		if (password === null || password === undefined || password === "") {
 			toast.error("Mật khẩu không được để trống");
-			return;
+			return false;
 		}
 		if (username.match(/^[a-zA-Z0-9]+$/) === null) {
 			toast.error("Tài khoản không được chứa ký tự đặc biệt");
-			return;
+			return false;
 		}
 		if (password.length < 6) {
 			toast.error("Mật khẩu phải có ít nhất 6 ký tự");
-			return;
+			return false;
 		}
 		axios.get("/api/user/username/" + username).then((response) => {
 			if (response.data === null) {
 				toast.error("Tài khoản không tồn tại");
-				return;
+				return false;
 			}
 			if (response.data.status === UserStatusConstant.STATUS_LOCK) {
 				toast.error("Tài khoản đã bị khóa");
-				return;
+				return false;
 			}
 			this.userCurrent = response.data;
 		});
@@ -64,8 +64,9 @@ export class UserService {
 			localStorage.setItem("access_token", "Bearer " + response.data.access_token);
 			localStorage.setItem("user", JSON.stringify(this.userCurrent));
 			toast.success("Đăng nhập thành công");
+			return true;
 		}).catch((error) => {
-			toast.error(error.response.data.message);
+			error;
 		})
 	}
 	logout() {

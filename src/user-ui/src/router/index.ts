@@ -48,6 +48,30 @@ const routes: Array<RouteRecordRaw> = [
 			showHeader: true,
 			showNav: true,
 		}
+	},
+	{
+		path: '/admin/dashboard',
+		name: 'AdminDashboard',
+		component: () => import('../views/admin/DashboardView.vue'),
+		meta: {
+			showTitle: false,
+			showFooter: false,
+			showCarousel: false,
+			showHeader: false,
+			showNav: false,
+		}
+	},
+	{
+		path: '/product/:id',
+		name: 'ProductDetail',
+		component: () => import('../views/ProductDetailView.vue'),
+		meta: {
+			showTitle: true,
+			showFooter: true,
+			showCarousel: true,
+			showHeader: true,
+			showNav: true,
+		}
 	}
 ]
 
@@ -58,7 +82,7 @@ const router = createRouter({
 
 // redirect to login page if not logged in and trying to access a restricted page
 router.beforeEach((to, from, next) => {
-	const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product'];
+	const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product','/admin/dashboard', '/product/:id'];
 	const authRequired = !publicPages.includes(to.path);
 	const loggedIn = localStorage.getItem('access_token');
 
