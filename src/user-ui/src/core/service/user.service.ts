@@ -1,7 +1,8 @@
 import axios from "axios";
 import { toast } from "vue3-toastify";
-import { ChangePasswordRequest, User, UserStatusConstant } from "../model/user.model";
+import {ChangePasswordRequest, User, UserFindRequest, UserStatusConstant} from "../model/user.model";
 import router from "@/router";
+import {Pageable} from "@/core/model/core.base";
 export class UserService {
 	public userCurrent: User = new User();
 	constructor() {
@@ -15,11 +16,13 @@ export class UserService {
 		return false;
 	}
 	register(user: User) {
-
+		if(user.id !== undefined && user.id !== null){
+			this.updateUser(user);
+			return;
+		}
 		axios.post("/api/user/add", user).then((response) => {
 			toast.success("Đăng ký thành công, bạn có thể đăng nhập ngay");
 			setInterval(() => {
-				router.push("/login");
 			}, 2000);
 		}).catch((error) => {
 			console.log(error)
@@ -29,6 +32,18 @@ export class UserService {
 		});
 	}
 
+	updateUser(user: User) {
+		axios.put("/api/user/update/" + user.id, user).then((response) => {
+			toast.success("Cập nhật thông tin thành công");
+			setInterval(() => {
+			}, 2000);
+		}).catch((error) => {
+			console.log(error)
+			error.response.data.forEach((element: string) => {
+				toast.error(element);
+			});
+		});
+	}
 	login(username: string, password: string) {
 		if (username === null || username === undefined || username === "") {
 			toast.error("Tài khoản không được để trống");
@@ -111,5 +126,25 @@ export class UserService {
 		}).catch((error) => {
 			toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
 		});
+	}
+	async getUser(page:number,size:number) : Promise<Pageable<User>>{
+		//return Pageable<User>;
+		return await axios.get("/api/user/page/"+page+"/"+size).then((response) => {
+			return response.data;
+		});
+		return new Pageable<User>();
+	}
+	 async deleteUser(id:number) : Promise<boolean>  {
+		return await axios.delete("/api/user/delete/"+id).then((response) => {
+			return true;
+		}).catch((error) => {
+			return false;
+		});
+	}
+	async findByUsernameOrEmail(request : UserFindRequest) : Promise<Array<User>>{
+		return await axios.post("/api/user/findByUsernameOrEmail", request).then((response) => {
+			return response.data;
+		});
+		return new Array<User>();
 	}
 }

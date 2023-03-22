@@ -50,4 +50,9 @@ public class CategoryServiceImpl implements CategoryService{
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return categoryRepo.findAll(pageable);
     }
+
+    @Override
+    public Category findByName(String name) {
+        return categoryRepo.findByName(name);
+    }
 }

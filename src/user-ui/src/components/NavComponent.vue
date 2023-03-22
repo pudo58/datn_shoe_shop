@@ -42,13 +42,10 @@
 										<router-link to="/profile" class="dropdown-item">Thông tin tài khoản</router-link>
 									</li>
 									<li>
-										<router-link to="/profile" class="dropdown-item">Lịch sử mua hàng</router-link>
+										<router-link to="/history" class="dropdown-item">Lịch sử mua hàng</router-link>
 									</li>
 									<li>
 										<router-link to="/cart" class="dropdown-item">Giỏ hàng</router-link>
-									</li>
-									<li>
-										<router-link to="/cart" class="dropdown-item">Đổi mật khẩu</router-link>
 									</li>
 									<li><a class="dropdown-item" @click.prevent="logout()">Đăng xuất</a></li>
 								</ul>

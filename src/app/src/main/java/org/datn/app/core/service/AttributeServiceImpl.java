@@ -24,7 +24,6 @@ public class AttributeServiceImpl implements AttributeService{
         Attribute attribute1 = attributeRepo.findById(aLong).get();
         attribute1.setName(attribute.getName());
         attribute1.setType(attribute.getType());
-        attribute1.setIsTrash(attribute.getIsTrash());
         return attributeRepo.save(attribute1);
     }
 

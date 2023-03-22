@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.dto.ChangePasswordRequest;
+import org.datn.app.core.dto.UserFindRequest;
 import org.datn.app.core.entity.Order;
 import org.datn.app.core.entity.User;
 import org.datn.app.core.repo.UserRepo;
@@ -161,6 +162,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cập nhật ảnh đại diện thất bại");
         }
+    }
+
+    @Override
+    public List<User> findByUsernameOrEmail(UserFindRequest request) {
+        return userRepo.findByUsernameOrEmail(request.getUsername(), request.getEmail());
     }
 
     @Override

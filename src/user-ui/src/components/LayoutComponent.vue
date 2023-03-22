@@ -37,3 +37,10 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.container-fluid{
+  padding: 0;
+  margin: 0;
+}
+</style>

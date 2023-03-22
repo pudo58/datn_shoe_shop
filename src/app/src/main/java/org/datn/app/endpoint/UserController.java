@@ -2,10 +2,13 @@ package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.dto.ChangePasswordRequest;
+import org.datn.app.core.dto.UserFindRequest;
 import org.datn.app.core.entity.User;
 import org.datn.app.core.service.UserService;
 import org.datn.app.util.MailSender;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +55,7 @@ public class UserController {
         if (error.size() > 0) {
             return ResponseEntity.badRequest().body(error);
         }
-        MailSender.sendCode(user.getEmail(), user.getFullName());
+        //MailSender.sendCode(user.getEmail(), user.getFullName());
         return ResponseEntity.ok(userService.doInsert(user));
     }
 
@@ -77,8 +80,8 @@ public class UserController {
     }
 
     @GetMapping("/page/{page}/{size}")
-    public List<User> page(@PathVariable Integer page, @PathVariable Integer size) {
-        return userService.findAll(page, size).getContent();
+    public Page<User> page(@PathVariable Integer page, @PathVariable Integer size) {
+        return userService.findAll(page, size);
     }
 
     @GetMapping("/username/{username}")
@@ -94,5 +97,10 @@ public class UserController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, Principal principal) {
         return userService.uploadFile(file, principal);
+    }
+
+    @PostMapping("/findByUsernameOrEmail")
+    public List<User> findByUsernameOrEmail(@RequestBody UserFindRequest request) {
+        return userService.findByUsernameOrEmail(request);
     }
 }

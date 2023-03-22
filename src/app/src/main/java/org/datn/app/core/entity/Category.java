@@ -28,7 +28,7 @@ public class Category implements Serializable {
     private List<Attribute> attributes;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Date created = new Date();
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     private List<Product> products;

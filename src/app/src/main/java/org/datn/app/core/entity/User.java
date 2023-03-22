@@ -44,9 +44,9 @@ public class User  implements Serializable{
     private Integer status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Date created = new Date();
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modified;
+    private Date modified = new Date();
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Rank.class)
     @JoinColumn(name = "rank_id",referencedColumnName = "rank_id")

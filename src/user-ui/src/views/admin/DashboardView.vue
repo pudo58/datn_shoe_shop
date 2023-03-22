@@ -4,23 +4,21 @@
       <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
         <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
           <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <span class="fs-5 d-none d-sm-inline">Menu</span>
+            <span class="fs-5 d-none d-sm-inline text-uppercase">Quản lý dữ liệu</span>
           </a>
           <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
             <li class="nav-item">
               <a href="#" class="nav-link align-middle px-0">
-                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                <i class="bi bi-bar-chart-line-fill"></i> <span class="ms-1 d-none d-sm-inline">Biểu đồ thống kê</span>
               </a>
             </li>
             <li>
               <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                <i class="bi bi-database-fill"></i> <span class="ms-1 d-none d-sm-inline">Quản lý dữ liệu bảng</span> </a>
               <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                <li class="w-100">
-                  <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1 </a>
-                </li>
-                <li>
-                  <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2 </a>
+                <li class="w-100" v-for="item in component">
+                  <a class="nav-link px-0 d-flex m-3" @click.prevent="hideComponent(item.name)" role="button">
+                    <span class="d-none d-sm-inline" :title="item.label">{{item.label}}</span> </a>
                 </li>
               </ul>
             </li>
@@ -82,29 +80,49 @@
         </div>
       </div>
       <div class="col py-3">
-        <h3>Left Sidebar with Submenus</h3>
-        <p class="lead">
-          An example 2-level sidebar with collasible menu items. The menu functions like an "accordion" where only a single
-          menu is be open at a time. While the sidebar itself is not toggle-able, it does responsively shrink in width on smaller screens.</p>
-        <ul class="list-unstyled">
-          <li><h5>Responsive</h5> shrinks in width, hides text labels and collapses to icons only on mobile</li>
-        </ul>
+        <user-component v-if="component[0].show"></user-component>
+        <category-component v-if="component[1].show"></category-component>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import {defineComponent} from "vue";
-import 'jquery/dist/jquery.min.js'
-
+import UserComponent from "@/views/admin/component/user/UserComponent.vue";
+import CategoryComponent from "@/views/admin/component/category/CategoryComponent.vue";
 export default defineComponent({
   name: "ProductView",
+  components: {
+    UserComponent,
+    CategoryComponent
+  },
+  data() {
+    return {
+      component : [
+        {name : 'user',show : false,label : 'Quản lý người dùng'},
+        {name : 'category',show : false,label : 'Quản lý danh mục'},
+        {name : 'product',show : false,label : 'Quản lý sản phẩm'},
+        {name : 'cart',show : false,label : 'Quản lý đơn hàng'},
+        {name : 'attribute',show : false,label : 'Quản lý thuộc tính'},
+      ]
+    }
+  },
   created() {
     this.init();
   },
   methods: {
-    init(){
+    init() {
+
+    },
+    hideComponent(name : string){
+      this.component.forEach((item)=>{
+        if(item.name === name){
+          item.show = true;
+        }else{
+          item.show = false;
+        }
+      })
     }
   }
 
@@ -112,5 +130,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+a{
+  color: #fff;
+}
 </style>

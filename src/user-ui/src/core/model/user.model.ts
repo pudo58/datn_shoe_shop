@@ -52,3 +52,7 @@ export class ChangePasswordRequest {
 export class UploadFileRequest {
 	file?: File;
 }
+export class UserFindRequest{
+	username?:string;
+	email?:string;
+}
