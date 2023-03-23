@@ -42,6 +42,29 @@
           <button type="button" class="btn btn-success" @click.prevent="addAll">Thêm</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
+        <div class="row">
+          <nav class="col">
+            <ul class="pagination">
+              <li class="page-item">
+                <a class="page-link" @click.prevent="getAttribute(page--,size)">Previous</a>
+              </li>
+              <li class="page-item" v-for="item in attributeList?.totalPages">
+                <a class="page-link" href="#" @click="getAttribute(item-1,size)">{{item}}</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="#" @click.prevent="getAttribute(page++,size)">Next</a>
+              </li>
+            </ul>
+            <div class="p-2 col pagination">
+              Số phần tử
+              <select v-model="size" @change.prevent="onChange()">
+                <option :value="10">10</option>
+                <option :value="25">25</option>
+                <option :value="50">50</option>
+              </select>
+            </div>
+          </nav>
+        </div>
         <hr>
         <div class="text-center h3">Thuộc tính đã thêm</div>
         <div>
@@ -70,29 +93,6 @@
               </tbody>
             </table>
           </div>
-        </div>
-        <div class="row">
-          <nav class="col">
-            <ul class="pagination">
-              <li class="page-item">
-                <a class="page-link" @click.prevent="getAttribute(page--,size)">Previous</a>
-              </li>
-              <li class="page-item" v-for="item in attributeList?.totalPages">
-                <a class="page-link" href="#" @click="getAttribute(item-1,size)">{{item}}</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#" @click.prevent="getAttribute(page++,size)">Next</a>
-              </li>
-            </ul>
-            <div class="p-2 col pagination">
-              Số phần tử
-              <select v-model="size" @change.prevent="onChange()">
-                <option :value="10">10</option>
-                <option :value="25">25</option>
-                <option :value="50">50</option>
-              </select>
-            </div>
-          </nav>
         </div>
       </div>
     </div>
