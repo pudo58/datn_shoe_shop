@@ -10,7 +10,7 @@
 					<div class="card shadow-2-strong" style="border-radius: 1rem;">
 						<div class="card-body p-5 text-center">
 							<h3 class="mb-5">Đăng nhập</h3>
-							<form @submit.prevent="login">
+							<form @submit.prevent="login()">
 								<div class="form-floating mb-4">
 									<input type="text" id="typeEmailX-2" class="form-control form-control-lg"
 										v-model="user.username" />
@@ -69,36 +69,36 @@
 <script lang="ts">
 import { UserService } from '@/core/service/user.service';
 import router from '@/router';
-import { ref } from 'vue';
 import { toast } from "vue3-toastify";
-export default {
+import {defineComponent} from "vue";
+export default defineComponent({
 	name: 'LoginView',
-	setup() {
-		const userService = new UserService();
-		var loading = ref(false);
-		const user = ref({
-			username: '',
-			password: ''
-		});
-		const login = function (){
-			loading.value = true;
-			if(userService.login(user.value.username, user.value.password)){
+  data() {
+    return {
+      user: {
+        username: '',
+        password: ''
+      },
+      loading: false,
+      userService : new UserService()
+    }
+  },
+  methods: {
+    async login() {
+      const loggIn = await this.userService.login(this.user.username, this.user.password);
+      if(loggIn){
+        this.loading = true;
         setTimeout(() => {
-          loading.value = false;
+          this.loading = false;
         }, 1000);
-        router.push('/')
       }else{
+        this.loading = true;
         setTimeout(() => {
-          loading.value = false;
+          this.loading = false;
+          toast.error("Đăng nhập thất bại");
         }, 1000);
-        toast.error("Tài khoản hoặc mật khẩu không đúng");
       }
-		}
-		return {
-			user,
-			login,
-			loading
-		}
+    }
 	}
-}
+});
 </script>

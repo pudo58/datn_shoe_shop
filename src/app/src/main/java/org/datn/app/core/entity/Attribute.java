@@ -26,13 +26,6 @@ public class Attribute implements Serializable {
     private Boolean isTrash = Boolean.FALSE;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Date created = new Date();
 
-    @OneToMany(mappedBy = "attribute",cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<AttributeData> attributeData;
-
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Category.class)
-    @JoinColumn(name = "category_id")
-    private Category category;
 }

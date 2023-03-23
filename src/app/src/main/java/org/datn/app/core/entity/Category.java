@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "categories")
@@ -24,8 +25,11 @@ public class Category implements Serializable {
 
     private Boolean isTrash = Boolean.FALSE;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
-    private List<Attribute> attributes;
+    @ManyToMany(cascade = CascadeType.ALL,targetEntity = Attribute.class)
+    @JoinTable(name = "category_attribute",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "attribute_id"))
+    private Set<Attribute> attributes;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created = new Date();

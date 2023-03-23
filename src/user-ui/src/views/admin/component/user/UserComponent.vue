@@ -131,7 +131,7 @@ import moment from 'moment/moment';
 import UserDetailComponent from "@/views/admin/component/user/UserDetailComponent.vue";
 
 export  default defineComponent({
-  name : "UserService",
+  name : "UserComponent",
   components : {
     UserDetailComponent
   },

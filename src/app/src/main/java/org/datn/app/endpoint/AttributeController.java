@@ -2,6 +2,8 @@ package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.constant.AttributeType;
+import org.datn.app.core.dto.AttributeAddAllRequest;
+import org.datn.app.core.dto.DeleteAttributeRequest;
 import org.datn.app.core.entity.Attribute;
 import org.datn.app.core.service.AttributeService;
 import org.springframework.data.domain.Page;
@@ -18,7 +20,7 @@ public class AttributeController {
     private final AttributeService attributeService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> saveAttribute(Attribute attribute){
+    public ResponseEntity<?> saveAttribute(@RequestBody Attribute attribute){
         List<String> errorList = new ArrayList<>();
         if(attribute.getName().isEmpty()){
             errorList.add("Tên thuộc tính không được để trống");
@@ -53,11 +55,24 @@ public class AttributeController {
         return attributeService.findById(id);
     }
     @PutMapping("/update/{id}")
-    public Attribute updateById(Long id,Attribute attribute){
+    public Attribute updateById(@PathVariable Long id,@RequestBody Attribute attribute){
         return attributeService.doUpdateById(attribute,id);
     }
     @DeleteMapping("/delete/{id}")
     public void deleteById(@PathVariable Long id){
         attributeService.doDeleteById(id);
+    }
+
+    @PostMapping("/addAll")
+    public List<Attribute> addAll(@RequestBody AttributeAddAllRequest request){
+        return attributeService.addAll(request);
+    }
+    @GetMapping("/findByCategoryId/{id}")
+    public List<Attribute> findByCategoryId(@PathVariable Long id){
+        return attributeService.findByCategoryId(id);
+    }
+    @PostMapping("/deleteAttributeRequest")
+    public void deleteAttributeRequest(@RequestBody DeleteAttributeRequest attribute){
+        attributeService.deleteAttributeByAttributeId(attribute);
     }
 }

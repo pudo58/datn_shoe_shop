@@ -44,46 +44,59 @@ export class UserService {
 			});
 		});
 	}
-	login(username: string, password: string) {
-		if (username === null || username === undefined || username === "") {
-			toast.error("Tài khoản không được để trống");
-			return false;
-		}
-		if (password === null || password === undefined || password === "") {
-			toast.error("Mật khẩu không được để trống");
-			return false;
-		}
-		if (username.match(/^[a-zA-Z0-9]+$/) === null) {
-			toast.error("Tài khoản không được chứa ký tự đặc biệt");
-			return false;
-		}
-		if (password.length < 6) {
-			toast.error("Mật khẩu phải có ít nhất 6 ký tự");
-			return false;
-		}
-		axios.get("/api/user/username/" + username).then((response) => {
-			if (response.data === null) {
+	// @ts-ignore
+	async login(username: string, password: string) : Promise<boolean> {
+		try {
+			if (username === null || username === undefined || username === "") {
+				toast.error("Tài khoản không được để trống");
+				return false;
+			}
+			if (password === null || password === undefined || password === "") {
+				toast.error("Mật khẩu không được để trống");
+				return false;
+			}
+			if (username.match(/^[a-zA-Z0-9]+$/) === null) {
+				toast.error("Tài khoản không được chứa ký tự đặc biệt");
+				return false;
+			}
+			if (password.length < 6) {
+				toast.error("Mật khẩu phải có ít nhất 6 ký tự");
+				return false;
+			}
+
+			const userResponse = await axios.get("/api/user/username/" + username);
+			if (userResponse.data === null) {
 				toast.error("Tài khoản không tồn tại");
 				return false;
 			}
-			if (response.data.status === UserStatusConstant.STATUS_LOCK) {
+			if (userResponse.data.status === UserStatusConstant.STATUS_LOCK) {
 				toast.error("Tài khoản đã bị khóa");
 				return false;
+			} else {
+				this.userCurrent = userResponse.data;
 			}
-			this.userCurrent = response.data;
-		});
-		axios.post("/api/login", {
-			username: username,
-			password: password
-		}).then((response) => {
-			localStorage.setItem("access_token", "Bearer " + response.data.access_token);
-			localStorage.setItem("user", JSON.stringify(this.userCurrent));
-			toast.success("Đăng nhập thành công");
-			return true;
-		}).catch((error) => {
-			error;
-		})
+
+			const response = await axios.post("/api/login", {
+				username: username,
+				password: password
+			});
+
+			if (response.data !== null && response.data !== undefined) {
+				localStorage.setItem("access_token", response.data.data);
+				localStorage.setItem("user", JSON.stringify(this.userCurrent));
+				toast.success("Đăng nhập thành công");
+				router.push("/");
+				return true;
+			} else {
+				toast.error(response.data.message);
+				return false;
+			}
+		} catch (error) {
+			console.error(error);
+			return false;
+		}
 	}
+
 	logout() {
 		localStorage.removeItem("access_token");
 		toast.success("Đăng xuất thành công");

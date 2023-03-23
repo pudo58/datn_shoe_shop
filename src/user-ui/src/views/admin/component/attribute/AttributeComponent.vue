@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <p class="h2">Quản lý danh mục</p>
+    <p class="h2">Quản lý thuộc tính</p>
   </div>
   <hr>
   <div class="row">
@@ -13,7 +13,7 @@
     </div>
     <div class="col"></div>
     <div class="col">
-      <button class="btn btn-success m-1" @click.prevent="$refs.attributeDetail.openModal();isUpdate=false;attribute = {}">
+      <button class="btn btn-success m-1" @click.prevent="$refs.attributeDetail.openModal();attribute = {}">
         <i class="bi bi-pencil-fill"></i>
         Thêm mới
       </button>
@@ -27,18 +27,17 @@
     <table class="table table-bordered table-hover table-striped">
       <thead>
       <tr>
-        <th>Tên danh mục</th>
-        <th>Ngày tạo</th>
-        <th>Mô tả</th>
+        <th>Tên thuộc tính</th>
+        <th>Kiểu dữ liệu</th>
         <th>Trạng thái</th>
         <th>Thao tác</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-if="attributeList.content?.length > 0" class="align-middle" v-for="item in attributeList.content">
-        <td>{{item.name}}</td>
-        <td>{{dateTime(item.created+'')}}</td>
-        <td>{{item.description}}</td>
+      <tr class="align-middle" v-for="item in attributeList?.content">
+        <td>{{item?.name}}</td>
+        <td>{{item?.type}}</td>
+        <td>{{dateTime(item?.created+'')}}</td>
         <td>
           <span v-if="item.isTrash === false" class="badge bg-success">Hoạt động</span>
           <span v-else class="badge bg-danger">Khóa</span>
@@ -59,13 +58,13 @@
     <nav class="col">
       <ul class="pagination">
         <li class="page-item">
-          <a class="page-link" @click.prevent="getattribute(page--,size)">Previous</a>
+          <a class="page-link" @click.prevent="getAttribute(page--,size)">Previous</a>
         </li>
         <li class="page-item" v-for="item in attributeList?.totalPages">
-          <a class="page-link" href="#" @click="getattribute(item-1,size)">{{item}}</a>
+          <a class="page-link" href="#" @click="getAttribute(item-1,size)">{{item}}</a>
         </li>
         <li class="page-item">
-          <a class="page-link" href="#" @click.prevent="getattribute(page++,size)">Next</a>
+          <a class="page-link" href="#" @click.prevent="getAttribute(page++,size)">Next</a>
         </li>
       </ul>
       <div class="p-2 col pagination">
@@ -85,24 +84,24 @@
 import { defineComponent } from 'vue';
 import { toast } from 'vue3-toastify';
 import {Pageable} from "@/core/model/core.base";
-import {attribute} from "@/core/model/attribute.model";
-import {attributeService} from "@/core/service/attribute.service";
-import {User, UserFindRequest} from "@/core/model/user.model";
+import {Category} from "@/core/model/category.model";;
 import moment from 'moment/moment';
-import attributeDetailComponent from "@/views/admin/component/attribute/attributeDetailComponent.vue";
+import {Attribute} from "@/core/model/attribute.model";
+import {AttributeService} from "@/core/service/attribute.service";
+import AttributeDetailComponent from "@/views/admin/component/attribute/AttributeDetailComponent.vue";
 
 export  default defineComponent({
-  name : "attributeService",
+  name : "AttributeComponent",
   components : {
-    attributeDetailComponent
+    AttributeDetailComponent,
   },
   data(){
     return {
-      attributeList : new Pageable<attribute>(),
-      attribute : new attribute(),
+      attributeList : new Pageable<Attribute>(),
+      attribute : new Category(),
       loading : false,
       search : '' as string,
-      attributeService : new attributeService(),
+      attributeService : new AttributeService(),
       page : 0 as number,
       size : 10 as number,
       find : '' as string,
@@ -111,7 +110,7 @@ export  default defineComponent({
   methods : {
     getAttribute(page:number,size : number){
       this.attributeService.findAll(page,size).then(response => {
-        this.attributeList = response.data;
+        this.attributeList = response;
       }).catch(error => {
         toast.error(error.message);
       })
@@ -125,25 +124,25 @@ export  default defineComponent({
 
     },
     onChange(){
-      this.getattribute(this.page,this.size);
+      this.getAttribute(this.page,this.size);
     },
     deleteById(id : number){
       if(confirm("Bạn có chắc chắn muốn xóa không?")){
         this.attributeService.delete(id).then(data => {
           if(data === true){
             toast.success("Xóa thành công");
-            this.getattribute(this.page,this.size);
+            this.getAttribute(this.page,this.size);
           }
         }).catch(error => {
           toast.error(error.message);
         })
       }
-    },attributeAdded(attribute : attribute){
+    },attributeAdded(attribute : Attribute){
       this.attributeList.content?.push(attribute);
     },
     findByName(){
       if(this.find === '' || this.find == null || this.find == undefined){
-        this.getattribute(this.page,this.size);
+        this.getAttribute(this.page,this.size);
         return;
       }
       this.attributeService.findByName(this.find).then(response => {
@@ -155,7 +154,7 @@ export  default defineComponent({
     }
   },
   created() {
-    this.getattribute(this.page,this.size);
+    this.getAttribute(this.page,this.size);
   }
 })
 </script>

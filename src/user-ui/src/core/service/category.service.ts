@@ -5,7 +5,8 @@ import {Category} from "@/core/model/category.model";
 
 export class CategoryService {
     async findAll(page: number, size: number): Promise<Pageable<Category>> {
-        return await axios.get("/api/category/page/" + page + "/" + size);
+        const response = await axios.get("/api/category/page/" + page + "/" + size);
+        return response.data;
     }
 
     async save(category: Category): Promise<Category> {

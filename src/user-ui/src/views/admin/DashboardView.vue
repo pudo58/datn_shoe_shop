@@ -82,6 +82,7 @@
       <div class="col py-3">
         <user-component v-if="component[0].show"></user-component>
         <category-component v-if="component[1].show"></category-component>
+        <attribute-component v-if="component[4].show"></attribute-component>
       </div>
     </div>
   </div>
@@ -91,11 +92,13 @@
 import {defineComponent} from "vue";
 import UserComponent from "@/views/admin/component/user/UserComponent.vue";
 import CategoryComponent from "@/views/admin/component/category/CategoryComponent.vue";
+import AttributeComponent from "@/views/admin/component/attribute/AttributeComponent.vue";
 export default defineComponent({
   name: "ProductView",
   components: {
     UserComponent,
-    CategoryComponent
+    CategoryComponent,
+    AttributeComponent
   },
   data() {
     return {

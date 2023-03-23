@@ -35,6 +35,7 @@ const routes: Array<RouteRecordRaw> = [
 			showCarousel: false,
 			showHeader: false,
 			showNav: false,
+			requiresAuth : true
 		}
 	},
 	{
@@ -59,6 +60,7 @@ const routes: Array<RouteRecordRaw> = [
 			showCarousel: false,
 			showHeader: false,
 			showNav: false,
+			requiresAuth : true
 		}
 	},
 	{
@@ -71,8 +73,9 @@ const routes: Array<RouteRecordRaw> = [
 			showCarousel: true,
 			showHeader: true,
 			showNav: true,
+			requiresAuth : true
 		}
-	}
+	},
 ]
 
 const router = createRouter({
@@ -80,7 +83,6 @@ const router = createRouter({
 	routes: routes
 });
 
-// redirect to login page if not logged in and trying to access a restricted page
 router.beforeEach((to, from, next) => {
 	const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product','/admin/dashboard', '/product/:id'];
 	const authRequired = !publicPages.includes(to.path);

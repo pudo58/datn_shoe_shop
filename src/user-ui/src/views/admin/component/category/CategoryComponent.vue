@@ -13,7 +13,8 @@
     </div>
     <div class="col"></div>
     <div class="col">
-      <button class="btn btn-success m-1" @click.prevent="$refs.categoryDetail.openModal();isUpdate=false;category = {}">
+      <button class="btn btn-success m-1"
+              @click.prevent="$refs.categoryDetail.openModal();isUpdate=false;category = {}">
         <i class="bi bi-pencil-fill"></i>
         Thêm mới
       </button>
@@ -31,17 +32,22 @@
         <th>Ngày tạo</th>
         <th>Mô tả</th>
         <th>Trạng thái</th>
+        <th>CHi tiết thuộc tính</th>
         <th>Thao tác</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-if="categoryList.content?.length > 0" class="align-middle" v-for="item in categoryList.content">
-        <td>{{item.name}}</td>
-        <td>{{dateTime(item.created+'')}}</td>
-        <td>{{item.description}}</td>
+      <tr class="align-middle" v-for="item in categoryList.content">
+        <td>{{ item.name }}</td>
+        <td>{{ dateTime(item.created + '') }}</td>
+        <td>{{ item.description }}</td>
         <td>
           <span v-if="item.isTrash === false" class="badge bg-success">Hoạt động</span>
           <span v-else class="badge bg-danger">Khóa</span>
+        </td>
+        <td>
+          <span class="badge text-bg-warning" role="button" @click="$refs.attributeList.openModal()
+          ;;$refs.attributeList.findAttributeByCategoryId(item.id);">Chi tiết</span>
         </td>
         <td>
           <button class="btn btn-success btn-sm m-1" @click.prevent="$refs.categoryDetail.openModal();category = item;">
@@ -62,7 +68,7 @@
           <a class="page-link" @click.prevent="getCategory(page--,size)">Previous</a>
         </li>
         <li class="page-item" v-for="item in categoryList?.totalPages">
-          <a class="page-link" href="#" @click="getCategory(item-1,size)">{{item}}</a>
+          <a class="page-link" href="#" @click="getCategory(item-1,size)">{{ item }}</a>
         </li>
         <li class="page-item">
           <a class="page-link" href="#" @click.prevent="getCategory(page++,size)">Next</a>
@@ -78,72 +84,76 @@
       </div>
     </nav>
   </div>
-  <category-detail-component :category="category" ref="categoryDetail" @added-category="categoryAdded"></category-detail-component>
+  <category-detail-component :category="category" ref="categoryDetail"
+                             @added-category="categoryAdded"></category-detail-component>
+  <attribute-list-component ref="attributeList" :categoryId="categoryId"></attribute-list-component>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { toast } from 'vue3-toastify';
+import {defineComponent} from 'vue';
+import {toast} from 'vue3-toastify';
 import {Pageable} from "@/core/model/core.base";
 import {Category} from "@/core/model/category.model";
 import {CategoryService} from "@/core/service/category.service";
-import {User, UserFindRequest} from "@/core/model/user.model";
 import moment from 'moment/moment';
 import CategoryDetailComponent from "@/views/admin/component/category/CategoryDetailComponent.vue";
+import AttributeListComponent from "@/views/admin/component/attribute/AttributeListComponent.vue";
 
-export  default defineComponent({
-  name : "CategoryService",
-  components : {
-    CategoryDetailComponent
+export default defineComponent({
+  name: "CategoryService",
+  components: {
+    CategoryDetailComponent,
+    AttributeListComponent
   },
-  data(){
+  data() {
     return {
-      categoryList : new Pageable<Category>(),
-      category : new Category(),
-      loading : false,
-      search : '' as string,
-      categoryService : new CategoryService(),
-      page : 0 as number,
-      size : 10 as number,
-      find : '' as string,
+      categoryList: new Pageable<Category>(),
+      category: new Category(),
+      loading: false,
+      search: '' as string,
+      categoryService: new CategoryService(),
+      page: 0 as number,
+      size: 10 as number,
+      find: '' as string,
+      categoryId: null,
     }
   },
-  methods : {
-    getCategory(page:number,size : number){
-      this.categoryService.findAll(page,size).then(response => {
-        this.categoryList = response.data;
+  methods: {
+    getCategory(page: number, size: number) {
+      this.categoryService.findAll(page, size).then(response => {
+        this.categoryList = response;
       }).catch(error => {
         toast.error(error.message);
       })
     },
-    dateTime(value : string) {
-      if(value == null || value == undefined || value === ''){
+    dateTime(value: string) {
+      if (value == null || value == undefined || value === '') {
         return '';
-      }else{
+      } else {
         return moment(value).format('DD-MM-YYYY HH:mm:ss');
       }
 
     },
-    onChange(){
-      this.getCategory(this.page,this.size);
+    onChange() {
+      this.getCategory(this.page, this.size);
     },
-    deleteById(id : number){
-      if(confirm("Bạn có chắc chắn muốn xóa không?")){
+    deleteById(id: number) {
+      if (confirm("Bạn có chắc chắn muốn xóa không?")) {
         this.categoryService.delete(id).then(data => {
-          if(data === true){
+          if (data === true) {
             toast.success("Xóa thành công");
-            this.getCategory(this.page,this.size);
+            this.getCategory(this.page, this.size);
           }
         }).catch(error => {
           toast.error(error.message);
         })
       }
-    },categoryAdded(category : Category){
+    }, categoryAdded(category: Category) {
       this.categoryList.content?.push(category);
     },
-    findByName(){
-      if(this.find === '' || this.find == null || this.find == undefined){
-        this.getCategory(this.page,this.size);
+    findByName() {
+      if (this.find === '' || this.find == null || this.find == undefined) {
+        this.getCategory(this.page, this.size);
         return;
       }
       this.categoryService.findByName(this.find).then(response => {
@@ -155,13 +165,13 @@ export  default defineComponent({
     }
   },
   created() {
-    this.getCategory(this.page,this.size);
+    this.getCategory(this.page, this.size);
   }
 })
 </script>
 
 <style scoped>
-#table{
+#table {
   padding: 0px;
 }
 </style>
