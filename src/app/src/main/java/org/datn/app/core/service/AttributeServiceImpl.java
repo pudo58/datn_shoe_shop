@@ -18,9 +18,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = RuntimeException.class)
-public class AttributeServiceImpl implements AttributeService{
+public class AttributeServiceImpl implements AttributeService {
     private final AttributeRepo attributeRepo;
     private final CategoryRepo categoryRepo;
+
     @Override
     public Attribute doInsert(Attribute attribute) {
         return attributeRepo.save(attribute);
@@ -66,9 +67,9 @@ public class AttributeServiceImpl implements AttributeService{
     public List<Attribute> addAll(AttributeAddAllRequest attributeAddAllRequest) {
         Category category = categoryRepo.findById(attributeAddAllRequest.getCategoryId()).get();
         List<Attribute> attributeList = attributeRepo.findAllById(attributeAddAllRequest.getAttributeIdList());
-        if(category == null){
+        if (category == null) {
             throw new RuntimeException("Category not found");
-        }else{
+        } else {
             category.setAttributes(attributeList.stream().collect(Collectors.toSet()));
             categoryRepo.save(category);
         }

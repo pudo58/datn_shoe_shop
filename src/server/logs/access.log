@@ -131,3 +131,5 @@
 127.0.0.1 - - [20/Mar/2023:15:44:15 +0700] "GET /image/user/erd.drawio.png HTTP/1.1" 200 17421 "http://localhost:8081/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
 127.0.0.1 - - [20/Mar/2023:22:30:49 +0700] "GET /image/default.jpg HTTP/1.1" 200 3024 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
 127.0.0.1 - - [20/Mar/2023:22:30:50 +0700] "GET /favicon.ico HTTP/1.1" 404 555 "http://localhost/image/default.jpg" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+127.0.0.1 - - [22/Mar/2023:21:27:12 +0700] "GET /image/user/null HTTP/1.1" 404 555 "http://localhost:8081/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
+127.0.0.1 - - [22/Mar/2023:21:27:21 +0700] "GET /image/user/Untitled.png HTTP/1.1" 200 38881 "http://localhost:8081/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
