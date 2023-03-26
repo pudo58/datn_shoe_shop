@@ -14,11 +14,11 @@
         </div>
         <div class="modal-body">
          <div class="table-responsive">
-           <table class="table table-striped table-hover table-bordered">
+           <table class="table table-bordered">
              <thead>
                <tr>
                  <th>
-                    <input type="checkbox" class="form-check-input" id="checkAll" @change="checkAll()">
+                    <input type="checkbox" class="form-check-input" id="checkAll" @change.prevent="checkAll()">
                  </th>
                   <th>STT</th>
                   <th>Tên thuộc tính</th>
@@ -26,9 +26,9 @@
                </tr>
              </thead>
              <tbody>
-                <tr v-for="(item,index) in attributeList?.content" :key="index">
+                <tr v-for="(item,index) in attributeList?.content" :key="index" v-hide="isExistAttribute(item.id)">
                   <td>
-                    <input type="checkbox" :value="item.id" class="form-check-input" id="check" v-model="attributeIdList">
+                    <input type="checkbox" :value="item.id" class="form-check-input" id="check" v-model="attributeIdList" :disabled="isExistAttribute(item.id)" >
                   </td>
                   <td>{{index+1}}</td>
                   <td>{{item.name}}</td>
@@ -39,7 +39,7 @@
          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-success" @click.prevent="addAll">Thêm</button>
+          <button type="button" class="btn btn-success" @click.prevent="addAll()">Thêm</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
         <div class="row">
@@ -120,7 +120,7 @@ export default defineComponent({
       attributeRequest : new AttributeAddAllRequest(),
       attributeCurrentList : [] as Attribute[],
       deleteAttribute : new DeleteAttributeRequest(),
-      categoryId : null
+      categoryId : 0
     }
   },
   props: {
@@ -143,24 +143,33 @@ export default defineComponent({
     openModal(){
       document.getElementById('show-modal-attr')?.click();
     },
-    checkAll(){
+    checkAll() {
       let checkAll = document.getElementById('checkAll') as HTMLInputElement;
       let check = document.getElementsByClassName('form-check-input') as HTMLCollectionOf<HTMLInputElement>;
-      if(checkAll.checked){
-        for(let i = 0; i < check.length; i++){
-          check[i].checked = true;
+      if (checkAll.checked) {
+        for (let i = 0; i < check.length; i++) {
+          if (!check[i].disabled) {
+            check[i].checked = true;
+            // Cập nhật giá trị của attributeIdList
+            if (!this.attributeIdList.includes(Number.parseInt(check[i].value))) {
+              this.attributeIdList.push(Number.parseInt(check[i].value));
+            }
+          }
         }
-      }else{
-        for(let i = 0; i < check.length; i++){
+      } else {
+        for (let i = 0; i < check.length; i++) {
           check[i].checked = false;
+          // Cập nhật giá trị của attributeIdList
+          this.attributeIdList = this.attributeIdList.filter(id => id !== Number.parseInt(check[i].value));
         }
       }
     },
     addAll(){
-      this.attributeRequest.categoryId = this.categoryId;
+      console.log(this.attributeIdList);
+      this.attributeRequest.categoryId = this.categoryId || 0;
       this.attributeRequest.attributeIdList = this.attributeIdList;
       this.attributeService.addAll(this.attributeRequest).then(response => {
-        this.findAttributeByCategoryId(this.categoryId);
+        this.findAttributeByCategoryId(this.categoryId || 0);
       }).catch(error => {
         toast.error(error.message);
       });
@@ -175,12 +184,21 @@ export default defineComponent({
     },
     deleteAttributeRequest(attributeId: number){
       this.deleteAttribute.attributeId = attributeId;
-      this.deleteAttribute.categoryId = this.categoryId;
+      this.deleteAttribute.categoryId = this.categoryId || 0;
       this.attributeService.deleteAttribute(this.deleteAttribute).then(response => {
-        this.findAttributeByCategoryId(this.categoryId);
+        this.findAttributeByCategoryId(this.categoryId || 0);
       }).catch(error => {
         toast.error(error.message);
       })
+    },
+    isExistAttribute(attributeId : number){
+      let check = false;
+      this.attributeCurrentList.forEach(item => {
+        if(item.id == attributeId){
+          check = true;
+        }
+      })
+      return check;
     }
   },
   created() {
