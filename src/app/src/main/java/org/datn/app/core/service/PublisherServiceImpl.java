@@ -23,7 +23,6 @@ public class PublisherServiceImpl implements PublisherService{
     public Publisher doUpdateById(Publisher publisher, Long aLong) {
         Publisher publisher1 = publisherRepo.findById(aLong).get();
         publisher1.setName(publisher.getName());
-        publisher1.setImage(publisher.getImage());
         publisher1.setWebsite(publisher.getWebsite());
         return publisherRepo.save(publisher1);
     }
@@ -48,5 +47,10 @@ public class PublisherServiceImpl implements PublisherService{
     public Page<Publisher> findAll(Integer page, Integer size) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return publisherRepo.findAll(pageable);
+    }
+
+    @Override
+    public List<Publisher> findByName(String name) {
+        return publisherRepo.findByName(name);
     }
 }

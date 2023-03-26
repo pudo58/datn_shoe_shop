@@ -1,5 +1,6 @@
 package org.datn.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,8 +23,7 @@ public class Publisher implements Serializable {
     @Column(name = "`website`")
     private String website;
 
-    private String image;
-
     @OneToMany(mappedBy = "publisher",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Product> products;
 }
