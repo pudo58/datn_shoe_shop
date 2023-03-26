@@ -35,15 +35,16 @@
       </thead>
       <tbody>
       <tr class="align-middle" v-for="item in attributeList?.content">
-        <td>{{item?.name}}</td>
-        <td>{{item?.type}}</td>
-        <td>{{dateTime(item?.created+'')}}</td>
+        <td>{{ item?.name }}</td>
+        <td>{{ item?.type }}</td>
+        <td>{{ dateTime(item?.created + '') }}</td>
         <td>
           <span v-if="item.isTrash === false" class="badge bg-success">Hoạt động</span>
           <span v-else class="badge bg-danger">Khóa</span>
         </td>
         <td>
-          <button class="btn btn-success btn-sm m-1" @click.prevent="$refs.attributeDetail.openModal();attribute = item;">
+          <button class="btn btn-success btn-sm m-1"
+                  @click.prevent="$refs.attributeDetail.openModal();attribute = item;">
             <i class="bi bi-pencil-fill"></i>
           </button>
           <button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">
@@ -61,7 +62,7 @@
           <a class="page-link" @click.prevent="getAttribute(page--,size)">Previous</a>
         </li>
         <li class="page-item" v-for="item in attributeList?.totalPages">
-          <a class="page-link" href="#" @click="getAttribute(item-1,size)">{{item}}</a>
+          <a class="page-link" href="#" @click="getAttribute(item-1,size)">{{ item }}</a>
         </li>
         <li class="page-item">
           <a class="page-link" href="#" @click.prevent="getAttribute(page++,size)">Next</a>
@@ -77,72 +78,75 @@
       </div>
     </nav>
   </div>
-  <attribute-detail-component :attribute="attribute" ref="attributeDetail" @added-attribute="attributeAdded"></attribute-detail-component>
+  <attribute-detail-component :attribute="attribute" ref="attributeDetail"
+                              @added-attribute="attributeAdded"></attribute-detail-component>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { toast } from 'vue3-toastify';
+import {defineComponent} from 'vue';
+import {toast} from 'vue3-toastify';
 import {Pageable} from "@/core/model/core.base";
-import {Category} from "@/core/model/category.model";;
+import {Category} from "@/core/model/category.model";
 import moment from 'moment/moment';
 import {Attribute} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
 import AttributeDetailComponent from "@/views/admin/component/attribute/AttributeDetailComponent.vue";
 
-export  default defineComponent({
-  name : "AttributeComponent",
-  components : {
+;
+
+export default defineComponent({
+  name: "AttributeComponent",
+  components: {
     AttributeDetailComponent,
   },
-  data(){
+  data() {
     return {
-      attributeList : new Pageable<Attribute>(),
-      attribute : new Category(),
-      loading : false,
-      search : '' as string,
-      attributeService : new AttributeService(),
-      page : 0 as number,
-      size : 10 as number,
-      find : '' as string,
+      attributeList: new Pageable<Attribute>(),
+      attribute: new Category(),
+      loading: false,
+      search: '' as string,
+      attributeService: new AttributeService(),
+      page: 0 as number,
+      size: 10 as number,
+      find: '' as string,
     }
   },
-  methods : {
-    getAttribute(page:number,size : number){
-      this.attributeService.findAll(page,size).then(response => {
+  methods: {
+    getAttribute(page: number, size: number) {
+      this.attributeService.findAll(page, size).then(response => {
         this.attributeList = response;
       }).catch(error => {
         toast.error(error.message);
       })
     },
-    dateTime(value : string) {
-      if(value == null || value == undefined || value === ''){
+    dateTime(value: string) {
+      if (value == null || value == undefined || value === '') {
         return '';
-      }else{
+      } else {
         return moment(value).format('DD-MM-YYYY HH:mm:ss');
       }
 
     },
-    onChange(){
-      this.getAttribute(this.page,this.size);
+    onChange() {
+      this.getAttribute(this.page, this.size);
     },
-    deleteById(id : number){
-      if(confirm("Bạn có chắc chắn muốn xóa không?")){
+    deleteById(id: number) {
+      if (confirm("Bạn có chắc chắn muốn xóa không?")) {
         this.attributeService.delete(id).then(data => {
-          if(data === true){
+          if (data === true) {
             toast.success("Xóa thành công");
-            this.getAttribute(this.page,this.size);
+            this.getAttribute(this.page, this.size);
           }
         }).catch(error => {
           toast.error(error.message);
         })
       }
-    },attributeAdded(attribute : Attribute){
+    }, attributeAdded(attribute: Attribute) {
       this.attributeList.content?.push(attribute);
     },
-    findByName(){
-      if(this.find === '' || this.find == null || this.find == undefined){
-        this.getAttribute(this.page,this.size);
+    findByName() {
+      if (this.find === '' || this.find == null || this.find == undefined) {
+        this.getAttribute(this.page, this.size);
         return;
       }
       this.attributeService.findByName(this.find).then(response => {
@@ -154,13 +158,13 @@ export  default defineComponent({
     }
   },
   created() {
-    this.getAttribute(this.page,this.size);
+    this.getAttribute(this.page, this.size);
   }
 })
 </script>
 
 <style scoped>
-#table{
+#table {
   padding: 0px;
 }
 </style>

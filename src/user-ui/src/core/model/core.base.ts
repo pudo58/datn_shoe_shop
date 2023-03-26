@@ -1,4 +1,4 @@
-export class Pageable<Type>{
+export class Pageable<Type> {
     public content?: Type[];
     public totalPages?: number;
     public totalElements?: number;

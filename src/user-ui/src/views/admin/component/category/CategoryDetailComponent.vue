@@ -1,11 +1,12 @@
 <template>
   <!-- Button trigger modal -->
-  <button v-show="false" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-category" id="show-modal">
+  <button v-show="false" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-category"
+          id="show-modal">
     Launch static backdrop modal
   </button>
 
   <!-- Modal -->
-  <div class="modal hide" id="create-category"  aria-hidden="true">
+  <div class="modal hide" id="create-category" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -19,7 +20,8 @@
               <label for="floatingCategoryName">Tên danh mục</label>
             </div>
             <div class="form-floating mb-3">
-              <textarea class="form-control" placeholder="Mô tả ...." id="floatingDesc" v-model="category.description"></textarea>
+              <textarea class="form-control" placeholder="Mô tả ...." id="floatingDesc"
+                        v-model="category.description"></textarea>
               <label for="floatingDesc">Mô tả</label>
             </div>
             <button type="submit" class="btn btn-success">Lưu</button>
@@ -34,16 +36,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import {CategoryService} from "@/core/service/category.service";
 import {Category} from "@/core/model/category.model";
-import { toast } from 'vue3-toastify';
+import {toast} from 'vue3-toastify';
+
 export default defineComponent({
   name: 'categoryDetailComponent',
   data() {
     return {
       categoryService: new CategoryService(),
-      openModalDialog : false
+      openModalDialog: false
     }
   },
   props: {
@@ -54,18 +57,18 @@ export default defineComponent({
   },
   methods: {
     addCategory() {
-      if(this.category.id != null){
+      if (this.category.id != null) {
         this.categoryService.update(this.category).then((res) => {
-        toast.success("Cập nhật thành công");
+          toast.success("Cập nhật thành công");
         });
         return;
       }
       this.categoryService.save(this.category).then((res) => {
-          this.$emit('added-category', res);
+        this.$emit('added-category', res);
       });
 
     },
-    openModal(){
+    openModal() {
       document.getElementById('show-modal')?.click();
     }
   }

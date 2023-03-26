@@ -20,29 +20,33 @@ export class CategoryService {
             return null;
         });
     }
-    async delete(id : number) : Promise<boolean>{
-        return await axios.delete("/api/category/delete/"+id).then((response) => {
+
+    async delete(id: number): Promise<boolean> {
+        return await axios.delete("/api/category/delete/" + id).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
             return false;
         });
     }
-    async findById(id : number) : Promise<Category>{
-        return await axios.get("/api/category/get/"+id).then((response) => {
+
+    async findById(id: number): Promise<Category> {
+        return await axios.get("/api/category/get/" + id).then((response) => {
             return response.data;
         });
     }
-    async update(category : Category) : Promise<boolean>{
-        return await axios.put("/api/category/update/" + category.id,category).then((response) => {
+
+    async update(category: Category): Promise<boolean> {
+        return await axios.put("/api/category/update/" + category.id, category).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
             return false;
         });
     }
-    async findByName(name : string) : Promise<Category>{
-        return await axios.get("/api/category/find/"+name).then((response) => {
+
+    async findByName(name: string): Promise<Category> {
+        return await axios.get("/api/category/find/" + name).then((response) => {
             return response.data;
         });
     }

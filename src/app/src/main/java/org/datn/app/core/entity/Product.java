@@ -44,10 +44,6 @@ public class Product implements Serializable {
     @JsonIgnore
     private List<OrderDetail> orderDetails;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = Image.class)
-    @JsonIgnore
-    private List<Image> images;
-
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
     @JsonIgnore
     private List<ProductDetail> productDetails;

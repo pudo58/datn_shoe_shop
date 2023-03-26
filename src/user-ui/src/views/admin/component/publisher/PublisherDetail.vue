@@ -1,11 +1,12 @@
 <template>
   <!-- Button trigger modal -->
-  <button v-show="false" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-publisher" id="show-modal">
+  <button v-show="false" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-publisher"
+          id="show-modal">
     Launch static backdrop modal
   </button>
 
   <!-- Modal -->
-  <div class="modal hide" id="create-publisher"  aria-hidden="true">
+  <div class="modal hide" id="create-publisher" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -34,16 +35,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import {PublisherService} from "@/core/service/publisher.service";
 import {Publisher} from "@/core/model/publisher.model";
-import { toast } from 'vue3-toastify';
+import {toast} from 'vue3-toastify';
+
 export default defineComponent({
   name: 'publisherDetailComponent',
   data() {
     return {
       publisherService: new PublisherService(),
-      openModalDialog : false
+      openModalDialog: false
     }
   },
   props: {
@@ -54,18 +56,18 @@ export default defineComponent({
   },
   methods: {
     addPublisher() {
-      if(this.publisher.id != null){
+      if (this.publisher.id != null) {
         this.publisherService.update(this.publisher).then((res) => {
           toast.success("Cập nhật thành công");
         });
         return;
+      } else {
+        this.publisherService.save(this.publisher).then((res) => {
+          this.$emit('added-publisher', res);
+        });
       }
-      this.publisherService.save(this.publisher).then((res) => {
-        this.$emit('added-publisher', res);
-      });
-
     },
-    openModal(){
+    openModal() {
       document.getElementById('show-modal')?.click();
     }
   }

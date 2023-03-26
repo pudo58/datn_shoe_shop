@@ -38,7 +38,8 @@
             <span>14</span></div>
         </div>
         <div class="brand p-2">
-          <div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">Hãng sản xuất</h6>
+          <div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">Hãng sản
+            xuất</h6>
             <span>--</span></div>
           <div class="d-flex justify-content-between mt-2">
             <div class="form-check"><input class="form-check-input" type="checkbox" value="" id="flexCheckDefault6">

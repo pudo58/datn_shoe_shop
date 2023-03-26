@@ -7,6 +7,7 @@ import org.datn.app.core.entity.Product;
 import org.datn.app.core.service.AttributeService;
 import org.datn.app.core.service.ProductDetailService;
 import org.datn.app.core.service.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,18 @@ public class ProductController {
     @GetMapping("/get/{id}")
     public Product getProductById(@PathVariable Long id){
         return productService.findById(id);
+    }
+    @DeleteMapping("/delete/{id}")
+    public void deleteProductById(@PathVariable Long id){
+        productService.doDeleteById(id);
+    }
+    @PutMapping("/update/{id}")
+    public Product updateProductById(@PathVariable Long id,@RequestBody Product product){
+        return productService.doUpdateById(product,id);
+    }
+    @GetMapping("/page/{page}/{size}")
+    public Page<Product> getAllProduct(@PathVariable int page, @PathVariable int size){
+        return productService.findAll(page,size);
     }
 
 }

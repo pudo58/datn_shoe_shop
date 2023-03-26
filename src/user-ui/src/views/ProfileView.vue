@@ -163,11 +163,12 @@
 </template>
 
 <script lang="ts">
-import { User, ChangePasswordRequest ,UploadFileRequest} from '@/core/model/user.model';
-import { defineComponent, ref } from 'vue';
-import { toast } from 'vue3-toastify';
+import {ChangePasswordRequest, UploadFileRequest, User} from '@/core/model/user.model';
+import {defineComponent} from 'vue';
+import {toast} from 'vue3-toastify';
 import axios from 'axios';
-import { UserService } from '@/core/service/user.service';
+import {UserService} from '@/core/service/user.service';
+
 export default defineComponent({
 	name: 'Profile Settings',
 	data() {

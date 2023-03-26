@@ -34,4 +34,8 @@ public class ProductDetail implements Serializable {
     //@JsonIgnore
     private List<AttributeData> attributeData;
 
+    @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = Image.class)
+    @JsonIgnore
+    private List<Image> images;
+
 }

@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.Publisher;
 import org.datn.app.core.service.PublisherService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,14 +17,18 @@ public class PublisherController {
     private final PublisherService publisherService;
 
     @PostMapping("/add")
-    public Publisher addPublisher(@RequestBody Publisher publisher){
+    public ResponseEntity<?> addPublisher(@RequestBody Publisher publisher){
+        List<String> errorList = new ArrayList<>();
         if(publisher.getName() == null || publisher.getName().trim().isEmpty()){
-            return null;
+            errorList.add("Tên nhà xuất bản không được để trống");
         }
-        if(publisherService.findByName(publisher.getName()) != null){
-            return null;
+        if(!publisherService.findByName(publisher.getName()).isEmpty()){
+            errorList.add("Tên nhà xuất bản đã tồn tại");
         }
-        return publisherService.doInsert(publisher);
+        if(errorList.size() > 0){
+            return ResponseEntity.badRequest().body(errorList);
+        }
+        return ResponseEntity.ok(publisherService.doInsert(publisher));
     }
 
     @GetMapping("/get/{id}")

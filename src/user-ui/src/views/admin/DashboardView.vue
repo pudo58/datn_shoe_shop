@@ -14,11 +14,12 @@
             </li>
             <li>
               <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="bi bi-database-fill"></i> <span class="ms-1 d-none d-sm-inline">Quản lý dữ liệu bảng</span> </a>
+                <i class="bi bi-database-fill"></i> <span class="ms-1 d-none d-sm-inline">Quản lý dữ liệu bảng</span>
+              </a>
               <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                 <li class="w-100" v-for="item in component">
                   <a class="nav-link px-0 d-flex m-3" @click.prevent="hideComponent(item.name)" role="button">
-                    <span class="d-none d-sm-inline" :title="item.label">{{item.label}}</span> </a>
+                    <span class="d-none d-sm-inline" :title="item.label">{{ item.label }}</span> </a>
                 </li>
               </ul>
             </li>
@@ -63,7 +64,8 @@
           </ul>
           <hr>
           <div class="dropdown pb-4">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+               id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
               <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
               <span class="d-none d-sm-inline mx-1">loser</span>
             </a>
@@ -95,6 +97,7 @@ import UserComponent from "@/views/admin/component/user/UserComponent.vue";
 import CategoryComponent from "@/views/admin/component/category/CategoryComponent.vue";
 import AttributeComponent from "@/views/admin/component/attribute/AttributeComponent.vue";
 import PublisherComponent from "@/views/admin/component/publisher/PublisherComponent.vue";
+
 export default defineComponent({
   name: "ProductView",
   components: {
@@ -105,13 +108,13 @@ export default defineComponent({
   },
   data() {
     return {
-      component : [
-        {name : 'user',show : false,label : 'Quản lý người dùng'},
-        {name : 'category',show : false,label : 'Quản lý danh mục'},
-        {name : 'publisher',show : false,label : 'Quản lý nhà sản xuất'},
-        {name : 'product',show : false,label : 'Quản lý sản phẩm'},
-        {name : 'cart',show : false,label : 'Quản lý đơn hàng'},
-        {name : 'attribute',show : false,label : 'Quản lý thuộc tính'},
+      component: [
+        {name: 'user', show: false, label: 'Quản lý người dùng'},
+        {name: 'category', show: false, label: 'Quản lý danh mục'},
+        {name: 'publisher', show: false, label: 'Quản lý nhà sản xuất'},
+        {name: 'product', show: false, label: 'Quản lý sản phẩm'},
+        {name: 'cart', show: false, label: 'Quản lý đơn hàng'},
+        {name: 'attribute', show: false, label: 'Quản lý thuộc tính'},
       ]
     }
   },
@@ -122,11 +125,11 @@ export default defineComponent({
     init() {
 
     },
-    hideComponent(name : string){
-      this.component.forEach((item)=>{
-        if(item.name === name){
+    hideComponent(name: string) {
+      this.component.forEach((item) => {
+        if (item.name === name) {
           item.show = true;
-        }else{
+        } else {
           item.show = false;
         }
       })
@@ -137,7 +140,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-a{
+a {
   color: #fff;
 }
 </style>

@@ -1,4 +1,4 @@
-export class Publisher{
+export class Publisher {
     id?: number;
     name?: string;
     website?: string;

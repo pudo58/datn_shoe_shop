@@ -17,6 +17,6 @@ public class Image implements Serializable {
 
     private String url;
 
-    @ManyToOne(targetEntity = Product.class)
-    private Product product;
+    @ManyToOne(targetEntity = ProductDetail.class)
+    private ProductDetail productDetail;
 }
