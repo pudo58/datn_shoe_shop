@@ -7,14 +7,16 @@
 					<div class="profile-tab-nav border-right">
 						<div class="p-4">
 							<div class="img-circle text-center mb-3">
-								<img :src="user.avatar === '' ? 'http://localhost/image/default.jpg' :'http://localhost/image/user/' + user.avatar" alt="Image" class="shadow">
+								<img
+									:src="user.avatar === '' ? 'http://localhost/image/default.jpg' :'http://localhost/image/user/' + user.avatar"
+									alt="Image" class="shadow">
 							</div>
 							<small v-if="user.avatar === null" class="text-danger">Bạn chưa có ảnh</small>
 							<br>
 							<form @submit.prevent="uploadFileData()">
 								<div class="form-group">
-								<!-- <label for="fileInput">Select file:</label> -->
-								<input type="file" id="file"  class="form-control-file">
+									<!-- <label for="fileInput">Select file:</label> -->
+									<input type="file" id="file" class="form-control-file">
 								</div>
 								<button type="submit" class="btn btn-primary">Cập nhật</button>
 							</form>
@@ -22,30 +24,35 @@
 							<br>
 							<h4 class="text-center">{{ user.fullName }}</h4>
 						</div>
-						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-							<a class="nav-link d-flex align-items-center" id="account-tab" data-bs-toggle="pill" data-bs-target="#account"
-								role="tab" aria-controls="account" aria-selected="true">
+						<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
+						     aria-orientation="vertical">
+							<a class="nav-link d-flex align-items-center" id="account-tab" data-bs-toggle="pill"
+							   data-bs-target="#account"
+							   role="tab" aria-controls="account" aria-selected="true">
 								<i class="bi bi-person-circle me-2"></i>
 								<span class="d-flex align-items-center">Tài khoản</span>
 							</a>
-							<a class="nav-link d-flex align-items-center" id="password-tab" data-bs-toggle="pill" data-bs-target="#password"
-							 role="tab" aria-controls="password" aria-selected="false">
+							<a class="nav-link d-flex align-items-center" id="password-tab" data-bs-toggle="pill"
+							   data-bs-target="#password"
+							   role="tab" aria-controls="password" aria-selected="false">
 								<i class="bi bi-key-fill me-2"></i>
 								<span class="d-flex align-items-center">Mật khẩu</span>
 							</a>
-							<a class="nav-link d-flex align-items-center" id="history-tab" data-bs-toggle="pill" data-bs-target="#history"
-								role="tab" aria-controls="history" aria-selected="false">
+							<a class="nav-link d-flex align-items-center" id="history-tab" data-bs-toggle="pill"
+							   data-bs-target="#history"
+							   role="tab" aria-controls="history" aria-selected="false">
 								<i class="bi bi-receipt me-2"></i>
 								<span class="d-flex align-items-center">Lịch sử mua hàng</span>
 							</a>
-							<router-link to="/"  class="nav-link d-flex align-items-center">
+							<router-link to="/" class="nav-link d-flex align-items-center">
 								<i class="bi bi-house-door-fill me-2"></i>
 								Quay về trang chủ
 							</router-link>
 						</div>
 					</div>
 					<div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
-						<div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+						<div class="tab-pane fade show active" id="account" role="tabpanel"
+						     aria-labelledby="account-tab">
 							<h3 class="mb-4">Tài khoản</h3>
 							<div class="row">
 								<div class="col-md-6">
@@ -69,13 +76,15 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Số điện thoại</label>
-										<input type="text" class="form-control" v-model="user.phoneNumber" :placeholder="'Bạn chưa đặt số điện thoại'">
+										<input type="text" class="form-control" v-model="user.phoneNumber"
+										       :placeholder="'Bạn chưa đặt số điện thoại'">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Ngày tham gia</label>
-										<input type="text" class="form-control" :value="formatDate(user.created)" disabled>
+										<input type="text" class="form-control" :value="formatDate(user.created)"
+										       disabled>
 									</div>
 								</div>
 								<div class="col-md-6">
@@ -88,7 +97,7 @@
 									<div class="form-group">
 										<label>Bio</label>
 										<textarea class="form-control"
-											rows="4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore vero enim error similique quia numquam ullam corporis officia odio repellendus aperiam consequatur laudantium porro voluptatibus, itaque laboriosam veritatis voluptatum distinctio!</textarea>
+										          rows="4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore vero enim error similique quia numquam ullam corporis officia odio repellendus aperiam consequatur laudantium porro voluptatibus, itaque laboriosam veritatis voluptatum distinctio!</textarea>
 									</div>
 								</div>
 							</div>
@@ -102,7 +111,8 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Mật khẩu cũ</label>
-										<input type="password" class="form-control" v-model="changePasswordRequest.oldPassword">
+										<input type="password" class="form-control"
+										       v-model="changePasswordRequest.oldPassword">
 									</div>
 								</div>
 							</div>
@@ -110,13 +120,15 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Mật khẩu mới</label>
-										<input type="password" class="form-control" v-model="changePasswordRequest.newPassword">
+										<input type="password" class="form-control"
+										       v-model="changePasswordRequest.newPassword">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label>Nhập lại mật khẩu</label>
-										<input type="password" class="form-control" v-model="changePasswordRequest.confirmPassword">
+										<input type="password" class="form-control"
+										       v-model="changePasswordRequest.confirmPassword">
 									</div>
 								</div>
 							</div>
@@ -173,10 +185,10 @@ export default defineComponent({
 	name: 'Profile Settings',
 	data() {
 		return {
-			user: JSON.parse(JSON.stringify(localStorage.getItem("user"))) ,
+			user: JSON.parse(JSON.stringify(localStorage.getItem("user"))),
 			changePasswordRequest: {} as ChangePasswordRequest,
 			uploadFile: {} as UploadFileRequest,
-			userService : new UserService()
+			userService: new UserService()
 		}
 	},
 	methods: {
@@ -189,26 +201,26 @@ export default defineComponent({
 		async uploadFileData() {
 			const file = document.getElementById('file') as HTMLInputElement;
 			const formData = new FormData();
-			if( file && file.files && file.files.length > 0) {
-			 	formData.append('file', file.files[0]);
-			try {
-			 	const response = await axios.post('api/user/upload', formData, {
-					headers: {
-						'Content-Type': 'multipart/form-data',
-						'Authorization' : localStorage.getItem('access_token')
+			if (file && file.files && file.files.length > 0) {
+				formData.append('file', file.files[0]);
+				try {
+					const response = await axios.post('api/user/upload', formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data',
+							'Authorization': localStorage.getItem('access_token')
+						}
+					});
+					if (response.status == 200) {
+						toast.success("Cập nhật ảnh đại diện thành công");
+						this.user.avatar = response.data;
+						localStorage.setItem('user', JSON.stringify(this.user));
 					}
-				});
-			 	if (response.status == 200) {
-					toast.success("Cập nhật ảnh đại diện thành công");
-					this.user.avatar = response.data;
-					localStorage.setItem('user', JSON.stringify(this.user));
-			 	}
-			} catch (error : any) {
-			 	toast.error(error.response.data);
-			}
+				} catch (error: any) {
+					toast.error(error.response.data);
+				}
 			}
 		},
-		async update(){
+		async update() {
 			try {
 				const response = await axios.put('api/user/update/' + this.user.id, this.user);
 				if (response.status == 200) {
