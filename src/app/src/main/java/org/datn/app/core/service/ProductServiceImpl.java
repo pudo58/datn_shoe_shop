@@ -11,10 +11,12 @@ import org.datn.app.core.entity.extend.ProductResponse;
 import org.datn.app.core.repo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -193,6 +195,11 @@ public class ProductServiceImpl implements ProductService {
                 throw new RuntimeException("có lỗi xảy ra khi thêm thuộc tính");
             }
         }
-        return ResponseEntity.ok(product);
+        // Khi thêm thành công sẽ trả về sản phẩm vừa thêm và thông báo thành công
+        Map<String, Object> response = new HashMap<>();
+        response.put("product", product);
+        response.put("message", "Thêm sản phẩm thành công");
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
     }
 }
