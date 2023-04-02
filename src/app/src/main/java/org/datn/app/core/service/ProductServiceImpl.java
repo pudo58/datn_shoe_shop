@@ -75,6 +75,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(rollbackOn = RuntimeException.class)
     public ResponseEntity<?> addProduct(ProductDTO productDTO) {
         // Lấy thông tin category và publisher từ ID
         Category category = categoryRepo.findById(productDTO.getCategoryId()).orElseThrow(
@@ -86,35 +87,47 @@ public class ProductServiceImpl implements ProductService {
 
         // Tạo sản phẩm
         Product product = new Product();
-        product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setDiscount(productDTO.getDiscount());
-        product.setImageThumbnail(productDTO.getImageThumbnail());
-        product.setDescription(productDTO.getDescription());
-        product.setCategory(category);
-        product.setStatus(ProductType.EFFECT);
-        product.setPublisher(publisher);
+        try{
+            product.setName(productDTO.getName());
+            product.setPrice(productDTO.getPrice());
+            product.setDiscount(productDTO.getDiscount());
+            product.setImageThumbnail(productDTO.getImageThumbnail());
+            product.setDescription(productDTO.getDescription());
+            product.setCategory(category);
+            product.setStatus(ProductType.EFFECT);
+            product.setPublisher(publisher);
+        }catch (RuntimeException e){
+            throw new RuntimeException("có lỗi xảy ra khi thêm sản phẩm");
+        }
         List<Size> sizeList = sizeRepo.findAllBySize(productDTO.getSizeList().stream()
                 .map(SizeDTO::getSize).collect(Collectors.toList()));
         for (int i = 0; i < sizeList.size(); i++) {
             ProductDetail productDetail = new ProductDetail();
             if (sizeList.get(i) == null) {
-                Size size = new Size();
-                size.setSize(productDTO.getSizeList().get(i).getSize());
-                sizeRepo.save(size);
-                productDetail.setSize(size);
-                productDetail.setProduct(product);
-                productDetail.setQuantity(productDTO.getSizeList().get(i).getQuantity());
-                product.getProductDetails().add(productDetail);
-                productDetail.setStatus(ProductDetailConstant.EFFECT);
-                productDetailRepo.save(productDetail);
+                try{
+                    Size size = new Size();
+                    size.setSize(productDTO.getSizeList().get(i).getSize());
+                    sizeRepo.save(size);
+                    productDetail.setSize(size);
+                    productDetail.setProduct(product);
+                    productDetail.setQuantity(productDTO.getSizeList().get(i).getQuantity());
+                    product.getProductDetails().add(productDetail);
+                    productDetail.setStatus(ProductDetailConstant.EFFECT);
+                    productDetailRepo.save(productDetail);
+                }catch (RuntimeException e){
+                    throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
+                }
             } else {
-                productDetail.setSize(sizeList.get(i));
-                productDetail.setProduct(product);
-                productDetail.setQuantity(productDTO.getSizeList().get(i).getQuantity());
-                product.getProductDetails().add(productDetail);
-                productDetail.setStatus(ProductDetailConstant.EFFECT);
-                productDetailRepo.save(productDetail);
+               try{
+                   productDetail.setSize(sizeList.get(i));
+                   productDetail.setProduct(product);
+                   productDetail.setQuantity(productDTO.getSizeList().get(i).getQuantity());
+                   product.getProductDetails().add(productDetail);
+                   productDetail.setStatus(ProductDetailConstant.EFFECT);
+                   productDetailRepo.save(productDetail);
+               }catch (RuntimeException e){
+                     throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
+               }
             }
         }
         // Lưu sản phẩm
@@ -176,7 +189,6 @@ public class ProductServiceImpl implements ProductService {
             attributeData.setType(attribute.getType());
             attributeDataRepo.save(attributeData);
         }
-
         return ResponseEntity.ok(product);
     }
 }

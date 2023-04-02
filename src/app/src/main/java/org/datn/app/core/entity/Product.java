@@ -22,7 +22,7 @@ public class Product implements Serializable {
 
     private Double price;
 
-    private Double discount = 0.0;
+    private Double discount;
 
     private String imageThumbnail;
 
@@ -54,15 +54,5 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = AttributeData.class)
     //@JsonIgnore
     private List<AttributeData> attributeData;
-
-    public void addAttributeData(Attribute attribute, String value, String type) {
-        AttributeData attributeData = new AttributeData();
-        attributeData.setAttribute(attribute);
-        attributeData.setProduct(this);
-        attributeData.setValue(value);
-        attributeData.setType(type);
-        this.getAttributeData().add(attributeData);
-    }
-
 
 }
