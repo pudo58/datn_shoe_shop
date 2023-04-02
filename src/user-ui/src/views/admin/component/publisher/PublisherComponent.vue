@@ -104,7 +104,7 @@ export default defineComponent({
 	},
 	methods: {
 		async getPublisher(page: number, size: number) {
-			const res = await this.publisherService.findAll(page, size);
+			const res = await this.publisherService.findAll(page, size) as Pageable<Publisher>;
 			this.publisherList = res;
 		},
 		deleteById(id: number) {
@@ -118,17 +118,18 @@ export default defineComponent({
 			}
 		},
 		getEmit(publisher: Publisher) {
-			this.publisherList.content.push(publisher);
+			this.publisherList.content?.push(publisher);
 		},
 		onChange() {
 			this.getPublisher(this.page, this.size);
 		},
-		findByName() {
+		async findByName() {
 			if (this.name == null || this.name == '')
-				this.getPublisher(this.page, this.size);
-			this.publisherService.findByName(this.name).then((res) => {
-				this.publisherList.content = res;
-			})
+				await this.getPublisher(this.page, this.size);
+			const res = await this.publisherService.findByName(this.name);
+			if(res){
+				this.publisherList.content?.push(res);
+			}
 		}
 	},
 	created() {

@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "products")
@@ -21,7 +22,9 @@ public class Product implements Serializable {
 
     private Double price;
 
-    private Double discount;
+    private Double discount = 0.0;
+
+    private String imageThumbnail;
 
     private String description;
 
@@ -47,5 +50,19 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
     @JsonIgnore
     private List<ProductDetail> productDetails;
+
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = AttributeData.class)
+    //@JsonIgnore
+    private List<AttributeData> attributeData;
+
+    public void addAttributeData(Attribute attribute, String value, String type) {
+        AttributeData attributeData = new AttributeData();
+        attributeData.setAttribute(attribute);
+        attributeData.setProduct(this);
+        attributeData.setValue(value);
+        attributeData.setType(type);
+        this.getAttributeData().add(attributeData);
+    }
+
 
 }

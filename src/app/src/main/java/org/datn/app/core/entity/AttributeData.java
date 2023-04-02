@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
 @Entity
 @Data
 @Table(name = "attribute_data")
@@ -19,11 +20,11 @@ public class AttributeData implements Serializable {
 
     private String type;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Attribute.class)
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Attribute.class)
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
-    @JoinColumn(name = "product_detail_id")
-    private ProductDetail productDetail;
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Product.class)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

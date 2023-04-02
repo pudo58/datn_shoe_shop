@@ -3,7 +3,7 @@ import {Image} from "@/core/model/image.model";
 import {Size} from "@/core/model/size.model";
 import {AttributeData} from "@/core/model/attribute-data.model";
 
-export default class ProductDetail {
+export class ProductDetail {
     id?: number;
     quantity?: number;
     product?: Product;

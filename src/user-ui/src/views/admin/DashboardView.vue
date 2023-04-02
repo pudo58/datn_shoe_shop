@@ -93,7 +93,8 @@
 				<user-component v-if="component[0].show"></user-component>
 				<category-component v-if="component[1].show"></category-component>
 				<publisher-component v-if="component[2].show"></publisher-component>
-				<attribute-component v-if="component[4].show"></attribute-component>
+				<product-component v-if="component[3].show"></product-component>
+				<attribute-component v-if="component[5].show"></attribute-component>
 			</div>
 		</div>
 	</div>
@@ -105,21 +106,22 @@ import UserComponent from "@/views/admin/component/user/UserComponent.vue";
 import CategoryComponent from "@/views/admin/component/category/CategoryComponent.vue";
 import AttributeComponent from "@/views/admin/component/attribute/AttributeComponent.vue";
 import PublisherComponent from "@/views/admin/component/publisher/PublisherComponent.vue";
-
+import ProductComponent from "@/views/admin/component/product/ProductComponent.vue";
 export default defineComponent({
 	name: "ProductView",
 	components: {
 		UserComponent,
 		CategoryComponent,
 		AttributeComponent,
-		PublisherComponent
+		PublisherComponent,
+		ProductComponent
 	},
 	data() {
 		return {
 			component: [
 				{name: 'user', show: false, label: 'Quản lý người dùng'},
 				{name: 'category', show: false, label: 'Quản lý danh mục'},
-				{name: 'publisher', show: false, label: 'Quản lý nhà sản xuất'},
+				{name: 'publisher', show: false, label: 'Quản lý hãng'},
 				{name: 'product', show: false, label: 'Quản lý sản phẩm'},
 				{name: 'cart', show: false, label: 'Quản lý đơn hàng'},
 				{name: 'attribute', show: false, label: 'Quản lý thuộc tính'},

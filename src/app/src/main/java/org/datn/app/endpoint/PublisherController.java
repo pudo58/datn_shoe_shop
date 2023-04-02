@@ -47,6 +47,12 @@ public class PublisherController {
     public Page<Publisher> getAllPublisher(@PathVariable int page, @PathVariable int size){
         return publisherService.findAll(page,size);
     }
+
+    @GetMapping("/findAll")
+    public List<Publisher> getAllPublisher(){
+        return publisherService.findAll();
+    }
+
     @GetMapping("/getByName/{name}")
     public List<Publisher> getPublisherByName(@PathVariable String name){
         return publisherService.findByName(name);

@@ -1,5 +1,6 @@
 package org.datn.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -35,5 +36,6 @@ public class Category implements Serializable {
     private Date created = new Date();
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Product> products;
 }

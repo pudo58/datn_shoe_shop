@@ -29,13 +29,4 @@ public class ProductDetail implements Serializable {
     @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = Cart.class)
     @JsonIgnore
     private List<Cart> carts;
-
-    @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = AttributeData.class)
-    //@JsonIgnore
-    private List<AttributeData> attributeData;
-
-    @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = Image.class)
-    @JsonIgnore
-    private List<Image> images;
-
 }

@@ -56,4 +56,10 @@ export class PublisherService {
             return response.data;
         });
     }
+
+    async findAllPublisher(): Promise<Publisher[]> {
+        return await axios.get("/api/publisher/findAll").then((response) => {
+            return response.data;
+        });
+    }
 }

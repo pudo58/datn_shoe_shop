@@ -14,6 +14,7 @@ public class Size implements Serializable {
     @Id
     @Column(name = "size_id")
     private Long id;
+
     private String size;
 
     @OneToMany(mappedBy = "size", cascade = CascadeType.ALL)

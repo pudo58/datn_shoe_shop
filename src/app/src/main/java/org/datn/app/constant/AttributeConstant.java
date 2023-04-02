@@ -1,6 +1,6 @@
 package org.datn.app.constant;
 
-public class AttributeType {
+public class AttributeConstant {
     public static final String INTEGER = "Integer";
     public static final String STRING = "String";
     public static final String DOUBLE = "Double";

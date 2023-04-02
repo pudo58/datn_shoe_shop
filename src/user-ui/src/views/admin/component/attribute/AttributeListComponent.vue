@@ -171,7 +171,6 @@ export default defineComponent({
 			}
 		},
 		addAll() {
-			console.log(this.attributeIdList);
 			this.attributeRequest.categoryId = this.categoryId || 0;
 			this.attributeRequest.attributeIdList = this.attributeIdList;
 			this.attributeService.addAll(this.attributeRequest).then(response => {

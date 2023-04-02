@@ -1,7 +1,7 @@
 package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
-import org.datn.app.constant.AttributeType;
+import org.datn.app.constant.AttributeConstant;
 import org.datn.app.core.dto.AttributeAddAllRequest;
 import org.datn.app.core.dto.DeleteAttributeRequest;
 import org.datn.app.core.entity.Attribute;
@@ -31,10 +31,10 @@ public class AttributeController {
         if(attribute.getType().trim().isEmpty() || attribute.getType() == null ){
             errorList.add("Loại thuộc tính không được để trống");
         }
-        if(!(attribute.getType().equals(AttributeType.STRING)||attribute.getType().equals(AttributeType.BOOLEAN)
-                ||attribute.getType().equals(AttributeType.DATE)||attribute.getType().equals(AttributeType.DATETIME)
-                ||attribute.getType().equals(AttributeType.DOUBLE)||attribute.getType().equals(AttributeType.INTEGER)
-                ||attribute.getType().equals(AttributeType.TIME))){
+        if(!(attribute.getType().equals(AttributeConstant.STRING)||attribute.getType().equals(AttributeConstant.BOOLEAN)
+                ||attribute.getType().equals(AttributeConstant.DATE)||attribute.getType().equals(AttributeConstant.DATETIME)
+                ||attribute.getType().equals(AttributeConstant.DOUBLE)||attribute.getType().equals(AttributeConstant.INTEGER)
+                ||attribute.getType().equals(AttributeConstant.TIME))){
             errorList.add("Loại thuộc tính không hợp lệ");
         }
         if(errorList.size() > 0){

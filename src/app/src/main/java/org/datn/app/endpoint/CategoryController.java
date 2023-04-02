@@ -61,4 +61,9 @@ public class CategoryController {
         return categoryService.findByName(name);
     }
 
+    @GetMapping("/findAll")
+    public List<Category> findAllCategory(){
+        return categoryService.findAll();
+    }
+
 }

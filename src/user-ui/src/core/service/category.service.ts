@@ -50,4 +50,9 @@ export class CategoryService {
             return response.data;
         });
     }
+    async findAllCategory(): Promise<Category[]> {
+        return await axios.get("/api/category/findAll").then((response) => {
+            return response.data;
+        });
+    }
 }

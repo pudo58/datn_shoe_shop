@@ -8,3 +8,8 @@ export class Pageable<Type> {
     public first?: boolean;
     public empty?: boolean;
 }
+
+export const PAGEABLE_DEFAULT  = {
+    SIZE : 1000000,
+    PAGE : 0
+}

@@ -8,6 +8,7 @@ export class Product {
     description?: string;
     discount?: number;
     status?: number;
+    imageThumbnail?: string;
     publisher?: Publisher;
     category?: Category;
 }

@@ -51,6 +51,10 @@ public class PublisherServiceImpl implements PublisherService{
 
     @Override
     public List<Publisher> findByName(String name) {
-        return publisherRepo.findByName(name);
+        List publisherList = publisherRepo.findByName(name);
+        if(publisherList.size() == 0){
+            return null;
+        }
+        return publisherList;
     }
 }
