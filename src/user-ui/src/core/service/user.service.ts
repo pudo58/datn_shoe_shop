@@ -6,12 +6,12 @@ import {Pageable} from "@/core/model/core.base";
 
 export class UserService {
     public userCurrent: User = new User();
-
+    url = "/api/user/";
     constructor() {
     }
 
     userExist(username: string) {
-        axios.get("/api/user/username/" + username).then((response) => {
+        axios.get(this.url + "username/" + username).then((response) => {
             if (response.data !== null) {
                 return true;
             }
@@ -24,7 +24,7 @@ export class UserService {
             this.updateUser(user);
             return;
         }
-        axios.post("/api/user/add", user).then((response) => {
+        axios.post(this.url + "add", user).then((response) => {
             toast.success("Đăng ký thành công, bạn có thể đăng nhập ngay");
             setInterval(() => {
             }, 2000);
@@ -37,7 +37,7 @@ export class UserService {
     }
 
     updateUser(user: User) {
-        axios.put("/api/user/update/" + user.id, user).then((response) => {
+        axios.put(this.url + "update/" + user.id, user).then((response) => {
             toast.success("Cập nhật thông tin thành công");
             setInterval(() => {
             }, 2000);
@@ -69,7 +69,7 @@ export class UserService {
                 return false;
             }
 
-            const userResponse = await axios.get("/api/user/username/" + username);
+            const userResponse = await axios.get(this.url + "username/" + username);
             if (userResponse.data === null) {
                 toast.error("Tài khoản không tồn tại");
                 return false;
@@ -133,7 +133,7 @@ export class UserService {
             toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp");
             return;
         }
-        axios.post("/api/user/changePassword", request).then((response) => {
+        axios.post(this.url + "changePassword", request).then((response) => {
             if (response.data !== null) {
                 console.log(response.data)
                 if (response.data.status == 200) {
@@ -150,14 +150,14 @@ export class UserService {
 
     async getUser(page: number, size: number): Promise<Pageable<User>> {
         //return Pageable<User>;
-        return await axios.get("/api/user/page/" + page + "/" + size).then((response) => {
+        return await axios.get(this.url + "page/" + page + "/" + size).then((response) => {
             return response.data;
         });
         return new Pageable<User>();
     }
 
     async deleteUser(id: number): Promise<boolean> {
-        return await axios.delete("/api/user/delete/" + id).then((response) => {
+        return await axios.delete(this.url + "delete/" + id).then((response) => {
             return true;
         }).catch((error) => {
             return false;
@@ -165,7 +165,7 @@ export class UserService {
     }
 
     async findByUsernameOrEmail(request: UserFindRequest): Promise<Array<User>> {
-        return await axios.post("/api/user/findByUsernameOrEmail", request).then((response) => {
+        return await axios.post(this.url + "findByUsernameOrEmail", request).then((response) => {
             return response.data;
         });
         return new Array<User>();

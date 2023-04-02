@@ -3,8 +3,9 @@ import {toast} from "vue3-toastify";
 import {Publisher} from "@/core/model/publisher.model";
 
 export class PublisherService {
+    url = "/api/publisher/";
     async findAll(page: number, size: number): Promise<Array<Publisher>> {
-        const response = await axios.get("/api/publisher/page/" + page + "/" + size);
+        const response = await axios.get(this.url + "page/" + page + "/" + size);
         return response.data;
     }
 
@@ -16,7 +17,7 @@ export class PublisherService {
             toast.error("Website nhà xuất bản không được để trống");
             return new Publisher();
         }
-        return await axios.post("/api/publisher/add", publisher).then((response) => {
+        return await axios.post(this.url + "add", publisher).then((response) => {
             if (response.data !== null) {
                 toast.success("Thêm mới thành công");
                 return response.data;
@@ -28,7 +29,7 @@ export class PublisherService {
     }
 
     async delete(id: number): Promise<boolean> {
-        return await axios.delete("/api/publisher/delete/" + id).then((response) => {
+        return await axios.delete(this.url + "delete/" + id).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -37,13 +38,13 @@ export class PublisherService {
     }
 
     async findById(id: number): Promise<Publisher> {
-        return await axios.get("/api/publisher/get/" + id).then((response) => {
+        return await axios.get(this.url + "get/" + id).then((response) => {
             return response.data;
         });
     }
 
     async update(publisher: Publisher): Promise<boolean> {
-        return await axios.put("/api/publisher/update/" + publisher.id, publisher).then((response) => {
+        return await axios.put(this.url + "update/" + publisher.id, publisher).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -52,13 +53,13 @@ export class PublisherService {
     }
 
     async findByName(name: string): Promise<Publisher> {
-        return await axios.get("/api/publisher/getByName/" + name).then((response) => {
+        return await axios.get(this.url + "getByName/" + name).then((response) => {
             return response.data;
         });
     }
 
     async findAllPublisher(): Promise<Publisher[]> {
-        return await axios.get("/api/publisher/findAll").then((response) => {
+        return await axios.get(this.url + "findAll").then((response) => {
             return response.data;
         });
     }

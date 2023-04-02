@@ -4,13 +4,15 @@ import {Pageable} from "@/core/model/core.base";
 import {Attribute, AttributeAddAllRequest, DeleteAttributeRequest} from "@/core/model/attribute.model";
 
 export class AttributeService {
+    url = "/api/attribute/";
+
     async findAll(page: number, size: number): Promise<Pageable<Attribute>> {
-        const response = await axios.get("/api/attribute/page/" + page + "/" + size);
+        const response = await axios.get(this.url + "page/" + page + "/" + size);
         return response.data;
     }
 
     async save(attribute: Attribute): Promise<Attribute> {
-        return await axios.post("/api/attribute/add", attribute).then((response) => {
+        return await axios.post(this.url + "add", attribute).then((response) => {
             if (response.data !== null) {
                 toast.success("Thêm mới thành công");
                 return response.data;
@@ -22,7 +24,7 @@ export class AttributeService {
     }
 
     delete(id: number): Promise<boolean> {
-        return axios.delete("/api/attribute/delete/" + id).then((response) => {
+        return axios.delete(this.url + "delete/" + id).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -31,19 +33,19 @@ export class AttributeService {
     }
 
     async findByName(name: string): Promise<Attribute> {
-        return await axios.get("/api/attribute/find/" + name).then((response) => {
+        return await axios.get(this.url + "find/" + name).then((response) => {
             return response.data;
         });
     }
 
     async findById(id: number): Promise<Attribute> {
-        return await axios.get("/api/attribute/get/" + id).then((response) => {
+        return await axios.get(this.url + "get/" + id).then((response) => {
             return response.data;
         });
     }
 
     async update(attribute: Attribute): Promise<boolean> {
-        return await axios.put("/api/attribute/update/" + attribute.id, attribute).then((response) => {
+        return await axios.put(this.url + "update/" + attribute.id, attribute).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -52,7 +54,7 @@ export class AttributeService {
     }
 
     async addAll(request: AttributeAddAllRequest): Promise<Array<Attribute>> {
-        const response = await axios.post("/api/attribute/addAll", request);
+        const response = await axios.post(this.url + "addAll", request);
         if (response.data !== null) {
             toast.success("Thêm mới thành công");
         }
@@ -60,12 +62,12 @@ export class AttributeService {
     }
 
     async findAllByCategoryId(id: number): Promise<Array<Attribute>> {
-        const response = await axios.get("/api/attribute/findByCategoryId/" + id);
+        const response = await axios.get(this.url + "findByCategoryId/" + id);
         return response.data;
     }
 
     async deleteAttribute(request: DeleteAttributeRequest): Promise<boolean> {
-        const response = await axios.post("/api/attribute/deleteAttributeRequest", request);
+        const response = await axios.post(this.url + "deleteAttributeRequest", request);
         toast.success("Xóa thành công");
         return response.data;
     }

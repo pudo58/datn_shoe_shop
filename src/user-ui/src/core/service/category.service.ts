@@ -4,13 +4,15 @@ import {Pageable} from "@/core/model/core.base";
 import {Category} from "@/core/model/category.model";
 
 export class CategoryService {
+    url = "/api/category/";
+
     async findAll(page: number, size: number): Promise<Pageable<Category>> {
-        const response = await axios.get("/api/category/page/" + page + "/" + size);
+        const response = await axios.get(this.url + "page/" + page + "/" + size);
         return response.data;
     }
 
     async save(category: Category): Promise<Category> {
-        return await axios.post("/api/category/add", category).then((response) => {
+        return await axios.post(this.url + "add", category).then((response) => {
             if (response.data !== null) {
                 toast.success("Thêm mới thành công");
                 return response.data;
@@ -22,7 +24,7 @@ export class CategoryService {
     }
 
     async delete(id: number): Promise<boolean> {
-        return await axios.delete("/api/category/delete/" + id).then((response) => {
+        return await axios.delete(this.url + "delete/" + id).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -31,13 +33,13 @@ export class CategoryService {
     }
 
     async findById(id: number): Promise<Category> {
-        return await axios.get("/api/category/get/" + id).then((response) => {
+        return await axios.get(this.url + "get/" + id).then((response) => {
             return response.data;
         });
     }
 
     async update(category: Category): Promise<boolean> {
-        return await axios.put("/api/category/update/" + category.id, category).then((response) => {
+        return await axios.put(this.url + "update/" + category.id, category).then((response) => {
             return true;
         }).catch((error) => {
             toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
@@ -46,12 +48,13 @@ export class CategoryService {
     }
 
     async findByName(name: string): Promise<Category> {
-        return await axios.get("/api/category/find/" + name).then((response) => {
+        return await axios.get(this.url + "find/" + name).then((response) => {
             return response.data;
         });
     }
+
     async findAllCategory(): Promise<Category[]> {
-        return await axios.get("/api/category/findAll").then((response) => {
+        return await axios.get(this.url + "findAll").then((response) => {
             return response.data;
         });
     }
