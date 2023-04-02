@@ -22,9 +22,9 @@ public class PublisherController {
         if(publisher.getName() == null || publisher.getName().trim().isEmpty()){
             errorList.add("Tên nhà xuất bản không được để trống");
         }
-        if(!publisherService.findByName(publisher.getName()).isEmpty()){
-            errorList.add("Tên nhà xuất bản đã tồn tại");
-        }
+//        if(!publisherService.findByName(publisher.getName()).isEmpty()){
+//            errorList.add("Tên nhà xuất bản đã tồn tại");
+//        }
         if(errorList.size() > 0){
             return ResponseEntity.badRequest().body(errorList);
         }

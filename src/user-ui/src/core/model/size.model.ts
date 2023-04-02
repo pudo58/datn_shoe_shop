@@ -1,8 +1,8 @@
 export class Size {
     id?: number;
-    size?: number;
+    size?: string;
 }
 export class SizeDto {
-    size?: number;
+    size?: string;
     quantity?: number;
 }

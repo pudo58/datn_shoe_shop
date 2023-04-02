@@ -88,7 +88,7 @@
 			</div>
 		</nav>
 	</div>
-	<product-detail-action-component ref="productDetail" :product="product"></product-detail-action-component>
+	<product-detail-action-component ref="productDetail"></product-detail-action-component>
 </template>
 
 <script lang="ts">

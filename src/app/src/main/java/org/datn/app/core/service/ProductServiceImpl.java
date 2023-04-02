@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,8 +51,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product doDeleteById(Long aLong) {
-        productRepo.deleteById(aLong);
-        return null;
+        Product product = productRepo.findById(aLong).get();
+        product.setStatus(0);
+        return productRepo.save(product);
     }
 
     @Override
@@ -101,18 +103,21 @@ public class ProductServiceImpl implements ProductService {
         }catch (RuntimeException e){
             throw new RuntimeException("có lỗi xảy ra khi thêm sản phẩm");
         }
-        List<Size> sizeList = sizeRepo.findAllBySize(productDTO.getSizeList().stream()
-                .map(SizeDTO::getSize).collect(Collectors.toList()));
+        List<SizeDTO> sizeList = productDTO.getSizeList();
         for (int i = 0; i < sizeList.size(); i++) {
             ProductDetail productDetail = new ProductDetail();
-            if (sizeList.get(i) == null) {
+            if (sizeRepo.findBySize(sizeList.get(i).getSize()) == null) {
                 try{
                     Size size = new Size();
                     size.setSize(productDTO.getSizeList().get(i).getSize());
                     sizeRepo.save(size);
-                    productDetail.setSize(size);
+                    productDetail.setSize(sizeRepo.findBySize(size.getSize()));
                     productDetail.setProduct(product);
-                    productDetail.setQuantity(productDTO.getSizeList().get(i).getQuantity());
+                    Integer quantity = productDTO.getSizeList().get(i).getQuantity();
+                    if(quantity < 0){
+                        throw new RuntimeException("Số lượng không hợp lệ");
+                    }
+                    productDetail.setQuantity(quantity);
                     product.getProductDetails().add(productDetail);
                     productDetail.setStatus(ProductDetailConstant.EFFECT);
                     productDetailRepo.save(productDetail);
@@ -121,14 +126,18 @@ public class ProductServiceImpl implements ProductService {
                 }
             } else {
                try{
-                   productDetail.setSize(sizeList.get(i));
+                   productDetail.setSize(sizeRepo.findBySize(sizeList.get(i).getSize()));
                    productDetail.setProduct(product);
-                   productDetail.setQuantity(productDTO.getSizeList().get(i).getQuantity());
+                   Integer quantity = productDTO.getSizeList().get(i).getQuantity();
+                   if(quantity < 0){
+                       throw new RuntimeException("Số lượng không hợp lệ");
+                   }
+                   productDetail.setQuantity(quantity);
                    product.getProductDetails().add(productDetail);
                    productDetail.setStatus(ProductDetailConstant.EFFECT);
                    productDetailRepo.save(productDetail);
                }catch (RuntimeException e){
-                     throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
+                   throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
                }
             }
         }

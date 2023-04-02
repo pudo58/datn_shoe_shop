@@ -9,4 +9,6 @@ import java.util.List;
 public interface SizeRepo extends JpaRepository<Size,Long> {
     @Query("select s from Size s where s.size in ?1")
     List<Size> findAllBySize(List<String> sizeList);
+
+    Size findBySize(String size);
 }

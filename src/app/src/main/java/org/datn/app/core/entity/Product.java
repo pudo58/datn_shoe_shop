@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,18 +42,18 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = Voucher.class)
     @JsonIgnore
-    private List<Voucher> vouchers;
+    private List<Voucher> vouchers = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = OrderDetail.class)
     @JsonIgnore
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
     @JsonIgnore
-    private List<ProductDetail> productDetails;
+    private List<ProductDetail> productDetails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = AttributeData.class)
-    //@JsonIgnore
-    private List<AttributeData> attributeData;
+    @OneToMany(mappedBy = "product",cascade = CascadeType.MERGE,targetEntity = AttributeData.class)
+    @JsonIgnore
+    private List<AttributeData> attributeData = new ArrayList<>();
 
 }
