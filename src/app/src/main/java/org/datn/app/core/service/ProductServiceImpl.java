@@ -152,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
                     break;
                 }
                 case AttributeConstant.DATE: {
-                    if(!entry.getValue().matches("\\d{4}-\\d{2}-\\d{2}")){
+                    if(!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4}")){
                         throw new RuntimeException("Giá trị thuộc tính ngày không hợp lệ");
                     }
                     break;
@@ -176,18 +176,22 @@ public class ProductServiceImpl implements ProductService {
                     break;
                 }
                 case AttributeConstant.DATETIME: {
-                    if(!entry.getValue().matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}")){
+                    if(!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}:\\d{2}")){
                         throw new RuntimeException("Giá trị thuộc tính ngày giờ không hợp lệ");
                     }
                     break;
                 }
             }
-            AttributeData attributeData = new AttributeData();
-            attributeData.setAttribute(attribute);
-            attributeData.setProduct(product);
-            attributeData.setValue(entry.getValue());
-            attributeData.setType(attribute.getType());
-            attributeDataRepo.save(attributeData);
+            try{
+                AttributeData attributeData = new AttributeData();
+                attributeData.setAttribute(attribute);
+                attributeData.setProduct(product);
+                attributeData.setValue(entry.getValue());
+                attributeData.setType(attribute.getType());
+                attributeDataRepo.save(attributeData);
+            }catch (RuntimeException e){
+                throw new RuntimeException("có lỗi xảy ra khi thêm thuộc tính");
+            }
         }
         return ResponseEntity.ok(product);
     }
