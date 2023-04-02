@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Product} from "@/core/model/product.model";
+import {Product, ProductDto} from "@/core/model/product.model";
 import {toast} from "vue3-toastify";
 
 export class ProductService {
@@ -14,8 +14,8 @@ export class ProductService {
         return response.data;
     }
 
-    async save(product: Product) {
-        const response = await axios.post(this.url + "addDetail", product);
+    async save(productDto: ProductDto) {
+        const response = await axios.post(this.url + "addDetail", productDto);
         try {
             if (response.data !== null  && response.data.status == 200) {
                 toast.success("Thêm sản phẩm thành công");
