@@ -1,6 +1,7 @@
 package org.datn.app.core.service;
 
 import org.datn.app.core.dto.ProductDTO;
+import org.datn.app.core.dto.ProductSearchRequest;
 import org.datn.app.core.entity.Product;
 import org.datn.app.core.entity.extend.ProductResponse;
 import org.datn.app.core.service.base.ServiceCore;
@@ -18,4 +19,6 @@ public interface ProductService extends ServiceCore<Product,Long> {
     ResponseEntity<?> addProduct(ProductDTO productDTO);
 
     ResponseEntity<?> addImage(MultipartFile file, HttpServletRequest request) throws IOException;
+
+    List<Product> searchByMultiCondition(ProductSearchRequest model);
 }

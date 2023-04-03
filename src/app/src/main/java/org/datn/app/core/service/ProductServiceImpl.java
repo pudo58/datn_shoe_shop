@@ -5,6 +5,7 @@ import org.datn.app.constant.AttributeConstant;
 import org.datn.app.constant.ProductDetailConstant;
 import org.datn.app.constant.ProductType;
 import org.datn.app.core.dto.ProductDTO;
+import org.datn.app.core.dto.ProductSearchRequest;
 import org.datn.app.core.dto.SizeDTO;
 import org.datn.app.core.entity.*;
 import org.datn.app.core.entity.extend.ProductResponse;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,10 +75,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> findAll(Integer page, Integer size) {
-        if(page == null) page = 0;
-        if(size == null) size = 15;
-        if(page < 0) page = 0;
-        if(size < 0) size = 15;
+        if (page == null) page = 0;
+        if (size == null) size = 15;
+        if (page < 0) page = 0;
+        if (size < 0) size = 15;
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return productRepo.findAll(pageable);
     }
@@ -231,8 +233,40 @@ public class ProductServiceImpl implements ProductService {
         );
         Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\product", file.getOriginalFilename());
         product.setImageThumbnail(file.getOriginalFilename());
-        if(productRepo.save(product) != null)
+        if (productRepo.save(product) != null)
             Files.write(filePath, file.getBytes());
         return ResponseEntity.ok(product);
+    }
+
+    @Override
+    public List<Product> searchByMultiCondition(ProductSearchRequest model) {
+        List<Product> products = productRepo.findAll();
+        List<Product> result = new ArrayList<>();
+        for (Product product : products) {
+            if (product.getName() != null) {
+                if (product.getName().contains(model.getName().toLowerCase())) {
+                    result.add(product);
+                }
+            }
+            if (model.getCategoryId() != null) {
+                if (product.getCategory().getId() == model.getCategoryId()) {
+                    result.add(product);
+                }
+            }
+            if (model.getPublisherId() != null) {
+                if (product.getPublisher().getId() == model.getPublisherId()) {
+                    result.add(product);
+                }
+            }
+            for (int i = 0; i < model.getAttributeIdList().size(); i++) {
+                if (model.getAttributeIdList().get(i) != null) {
+                    if (product.getAttributeData().get(i).getAttribute().getId() == model.getAttributeIdList().get(i)) {
+                        result.add(product);
+                    }
+                }
+            }
+
+        }
+        return result;
     }
 }

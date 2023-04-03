@@ -26,7 +26,12 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findByUserIdAndAndProductDetailId(Long userId, Long productDetailId) {
-        return cartRepo.findByUserIdAndAndProductDetailId(userId, productDetailId);
+        User user = userService.findById(userId);
+        for(Cart cart : user.getCarts()) {
+            if(cart.getProductDetail().getId().equals(productDetailId))
+                return cart;
+        }
+        return null;
     }
 
     @Override

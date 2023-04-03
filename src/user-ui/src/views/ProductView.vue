@@ -7,7 +7,7 @@
 						Danh mục</h6> <span>--</span></div>
 					<div class="p-lists">
 						<div class="d-flex justify-content-between m-2" v-for="item in categoryList">
-							<input type="checkbox" :value="item.id" :id="'label' + item.name">
+							<input type="radio" :value="item.id" :id="'label' + item.name" name="cate" v-model="productSearchRequest.categoryId" @change.prevent="onChange">
 							<label role="button" :for="'label' + item.name">{{ item.name }}</label>
 							<span role="button" title="Tổng số sản phẩm trong danh mục">{{ item.totalProduct }}</span>
 						</div>
@@ -16,9 +16,9 @@
 				<div class="processor p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
 						Thuộc tính</h6> <span>--</span></div>
-					<div class="d-flex justify-content-between mt-2" v-for="item in attributeList">
+					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in attributeList" >
 						<div class="form-check">
-							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name">
+							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name" @change.prevent="checked();onChange">
 							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
 						</div>
 					</div>
@@ -30,7 +30,7 @@
 						<span>--</span></div>
 					<div class="d-flex justify-content-between mt-2" v-for="item in publisherList">
 						<div class="form-check">
-							<input class="form-check-input" type="checkbox" :id="item.name" :value="item.id">
+							<input class="form-check-input" type="radio" :id="item.name" :value="item.id" v-model="productSearchRequest.publisherId" name="nsx" @change.prevent="onChange">
 							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
 						</div>
 						<span role="button" title="Tổng số sản phẩm của nhà sản xuất">{{ item.totalProduct }}</span>
@@ -85,7 +85,7 @@
 							<div class="about text-center"><h5>{{ item.name }}</h5> <span>{{ item.price }} VND</span>
 							</div>
 							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
+								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">Chi tiết</button>
 								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
 									class="product_fav"><i class="fa fa-opencart"></i></span></div>
 							</div>
@@ -126,7 +126,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {Pageable} from "@/core/model/core.base";
-import {Product} from "@/core/model/product.model";
+import {Product, ProductSearchRequest} from "@/core/model/product.model";
 import {ProductService} from "@/core/service/product.service";
 import {CategoryService} from "@/core/service/category.service";
 import {CategoryResponse} from "@/core/model/category.model";
@@ -147,6 +147,8 @@ export default defineComponent({
 			productService: new ProductService(),
 			attributeList: Array<Attribute>(),
 			attributeService: new AttributeService(),
+			attributeIdListSelected: Array<number>(),
+			productSearchRequest : new ProductSearchRequest(),
 			sort: 1,
 			page: 0,
 			size: 15
@@ -184,12 +186,27 @@ export default defineComponent({
 				});
 			}
 		},
+		onChange(){
+			this.productService.findBySearch(this.productSearchRequest).then((res) => {
+				this.productList.content = res;
+				console.log(res);
+			})
+		},
+		checked(){
+			// Lọc ra các giá trị được chọn từ mảng attributeIdList
+			this.selectedIds = this.productSearchRequest.attributeIdList.filter(value => value !== null);
+		},
+		redirectDetail(id: number) {
+			this.$router.push({name: 'ProductDetail', params: {id: id}});
+		}
 	},
 	created() {
 		this.getProductList(this.page,this.size);
 		this.getCategoryList();
 		this.getPublisherList();
 		this.getAttributeList();
+		this.productSearchRequest.name = "";
+		this.productSearchRequest.attributeIdList = [];
 	}
 })
 </script>

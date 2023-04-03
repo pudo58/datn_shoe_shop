@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Product, ProductDto} from "@/core/model/product.model";
+import {Product, ProductDto, ProductSearchRequest} from "@/core/model/product.model";
 import {toast} from "vue3-toastify";
 
 export class ProductService {
@@ -11,7 +11,7 @@ export class ProductService {
     }
 
     async findById(id: number) {
-        const response = await axios.get(this.url + id);
+        const response = await axios.get(this.url + "get/"+ id);
         return response.data;
     }
 
@@ -69,6 +69,11 @@ export class ProductService {
                 toast.error("Xóa sản phẩm thất bại");
             }
         }
+    }
+
+    async findBySearch(model : ProductSearchRequest) {
+        const response = await axios.post(this.url + "findBySearch", model);
+        return response.data;
     }
 
 }
