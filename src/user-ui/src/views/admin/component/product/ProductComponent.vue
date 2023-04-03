@@ -37,20 +37,21 @@
 					<strong>Không có dữ liệu</strong>
 				</td>
 			</tr>
-			<tr v-if="!!productList.content?.length > 0" class="align-middle" v-for="(item,index) in productList.content">
-				<td class="fw-bold">{{ index + 1 }}</td>
+			<tr v-if="!!productList.content?.length > 0" class="align-middle"
+			    v-for="(item,index) in productList.content">
+				<td class="fw-bold">{{ '#' + (index + 1) }}</td>
 				<td class="fw-bold link-primary" role="button">{{ item.name }}</td>
 				<td>
-					<img :src="item.imageThumbnail" alt="" width="80px" height="80px">
+					<img :src="'http://localhost/image/product/' + item.imageThumbnail" alt="" width="100px">
 				</td>
 				<td class="fw-bold">{{ formatMoney(item.price) }}</td>
 				<td class="fw-bold">{{ item.discount + '%' }}</td>
-				<td class="fw-bold">{{ formatMoney(item.price * (item.discount / 100)) }}</td>
 				<td>{{ item.category.name }}</td>
-				<td>{{ item.description }}</td>
+				<td>{{ item.description === null ? '' : item.description.substring(0,6).concat('...') }}</td>
 				<td>{{ item.publisher.name }}</td>
 				<td>
-					<span class="badge bg-success" role="button">Chi tiết</span>
+					<span v-if="item.status === 1" class="badge bg-success" role="button">Hoạt động</span>
+					<span v-if="item.status === 2 " class="badge bg-danger" role="button">Hết hàng</span>
 				</td>
 				<td>
 					<button class="btn btn-success btn-sm m-1"
@@ -88,7 +89,7 @@
 			</div>
 		</nav>
 	</div>
-	<product-detail-action-component ref="productDetail"></product-detail-action-component>
+	<product-detail-action-component ref="productDetail" @onSubmit="callEmits"></product-detail-action-component>
 </template>
 
 <script lang="ts">
@@ -97,6 +98,7 @@ import {Product} from "@/core/model/product.model";
 import {Pageable} from "@/core/model/core.base";
 import {ProductService} from "@/core/service/product.service";
 import ProductDetailActionComponent from "@/views/admin/component/product/ProductDetailActionComponent.vue";
+
 export default defineComponent({
 	name: "ProductComponent",
 	components: {
@@ -117,11 +119,10 @@ export default defineComponent({
 				'Hình ảnh',
 				'Giá',
 				'Giảm giá',
-				'Giá sau khi giảm',
-				'Mô tả',
 				'Danh mục',
-				'Nhà sản xuất',
-				'Chi tiết',
+				'Mô tả',
+				'Hãng sản xuất',
+				'Trạng thái',
 				'Chức năng'
 			]
 		}
@@ -143,6 +144,11 @@ export default defineComponent({
 				this.findAll(this.page, this.size);
 			})
 		},
+		callEmits(data : boolean) {
+			if(data){
+				this.findAll(this.page, this.size);
+			}
+		}
 	},
 	created() {
 		this.findAll(this.page, this.size);
@@ -151,4 +157,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+img {
+	width: 80px;
+	height: 60px;
+}
 </style>

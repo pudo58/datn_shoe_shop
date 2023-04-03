@@ -1,13 +1,16 @@
 package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
+import org.datn.app.constant.ProductType;
 import org.datn.app.core.entity.Publisher;
+import org.datn.app.core.entity.extend.PublisherResponse;
 import org.datn.app.core.repo.PublisherRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -56,5 +59,20 @@ public class PublisherServiceImpl implements PublisherService{
             return null;
         }
         return publisherList;
+    }
+
+    @Override
+    public List<PublisherResponse> findAllData() {
+        List<PublisherResponse> publisherResponseList = new ArrayList<>();
+        List<Publisher> publisherList = publisherRepo.findAll();
+        for (Publisher publisher : publisherList) {
+            PublisherResponse publisherResponse = new PublisherResponse();
+            publisherResponse.setId(publisher.getId());
+            publisherResponse.setName(publisher.getName());
+            publisherResponse.setWebsite(publisher.getWebsite());
+            publisherResponse.setTotalProduct(publisher.getProducts().stream().filter(product -> product.getStatus() == ProductType.EFFECT).count());
+            publisherResponseList.add(publisherResponse);
+        }
+        return publisherResponseList;
     }
 }

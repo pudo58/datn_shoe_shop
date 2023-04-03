@@ -1,6 +1,6 @@
 import axios from "axios";
 import {toast} from "vue3-toastify";
-import {Publisher} from "@/core/model/publisher.model";
+import {Publisher, PublisherResponse} from "@/core/model/publisher.model";
 
 export class PublisherService {
     url = "/api/publisher/";
@@ -60,6 +60,12 @@ export class PublisherService {
 
     async findAllPublisher(): Promise<Publisher[]> {
         return await axios.get(this.url + "findAll").then((response) => {
+            return response.data;
+        });
+    }
+
+    async findAllPublisherData(): Promise<PublisherResponse[]> {
+        return await axios.get(this.url + "findAllData").then((response) => {
             return response.data;
         });
     }

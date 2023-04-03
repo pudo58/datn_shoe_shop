@@ -71,4 +71,9 @@ export class AttributeService {
         toast.success("Xóa thành công");
         return response.data;
     }
+
+    async findAllAttribute(): Promise<Array<Attribute>> {
+        const response = await axios.get(this.url + "findAll");
+        return response.data;
+    }
 }

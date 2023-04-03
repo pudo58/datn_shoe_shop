@@ -5,3 +5,6 @@ export class Category {
     isTrash?: boolean;
     created?: Date;
 }
+export class CategoryResponse extends Category {
+    totalProduct?: number;
+}

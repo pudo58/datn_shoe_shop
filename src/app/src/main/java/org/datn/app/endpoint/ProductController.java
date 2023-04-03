@@ -2,21 +2,18 @@ package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.dto.ProductDTO;
+import org.datn.app.core.dto.ProductRequest;
 import org.datn.app.core.entity.Product;
-import org.datn.app.core.service.AttributeService;
-import org.datn.app.core.service.ProductDetailService;
 import org.datn.app.core.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,9 +41,13 @@ public class ProductController {
         return productService.findAll(page, size);
     }
 
-    @PostMapping("/addDetail")
-    public ResponseEntity<?> addProductDetail(@RequestBody ProductDTO product) {
-        return ResponseEntity.ok(productService.addProduct(product));
+    @PostMapping(value = "/addDetail")
+    public ResponseEntity<?> addProductDetail(@RequestBody ProductDTO productDTO) {
+        return productService.addProduct(productDTO);
     }
 
+    @PostMapping(value = "/addImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addImage(MultipartFile file, HttpServletRequest request) throws IOException, IOException {
+        return productService.addImage(file, request);
+    }
 }

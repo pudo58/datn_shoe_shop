@@ -1,5 +1,6 @@
 package org.datn.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,5 +20,6 @@ public class Size implements Serializable {
     private String size;
 
     @OneToMany(mappedBy = "size", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ProductDetail> productDetails;
 }

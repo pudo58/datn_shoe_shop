@@ -3,6 +3,6 @@ export class Size {
     size?: string;
 }
 export class SizeDto {
-    size?: string;
-    quantity?: number;
+    size: string = '';
+    quantity: number = 0;
 }

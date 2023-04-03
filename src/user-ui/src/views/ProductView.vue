@@ -2,86 +2,39 @@
 	<div class="container-fluid mt-5 mb-5">
 		<div class="row g-2">
 			<div class="col-md-3">
-				<div class="t-products p-2"><h6 class="text-uppercase">Loại giày</h6>
+				<div class="t-products p-2"><h6 class="text-uppercase">Bộ lọc</h6>
+					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
+						Danh mục</h6> <span>--</span></div>
 					<div class="p-lists">
-						<div class="d-flex justify-content-between mt-2"><span>Giày đá bóng</span> <span>23</span></div>
-						<div class="d-flex justify-content-between mt-2"><span>Giày chạy</span> <span>46</span></div>
-						<div class="d-flex justify-content-between mt-2"><span>Giày vận động mạnh</span> <span>13</span>
+						<div class="d-flex justify-content-between m-2" v-for="item in categoryList">
+							<input type="checkbox" :value="item.id" :id="'label' + item.name">
+							<label role="button" :for="'label' + item.name">{{ item.name }}</label>
+							<span role="button" title="Tổng số sản phẩm trong danh mục">{{ item.totalProduct }}</span>
 						</div>
 					</div>
 				</div>
 				<div class="processor p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
-						Danh mục</h6> <span>--</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckDefault1">
-							<label class="form-check-label" for="flexCheckDefault1"> Intel Core i7 </label></div>
-						<span>3</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked2"
-						                               checked> <label class="form-check-label" for="flexCheckChecked2">
-							Intel Core
-							i6 </label></div>
-						<span>4</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked3"
-						                               checked> <label class="form-check-label" for="flexCheckChecked3">
-							Intel Core
-							i3 </label></div>
-						<span>14</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked4"
-						                               checked> <label class="form-check-label" for="flexCheckChecked4">
-							Intel
-							Centron </label></div>
-						<span>8</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked5"
-						                               checked> <label class="form-check-label" for="flexCheckChecked5">
-							Intel
-							Pentinum </label></div>
-						<span>14</span></div>
+						Thuộc tính</h6> <span>--</span></div>
+					<div class="d-flex justify-content-between mt-2" v-for="item in attributeList">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name">
+							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
+						</div>
+					</div>
 				</div>
 				<div class="brand p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
 						Hãng sản
 						xuất</h6>
 						<span>--</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckDefault6">
-							<label class="form-check-label" for="flexCheckDefault6"> Apple </label></div>
-						<span>13</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked7"
-						                               checked> <label class="form-check-label" for="flexCheckChecked7">
-							Asus </label></div>
-						<span>4</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked8"
-						                               checked> <label class="form-check-label" for="flexCheckChecked8">
-							Dell </label></div>
-						<span>24</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked9"
-						                               checked> <label class="form-check-label" for="flexCheckChecked9">
-							Lenovo </label></div>
-						<span>18</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked10"
-						                               checked> <label class="form-check-label"
-						                                               for="flexCheckChecked10">
-							Acer </label></div>
-						<span>44</span></div>
+					<div class="d-flex justify-content-between mt-2" v-for="item in publisherList">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" :id="item.name" :value="item.id">
+							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
+						</div>
+						<span role="button" title="Tổng số sản phẩm của nhà sản xuất">{{ item.totalProduct }}</span>
+					</div>
 				</div>
 				<div class="type p-2 mb-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
@@ -124,98 +77,13 @@
 			</div>
 			<div class="col-md-9">
 				<div class="row g-2">
-					<div class="col-md-4">
-						<div class="product py-4"><span class="off bg-success">-25% OFF</span>
-							<div class="text-center"><img src="https://i.imgur.com/nOFet9u.jpg" width="200"></div>
-							<div class="about text-center"><h5>XRD Active Shoes</h5> <span>$1,999.99</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
+					<div class="col-md-4" v-for="item in productList.content">
+						<div class="product py-4"><span class="off bg-success" v-if="item?.discount">{{ item.discount }} % OFF</span>
+							<div class="text-center"><img class="image"
+							                              :src="'http://localhost/image/product/'+item.imageThumbnail">
 							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4"><span class="off bg-warning">SALE</span>
-							<div class="text-center"><img src="https://i.imgur.com/VY0R9aV.png" width="200"></div>
-							<div class="about text-center"><h5>Hygen Smart watch </h5> <span>$123.43</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
+							<div class="about text-center"><h5>{{ item.name }}</h5> <span>{{ item.price }} VND</span>
 							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4">
-							<div class="text-center"><img src="https://i.imgur.com/PSGrLdz.jpg" width="200"></div>
-							<div class="about text-center"><h5>Acer surface book 2.5</h5> <span>$1,999.99</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4"><span class="off bg-success">-10% OFF</span>
-							<div class="text-center"><img src="https://i.imgur.com/OdRSpXG.jpg" width="200"></div>
-							<div class="about text-center"><h5>Dell XPS Surface</h5> <span>$1,245.89</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4"> <!-- <span class="off bg-success">-25% OFF</span> -->
-							<div class="text-center"><img src="https://i.imgur.com/X2AwTCY.jpg" width="200"></div>
-							<div class="about text-center"><h5>Acer surface book 5.5</h5> <span>$2,999.99</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4"><span class="off bg-success">-5% OFF</span>
-							<div class="text-center"><img src="https://i.imgur.com/QQwcBpF.png" width="200"></div>
-							<div class="about text-center"><h5>Xps smart watch 5.0</h5> <span>$999.99</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4"><span class="off bg-warning">SALE</span>
-							<div class="text-center"><img src="https://i.imgur.com/PSGrLdz.jpg" width="200"></div>
-							<div class="about text-center"><h5>Acer surface book 8.5</h5> <span>$3,999.99</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4">
-							<div class="text-center"><img src="https://i.imgur.com/m22OQy9.jpg" width="200"></div>
-							<div class="about text-center"><h5>Tyko Running shoes</h5> <span>$99.99</span></div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="product py-4">
-							<div class="text-center"><img src="https://i.imgur.com/OdRSpXG.jpg" width="200"></div>
-							<div class="about text-center"><h5>Dell surface book 5</h5> <span>$1,999.99</span></div>
 							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
 								<button class="btn btn-primary text-uppercase">Chi tiết</button>
 								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
@@ -224,24 +92,111 @@
 						</div>
 					</div>
 				</div>
+				<div class="d-flex justify-content-between">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination">
+							<li class="page-item">
+								<a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductList(page--,size)">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li class="page-item" v-for="item in productList.totalPages">
+								<a class="page-link" href="#" @click.prevent="getProductList(Number.parseInt(item) -1,15)">{{item}}</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="#" aria-label="Next" @click.prevent="getProductList(page++,size)">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+					<div class="mt-4">
+						<span>Hiển thị</span>
+						<select v-model="sort" @change="sortByCreatedDate">
+							<option value="1">Hàng mới nhất</option>
+							<option value="2">Hàng cũ nhất</option>
+						</select>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
+import {defineComponent} from "vue";
+import {Pageable} from "@/core/model/core.base";
+import {Product} from "@/core/model/product.model";
+import {ProductService} from "@/core/service/product.service";
+import {CategoryService} from "@/core/service/category.service";
+import {CategoryResponse} from "@/core/model/category.model";
+import {PublisherService} from "@/core/service/publisher.service";
+import {PublisherResponse} from "@/core/model/publisher.model";
+import {Attribute} from "@/core/model/attribute.model";
+import {AttributeService} from "@/core/service/attribute.service";
 
+export default defineComponent({
+	name: "Products",
+	data() {
+		return {
+			productList: new Pageable<Product>(),
+			categoryList: Array<CategoryResponse>(),
+			categoryService: new CategoryService(),
+			publisherService: new PublisherService(),
+			publisherList: Array<PublisherResponse>(),
+			productService: new ProductService(),
+			attributeList: Array<Attribute>(),
+			attributeService: new AttributeService(),
+			sort: 1,
+			page: 0,
+			size: 15
+		}
+	},
+	methods: {
+		getProductList(page,size) {
+			this.productService.findAll(page, size).then((res) => {
+				this.productList = res;
+			})
+		},
+		getCategoryList() {
+			this.categoryService.findAllCategoryData().then((res) => {
+				this.categoryList = res;
+			})
+		},
+		getPublisherList() {
+			this.publisherService.findAllPublisherData().then((res) => {
+				this.publisherList = res;
+			})
+		},
+		getAttributeList() {
+			this.attributeService.findAllAttribute().then((res) => {
+				this.attributeList = res;
+			})
+		},
+		sortByCreatedDate() {
+			if(this.sort == 1){
+				this.productList.content.sort((a, b) => {
+					return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime();
+				});
+			}else{
+				this.productList.content.sort((a, b) => {
+					return new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime();
+				});
+			}
+		},
+	},
+	created() {
+		this.getProductList(this.page,this.size);
+		this.getCategoryList();
+		this.getPublisherList();
+		this.getAttributeList();
+	}
+})
 </script>
 
 <style scoped>
 body {
 	background-color: #eeeeee;
-}
-
-.t-products {
-	background-image: linear-gradient(to right top, #5629c0, #5625cb, #5620d5, #551ae0, #5412eb);
-	color: #fff;
-	border-radius: 3px 3px;
 }
 
 .processor {
@@ -336,5 +291,11 @@ button:active {
 	align-items: center;
 	justify-content: center;
 	color: #fff
+}
+
+.image {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
 }
 </style>

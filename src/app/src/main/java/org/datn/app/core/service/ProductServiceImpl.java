@@ -14,13 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -69,6 +73,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> findAll(Integer page, Integer size) {
+        if(page == null) page = 0;
+        if(size == null) size = 15;
+        if(page < 0) page = 0;
+        if(size < 0) size = 15;
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return productRepo.findAll(pageable);
     }
@@ -91,54 +99,57 @@ public class ProductServiceImpl implements ProductService {
 
         // Tạo sản phẩm
         Product product = new Product();
-        try{
+        try {
             product.setName(productDTO.getName());
             product.setPrice(productDTO.getPrice());
             product.setDiscount(productDTO.getDiscount());
-            product.setImageThumbnail(productDTO.getImageThumbnail());
             product.setDescription(productDTO.getDescription());
             product.setCategory(category);
             product.setStatus(ProductType.EFFECT);
             product.setPublisher(publisher);
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             throw new RuntimeException("có lỗi xảy ra khi thêm sản phẩm");
         }
         List<SizeDTO> sizeList = productDTO.getSizeList();
+        if (sizeList.size() == 0) {
+            //throw new RuntimeException("Sản phẩm phải có ít nhất 1 kích thước");
+        }
         for (int i = 0; i < sizeList.size(); i++) {
             ProductDetail productDetail = new ProductDetail();
             if (sizeRepo.findBySize(sizeList.get(i).getSize()) == null) {
-                try{
+                try {
                     Size size = new Size();
                     size.setSize(productDTO.getSizeList().get(i).getSize());
                     sizeRepo.save(size);
                     productDetail.setSize(sizeRepo.findBySize(size.getSize()));
                     productDetail.setProduct(product);
                     Integer quantity = productDTO.getSizeList().get(i).getQuantity();
-                    if(quantity < 0){
+                    if (quantity < 0) {
                         throw new RuntimeException("Số lượng không hợp lệ");
                     }
                     productDetail.setQuantity(quantity);
                     product.getProductDetails().add(productDetail);
                     productDetail.setStatus(ProductDetailConstant.EFFECT);
                     productDetailRepo.save(productDetail);
-                }catch (RuntimeException e){
+                } catch (RuntimeException e) {
                     throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
                 }
             } else {
-               try{
-                   productDetail.setSize(sizeRepo.findBySize(sizeList.get(i).getSize()));
-                   productDetail.setProduct(product);
-                   Integer quantity = productDTO.getSizeList().get(i).getQuantity();
-                   if(quantity < 0){
-                       throw new RuntimeException("Số lượng không hợp lệ");
-                   }
-                   productDetail.setQuantity(quantity);
-                   product.getProductDetails().add(productDetail);
-                   productDetail.setStatus(ProductDetailConstant.EFFECT);
-                   productDetailRepo.save(productDetail);
-               }catch (RuntimeException e){
-                   throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
-               }
+                try {
+                    productDetail.setSize(sizeRepo.findBySize(sizeList.get(i).getSize()));
+                    productDetail.setProduct(product);
+                    Integer quantity = productDTO.getSizeList().get(i).getQuantity();
+                    if (quantity < 0) {
+                        throw new RuntimeException("Số lượng không hợp lệ");
+                    }
+                    productDetail.setQuantity(quantity);
+                    product.getProductDetails().add(productDetail);
+                    productDetail.setStatus(ProductDetailConstant.EFFECT);
+                    productDetailRepo.save(productDetail);
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("có lỗi xảy ra khi thêm kích thước");
+                }
             }
         }
         // Lưu sản phẩm
@@ -149,58 +160,58 @@ public class ProductServiceImpl implements ProductService {
             Attribute attribute = attributeRepo.findById(entry.getKey()).orElseThrow(
                     () -> new RuntimeException("Thuộc tính không tồn tại")
             );
-            switch (attribute.getType()){
-                case AttributeConstant.INTEGER : {
-                   if(!entry.getValue().matches("\\d+")){
-                       throw new RuntimeException("Giá trị thuộc tính số nguyên hợp lệ");
-                   }
-                   break;
+            switch (attribute.getType()) { // cây validate
+                case AttributeConstant.INTEGER: {
+                    if (!entry.getValue().matches("\\d+")) {
+                        throw new RuntimeException("Giá trị thuộc tính số nguyên hợp lệ");
+                    }
+                    break;
                 }
-                case AttributeConstant.STRING : {
-                    if(entry.getValue().length() > 255){
+                case AttributeConstant.STRING: {
+                    if (entry.getValue().length() > 255) {
                         throw new RuntimeException("Giá trị thuộc tính chuỗi không hợp lệ");
                     }
                     break;
                 }
                 case AttributeConstant.DATE: {
-                    if(!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4}")){
+                    if (!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4}")) {
                         throw new RuntimeException("Giá trị thuộc tính ngày không hợp lệ");
                     }
                     break;
                 }
                 case AttributeConstant.BOOLEAN: {
-                    if(!entry.getValue().matches("true|false")){
+                    if (!entry.getValue().matches("true|false")) {
                         throw new RuntimeException("Giá trị thuộc tính boolean không hợp lệ");
                     }
                     break;
                 }
                 case AttributeConstant.DOUBLE: {
-                    if(!entry.getValue().matches("\\d+\\.\\d+")){
+                    if (!entry.getValue().matches("\\d+\\.\\d+")) {
                         throw new RuntimeException("Giá trị thuộc tính số thực không hợp lệ");
                     }
                     break;
                 }
                 case AttributeConstant.TIME: {
-                    if(!entry.getValue().matches("\\d{2}:\\d{2}:\\d{2}")){
+                    if (!entry.getValue().matches("\\d{2}:\\d{2}:\\d{2}")) {
                         throw new RuntimeException("Giá trị thuộc tính giờ không hợp lệ");
                     }
                     break;
                 }
                 case AttributeConstant.DATETIME: {
-                    if(!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}:\\d{2}")){
+                    if (!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4} \\d{2}:\\d{2}:\\d{2}")) {
                         throw new RuntimeException("Giá trị thuộc tính ngày giờ không hợp lệ");
                     }
                     break;
                 }
             }
-            try{
+            try {
                 AttributeData attributeData = new AttributeData();
                 attributeData.setAttribute(attribute);
                 attributeData.setProduct(product);
                 attributeData.setValue(entry.getValue());
                 attributeData.setType(attribute.getType());
                 attributeDataRepo.save(attributeData);
-            }catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 throw new RuntimeException("có lỗi xảy ra khi thêm thuộc tính");
             }
         }
@@ -210,5 +221,18 @@ public class ProductServiceImpl implements ProductService {
         response.put("message", "Thêm sản phẩm thành công");
         response.put("status", HttpStatus.OK.value());
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<?> addImage(MultipartFile file, HttpServletRequest request) throws IOException {
+        Long id = Long.parseLong(request.getParameter("id"));
+        Product product = productRepo.findById(id).orElseThrow(
+                () -> new RuntimeException("Sản phẩm không tồn tại")
+        );
+        Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\product", file.getOriginalFilename());
+        product.setImageThumbnail(file.getOriginalFilename());
+        if(productRepo.save(product) != null)
+            Files.write(filePath, file.getBytes());
+        return ResponseEntity.ok(product);
     }
 }

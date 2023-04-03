@@ -22,6 +22,6 @@ export class ProductDto {
     description?: string;
     categoryId?: number;
     publisherId?: number;
-    sizeList?: Array<SizeDto>;
-    attributeValues?: Map<number, string>;
+    sizeList?: Array<SizeDto> = [] as Array<SizeDto>;
+    attributeValues?: Map<number, string> = new Map<number, string>();
 }

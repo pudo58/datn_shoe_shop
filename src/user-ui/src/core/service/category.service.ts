@@ -1,7 +1,7 @@
 import axios from "axios";
 import {toast} from "vue3-toastify";
 import {Pageable} from "@/core/model/core.base";
-import {Category} from "@/core/model/category.model";
+import {Category, CategoryResponse} from "@/core/model/category.model";
 
 export class CategoryService {
     url = "/api/category/";
@@ -55,6 +55,12 @@ export class CategoryService {
 
     async findAllCategory(): Promise<Category[]> {
         return await axios.get(this.url + "findAll").then((response) => {
+            return response.data;
+        });
+    }
+
+    async findAllCategoryData(): Promise<CategoryResponse[]> {
+        return await axios.get(this.url + "findAllData").then((response) => {
             return response.data;
         });
     }

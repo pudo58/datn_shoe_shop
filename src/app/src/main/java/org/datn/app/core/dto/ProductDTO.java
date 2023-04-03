@@ -1,7 +1,6 @@
 package org.datn.app.core.dto;
 
 import lombok.Data;
-import org.datn.app.core.entity.Size;
 
 import java.util.List;
 import java.util.Map;

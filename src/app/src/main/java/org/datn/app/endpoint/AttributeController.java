@@ -67,6 +67,12 @@ public class AttributeController {
     public List<Attribute> addAll(@RequestBody AttributeAddAllRequest request){
         return attributeService.addAll(request);
     }
+
+    @GetMapping("/findAll")
+    public List<Attribute> findAll(){
+        return attributeService.findAll();
+    }
+
     @GetMapping("/findByCategoryId/{id}")
     public List<Attribute> findByCategoryId(@PathVariable Long id){
         return attributeService.findByCategoryId(id);

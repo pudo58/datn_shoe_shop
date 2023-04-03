@@ -39,7 +39,7 @@
 				<td>{{ item?.type }}</td>
 				<td>{{ dateTime(item?.created + '') }}</td>
 				<td>
-					<span v-if="item.isTrash === false" class="badge bg-success">Hoạt động</span>
+					<span v-if="item?.isTrash === false" class="badge bg-success">Hoạt động</span>
 					<span v-else class="badge bg-danger">Khóa</span>
 				</td>
 				<td>

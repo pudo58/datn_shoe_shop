@@ -1,13 +1,16 @@
 package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
+import org.datn.app.constant.ProductType;
 import org.datn.app.core.entity.Category;
+import org.datn.app.core.entity.extend.CategoryResponse;
 import org.datn.app.core.repo.CategoryRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -54,5 +57,21 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category findByName(String name) {
         return categoryRepo.findByName(name);
+    }
+
+    @Override
+    public List<CategoryResponse> findAllData() {
+        List<CategoryResponse> responseList = new ArrayList<>();
+        for (Category item : categoryRepo.findAll()) {
+            CategoryResponse response = new CategoryResponse();
+            response.setId(item.getId());
+            response.setName(item.getName());
+            response.setDescription(item.getDescription());
+            response.setIsTrash(item.getIsTrash());
+            long count =  item.getProducts().stream().filter(product -> product.getStatus() == ProductType.EFFECT).count();
+            response.setTotalProduct(count);
+            responseList.add(response);
+        }
+        return responseList;
     }
 }

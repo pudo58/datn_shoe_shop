@@ -4,8 +4,9 @@ import {toast} from "vue3-toastify";
 
 export class ProductService {
     url = "/api/product/";
+
     async findAll(page: number, size: number) {
-        const response = await axios.get(this.url +"page/" + page + "/" + size);
+        const response = await axios.get(this.url + "page/" + page + "/" + size);
         return response.data;
     }
 
@@ -15,9 +16,10 @@ export class ProductService {
     }
 
     async save(productDto: ProductDto) {
+
         const response = await axios.post(this.url + "addDetail", productDto);
         try {
-            if (response.data !== null  && response.data.status == 200) {
+            if (response.data !== null && response.data.status == 200) {
                 toast.success("Thêm sản phẩm thành công");
                 return response.data;
             }
@@ -38,15 +40,34 @@ export class ProductService {
         }
     }
 
-    async delete(id: number) {
-        const response = await axios.delete(this.url + "detele" + id);
+    async addImage(id: number, file: File) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await axios.post(this.url + "addImage?id=" + id, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         try {
             if (response.data !== null) {
-                toast.success("Xóa sản phẩm thành công");
                 return response.data;
             }
         } catch (e) {
-            toast.error("Xóa sản phẩm thất bại");
+            toast.error("Thêm ảnh thất bại");
+        }
+    }
+
+    async delete(id: number) {
+        if (confirm("Bạn có muốn xóa sản phẩm không ?")) {
+            const response = await axios.delete(this.url + "delete/" + id);
+            try {
+                if (response.data !== null) {
+                    toast.success("Xóa sản phẩm thành công");
+                    return response.data;
+                }
+            } catch (e) {
+                toast.error("Xóa sản phẩm thất bại");
+            }
         }
     }
 

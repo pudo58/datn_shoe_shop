@@ -2,6 +2,7 @@ package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.Publisher;
+import org.datn.app.core.entity.extend.PublisherResponse;
 import org.datn.app.core.service.PublisherService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,11 @@ public class PublisherController {
     @GetMapping("/findAll")
     public List<Publisher> getAllPublisher(){
         return publisherService.findAll();
+    }
+
+    @GetMapping("/findAllData")
+    public List<PublisherResponse> findAll(){
+        return publisherService.findAllData();
     }
 
     @GetMapping("/getByName/{name}")

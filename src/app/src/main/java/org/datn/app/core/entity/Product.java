@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,8 @@ public class Product implements Serializable {
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "product_name")
+
+    @Column(name = "product_name",columnDefinition = "TEXT",length = 65535)
     private String name;
 
     private Double price;
@@ -30,6 +32,9 @@ public class Product implements Serializable {
     private String description;
 
     private Integer status;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate = new Date();
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Category.class)
     @JoinColumn(name = "category_id")
