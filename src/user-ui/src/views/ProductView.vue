@@ -149,13 +149,14 @@ export default defineComponent({
 			attributeService: new AttributeService(),
 			attributeIdListSelected: Array<number>(),
 			productSearchRequest : new ProductSearchRequest(),
+			selectedIds: Array<number>(),
 			sort: 1,
 			page: 0,
 			size: 15
 		}
 	},
 	methods: {
-		getProductList(page,size) {
+		getProductList(page : number,size : number) {
 			this.productService.findAll(page, size).then((res) => {
 				this.productList = res;
 			})
@@ -177,12 +178,12 @@ export default defineComponent({
 		},
 		sortByCreatedDate() {
 			if(this.sort == 1){
-				this.productList.content.sort((a, b) => {
-					return new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime();
+				this.productList.content?.sort((a : Product, b : Product) => {
+					return new Date(b.createdDate || new Date()).getTime() - new Date(a.createdDate || new Date()).getTime();
 				});
 			}else{
-				this.productList.content.sort((a, b) => {
-					return new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime();
+				this.productList.content?.sort((a, b) => {
+					return new Date(a.createdDate|| new Date()).getTime() - new Date(b.createdDate|| new Date()).getTime();
 				});
 			}
 		},
@@ -194,7 +195,7 @@ export default defineComponent({
 		},
 		checked(){
 			// Lọc ra các giá trị được chọn từ mảng attributeIdList
-			this.selectedIds = this.productSearchRequest.attributeIdList.filter(value => value !== null);
+			this.selectedIds = this.productSearchRequest.attributeIdList?.filter(value => value !== null) || [];
 		},
 		redirectDetail(id: number) {
 			this.$router.push({name: 'ProductDetail', params: {id: id}});

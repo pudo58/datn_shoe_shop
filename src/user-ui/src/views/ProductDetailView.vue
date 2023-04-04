@@ -46,7 +46,7 @@ export default defineComponent({
 	name: "ProductDetailView",
 	data () {
 		return {
-			productId : this.$route.params.id,
+			productId : this.$route.params.id as string ,
 			product : new Product(),
 			productService : new ProductService(),
 			productDetailList : new Array<ProductDetail>(),
@@ -54,7 +54,8 @@ export default defineComponent({
 	},
 	methods : {
 		getProduct(){
-			this.productService.findById(this.productId).then((response) => {
+			console.log(this.productId);
+			this.productService.findById(Number.parseInt(this.productId)).then((response) => {
 				this.product = response;
 				//this.productDetailList = this.product.productDetailList;
 			}).catch((error) => {

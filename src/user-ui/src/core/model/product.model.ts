@@ -12,6 +12,7 @@ export class Product {
     imageThumbnail?: string;
     publisher?: Publisher;
     category?: Category;
+    createdDate?: Date;
 }
 
 export class ProductDto {
