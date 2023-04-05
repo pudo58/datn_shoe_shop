@@ -1,7 +1,7 @@
 package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
-import org.datn.app.constant.ProductType;
+import org.datn.app.constant.ProductConstant;
 import org.datn.app.core.entity.Category;
 import org.datn.app.core.entity.extend.CategoryResponse;
 import org.datn.app.core.repo.CategoryRepo;
@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService{
             response.setName(item.getName());
             response.setDescription(item.getDescription());
             response.setIsTrash(item.getIsTrash());
-            long count =  item.getProducts().stream().filter(product -> product.getStatus() == ProductType.EFFECT).count();
+            long count =  item.getProducts().stream().filter(product -> product.getStatus() == ProductConstant.EFFECT).count();
             response.setTotalProduct(count);
             responseList.add(response);
         }

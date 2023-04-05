@@ -1,9 +1,11 @@
 package org.datn.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,15 +37,21 @@ public class Voucher implements Serializable {
 
     private Integer quantity;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = VoucherType.class)
-    @JoinColumn(name = "voucher_type_id")
-    private VoucherType voucherType;
+    private Integer limitPerUser;
+
+    private Integer discountType;
+
+    private Integer discountValue;
+
+    private Boolean isAutoApply; // TODO : tự động sử dụng khi nguời dùng đủ điều kiện
+
+    private Integer status;
 
     @OneToMany(mappedBy = "voucher",cascade = CascadeType.ALL,targetEntity = Transaction.class)
-    private List<Transaction> transactions;
+    @JsonIgnore
+    private List<Transaction> transactions = new ArrayList<>();
 
-    // 1 product have many voucher
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Product.class)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToMany(mappedBy = "voucher",cascade = CascadeType.ALL,targetEntity = VoucherProductCategoryLink.class)
+    @JsonIgnore
+    private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 }

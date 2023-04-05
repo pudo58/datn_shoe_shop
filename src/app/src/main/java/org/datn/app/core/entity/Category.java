@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -38,4 +39,8 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Product> products;
+
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 }

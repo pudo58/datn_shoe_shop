@@ -1,7 +1,7 @@
 package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
-import org.datn.app.constant.ProductType;
+import org.datn.app.constant.ProductConstant;
 import org.datn.app.core.entity.Publisher;
 import org.datn.app.core.entity.extend.PublisherResponse;
 import org.datn.app.core.repo.PublisherRepo;
@@ -70,7 +70,7 @@ public class PublisherServiceImpl implements PublisherService{
             publisherResponse.setId(publisher.getId());
             publisherResponse.setName(publisher.getName());
             publisherResponse.setWebsite(publisher.getWebsite());
-            publisherResponse.setTotalProduct(publisher.getProducts().stream().filter(product -> product.getStatus() == ProductType.EFFECT).count());
+            publisherResponse.setTotalProduct(publisher.getProducts().stream().filter(product -> product.getStatus() == ProductConstant.EFFECT).count());
             publisherResponseList.add(publisherResponse);
         }
         return publisherResponseList;

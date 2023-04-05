@@ -32,7 +32,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findByUserIdAndAndProductDetailId(Long userId, Long productDetailId) {
-        // binary search
         User user = userService.findById(userId);
         for(Cart cart : user.getCarts()) {
             if(cart.getProductDetail().getId().equals(productDetailId))

@@ -26,6 +26,9 @@ public class Order implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created = new Date();
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modified = new Date();
+
     private String paymentMethod;
 
     private String note;

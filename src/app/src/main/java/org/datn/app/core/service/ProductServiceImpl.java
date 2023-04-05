@@ -3,7 +3,7 @@ package org.datn.app.core.service;
 import lombok.RequiredArgsConstructor;
 import org.datn.app.constant.AttributeConstant;
 import org.datn.app.constant.ProductDetailConstant;
-import org.datn.app.constant.ProductType;
+import org.datn.app.constant.ProductConstant;
 import org.datn.app.core.dto.ProductDTO;
 import org.datn.app.core.dto.ProductSearchRequest;
 import org.datn.app.core.dto.SizeDTO;
@@ -107,7 +107,7 @@ public class ProductServiceImpl implements ProductService {
             product.setDiscount(productDTO.getDiscount());
             product.setDescription(productDTO.getDescription());
             product.setCategory(category);
-            product.setStatus(ProductType.EFFECT);
+            product.setStatus(ProductConstant.EFFECT);
             product.setPublisher(publisher);
         } catch (RuntimeException e) {
             throw new RuntimeException("có lỗi xảy ra khi thêm sản phẩm");

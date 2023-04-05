@@ -1,6 +1,6 @@
 package org.datn.app.constant;
 
-public class PaymentMethod {
+public class PaymentMethodConstant {
     // tiền mặt
     public static final String COD = "COD";
     // chuyển khoản ngân hàng

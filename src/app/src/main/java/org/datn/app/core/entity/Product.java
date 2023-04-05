@@ -40,14 +40,9 @@ public class Product implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
-
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Publisher.class)
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
-
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = Voucher.class)
-    @JsonIgnore
-    private List<Voucher> vouchers = new ArrayList<>();
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
     @JsonIgnore
@@ -56,5 +51,9 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product",cascade = CascadeType.MERGE,targetEntity = AttributeData.class)
     @JsonIgnore
     private List<AttributeData> attributeData = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = VoucherProductCategoryLink.class)
+    @JsonIgnore
+    private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 
 }
