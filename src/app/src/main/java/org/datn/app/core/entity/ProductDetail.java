@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,5 +29,9 @@ public class ProductDetail implements Serializable {
 
     @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = Cart.class)
     @JsonIgnore
-    private List<Cart> carts;
+    private List<Cart> carts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = OrderDetail.class)
+    @JsonIgnore
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }

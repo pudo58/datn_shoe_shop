@@ -3,15 +3,19 @@ package org.datn.app.core.service;
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.dto.CartRequest;
 import org.datn.app.core.entity.Cart;
+import org.datn.app.core.entity.Order;
 import org.datn.app.core.entity.ProductDetail;
 import org.datn.app.core.entity.User;
 import org.datn.app.core.repo.CartRepo;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,10 +26,13 @@ public class CartServiceImpl implements CartService {
     private final CartRepo cartRepo;
     private final UserService userService;
     private final ProductDetailService productDetailService;
-
+    private final ProductService productService;
+    private final OrderService orderService;
+    private final OrderDetailService orderDetailService;
 
     @Override
     public Cart findByUserIdAndAndProductDetailId(Long userId, Long productDetailId) {
+        // binary search
         User user = userService.findById(userId);
         for(Cart cart : user.getCarts()) {
             if(cart.getProductDetail().getId().equals(productDetailId))
@@ -47,7 +54,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart doInsert(Cart cart) {
-        return cartRepo.save(cart);
+        return null;
     }
 
     @Override
@@ -88,7 +95,7 @@ public class CartServiceImpl implements CartService {
      *   @return ResponseEntity<String>
      */
     @Override
-    public synchronized ResponseEntity<String> addToCart(CartRequest cartRequest) {
+    public ResponseEntity<String> addToCart(CartRequest cartRequest) {
         Long productDetailId = cartRequest.getProductDetailId();
         Long userId = cartRequest.getUserId();
         Integer quantity = cartRequest.getQuantity();
@@ -107,7 +114,10 @@ public class CartServiceImpl implements CartService {
         if (!quantity.toString().matches("[0-9]+"))
             return ResponseEntity.badRequest().body("Số lượng sản phẩm phải là số nguyên dương");
         User user1 = userService.findById(userId);
-        Cart cart = this.findByUserIdAndAndProductDetailId(user1.getId(), productDetailId);
+        Cart cart = new Cart();
+        cart.setUser(user1);
+        cart.setProductDetail(productDetail);
+        cart = cartRepo.findOne(Example.of(cart)).orElse(null);
         synchronized (cart) {
             if (cart != null) {
                 cart.setQuantity(cart.getQuantity() + quantity);

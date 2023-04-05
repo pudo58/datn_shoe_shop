@@ -159,6 +159,8 @@ import {Publisher} from "@/core/model/publisher.model";
 import {ProductDetailService} from "@/core/service/product-detail.service";
 import {Size, SizeDto} from "@/core/model/size.model";
 import {SizeService} from "@/core/service/size.service";
+import {Attribute} from "@/core/model/attribute.model";
+import {AttributeService} from "@/core/service/attribute.service";
 
 export default defineComponent({
 	name: "ProductDetailActionComponent",
@@ -178,6 +180,8 @@ export default defineComponent({
 			sizeList: new Array<Size>(),
 			sizeListSelected: [] as string[],
 			quantityList: [] as number[],
+			attributeList : new Array<Attribute>(),
+			attributeService : new AttributeService()
 		}
 	},
 	methods: {
@@ -221,8 +225,10 @@ export default defineComponent({
 		openModal() {
 			document.getElementById('show-modal')?.click();
 		},
-		handleImageChange(e: any) {
-
+		changeCategoryCombo(){
+			this.attributeService.findAllByCategoryId(this.productDto.categoryId || 0).then((res) => {
+				this.attributeList = res;
+			});
 		}
 	},
 	created() {

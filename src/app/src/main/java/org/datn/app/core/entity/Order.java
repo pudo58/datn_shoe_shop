@@ -24,7 +24,11 @@ public class Order implements Serializable {
     private String phoneNumber;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created;
+    private Date created = new Date();
+
+    private String paymentMethod;
+
+    private String note;
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = User.class)
     @JoinColumn(name = "user_id")

@@ -49,10 +49,6 @@ public class Product implements Serializable {
     @JsonIgnore
     private List<Voucher> vouchers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = OrderDetail.class)
-    @JsonIgnore
-    private List<OrderDetail> orderDetails = new ArrayList<>();
-
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
     @JsonIgnore
     private List<ProductDetail> productDetails = new ArrayList<>();
