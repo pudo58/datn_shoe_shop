@@ -19,4 +19,13 @@ public class OrderConstant {
     public static final Integer RETURNED = 4;   // trả hàng
     public static final Integer EXCHANGED = 5;  // đổi hàng
 
+
+    public static final Long DELIVERY_FEE = 30000L; // phí vận chuyển
+    public static final Long DELIVERY_FEE_FREE = 0L; // miễn phí vận chuyển
+    public static final Long DELIVERY_FEE_FREE_MIN = 1000000L; // đơn hàng trên 1 triệu miễn phí vận chuyển
+
+
+    public static final Long TIME_DELIVERY = 3L; // thời gian giao hàng
+    public static final Long TIME_RETURN = 7L; // thời gian trả hàng
+    public static final Long TIME_EXCHANGE = 7L; // thời gian đổi hàng
 }
