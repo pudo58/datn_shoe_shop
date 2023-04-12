@@ -167,7 +167,8 @@ export default defineComponent({
 			attributeList: new Array<Attribute>(),
 			attributeService: new AttributeService(),
 			id : 0 as number,
-			isUpdate: false as boolean
+			isUpdate: false as boolean,
+			attributeValues : new Map<string, string>()
 		}
 	},
 	methods: {
@@ -193,7 +194,7 @@ export default defineComponent({
 		getCategoryList() {
 			this.categoryService.findAllCategory().then((res) => {
 				this.categoryList = res;
-			})
+			});
 		},
 		getPublisherList() {
 			this.publisherService.findAllPublisher().then((res) => {

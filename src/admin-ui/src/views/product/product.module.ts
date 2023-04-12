@@ -10,7 +10,7 @@ const ProductModule: Array<RouteRecordRaw> = [
     {
         path: '/admin/product/new',
         component: ProductDetailComponent,
-        name: 'ProductDetailComponent'
+        name: 'ProductDetailAddComponent'
     },
     {
         path: '/admin/product/:id',
