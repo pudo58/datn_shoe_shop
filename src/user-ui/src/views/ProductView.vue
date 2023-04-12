@@ -36,44 +36,6 @@
 						<span role="button" title="Tổng số sản phẩm của nhà sản xuất">{{ item.totalProduct }}</span>
 					</div>
 				</div>
-				<div class="type p-2 mb-2">
-					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
-						Type</h6>
-						<span>--</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckDefault">
-							<label class="form-check-label" for="flexCheckDefault"> Hybrid </label></div>
-						<span>23</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked11"
-						                               checked> <label class="form-check-label"
-						                                               for="flexCheckChecked11">
-							Laptop </label></div>
-						<span>24</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked12"
-						                               checked> <label class="form-check-label"
-						                                               for="flexCheckChecked12">
-							Desktop </label></div>
-						<span>14</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked13"
-						                               checked> <label class="form-check-label"
-						                                               for="flexCheckChecked13">
-							Touch </label></div>
-						<span>28</span></div>
-					<div class="d-flex justify-content-between mt-2">
-						<div class="form-check"><input class="form-check-input" type="checkbox" value=""
-						                               id="flexCheckChecked14"
-						                               checked> <label class="form-check-label"
-						                                               for="flexCheckChecked14">
-							Tablets </label></div>
-						<span>44</span></div>
-				</div>
 			</div>
 			<div class="col-md-9">
 				<div class="row g-2">

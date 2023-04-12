@@ -87,7 +87,7 @@ export class UserService {
             });
 
             if (response.data !== null && response.data !== undefined) {
-                localStorage.setItem("access_token", response.data.data);
+                localStorage.setItem("access_token","Bearer " + response.data.access_token);
                 localStorage.setItem("user", JSON.stringify(this.userCurrent));
                 toast.success("Đăng nhập thành công");
                 router.push("/");

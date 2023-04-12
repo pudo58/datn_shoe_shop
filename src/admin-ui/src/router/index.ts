@@ -5,16 +5,11 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/admin',
         component: () => import('@/views/DashboardView.vue'),
-        name: 'DashboardView',
-        children: [
-            {
-                path: '/',
-                name: 'DashboardView',
-                component: () => import('@/views/DashboardView.vue')
-            },
-            ...CategoryModule,
-        ]
-    }
+        name: 'DashboardView'
+    },
+    ...CategoryModule,
+
+
 ]
 
 const router = createRouter({

@@ -87,19 +87,6 @@
 										       disabled>
 									</div>
 								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Designation</label>
-										<input type="text" class="form-control" value="UI Developer">
-									</div>
-								</div>
-								<div class="col-md-12">
-									<div class="form-group">
-										<label>Bio</label>
-										<textarea class="form-control"
-										          rows="4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore vero enim error similique quia numquam ullam corporis officia odio repellendus aperiam consequatur laudantium porro voluptatibus, itaque laboriosam veritatis voluptatum distinctio!</textarea>
-									</div>
-								</div>
 							</div>
 							<div>
 								<button class="btn btn-primary" @click.prevent="update">Cập nhật</button>
