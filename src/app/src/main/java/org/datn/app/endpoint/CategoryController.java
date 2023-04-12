@@ -37,8 +37,11 @@ public class CategoryController {
         if (category.getName().isEmpty()) {
             errorList.add("Tên danh mục không được để trống");
         }
-        if (categoryService.findByName(category.getName()) != null) {
-            errorList.add("Tên danh mục đã tồn tại");
+        Category category1 = categoryService.findById(id);
+        if(!(category.getName().equals(category1.getName()))){
+            if (categoryService.findByName(category.getName()) != null) {
+                errorList.add("Tên danh mục đã tồn tại");
+            }
         }
         if (errorList.size() > 0) {
             return ResponseEntity.badRequest().body(errorList);

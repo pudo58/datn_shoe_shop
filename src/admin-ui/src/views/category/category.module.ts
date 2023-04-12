@@ -1,13 +1,14 @@
 import {RouteRecordRaw} from "vue-router";
 import CategoryDetailComponent from "@/views/category/CategoryDetailComponent.vue";
+import CategoryComponent from "@/views/category/CategoryComponent.vue";
 const CategoryModule: Array<RouteRecordRaw> = [
     {
         path: '/admin/category',
-        component: () => import('@/views/category/CategoryComponent.vue'),
+        component: CategoryComponent,
         name: 'CategoryComponent'
     },
     {
-        path: '/admin/category/add',
+        path: '/admin/category/new',
         component: CategoryDetailComponent,
         name: 'CategoryAddComponent'
     },

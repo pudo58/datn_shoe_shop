@@ -1,5 +1,9 @@
 import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
 import CategoryModule from "@/views/category/category.module";
+import UserModule from "@/views/user/user.module";
+import PublisherModule from "@/views/publisher/publisher.module";
+import AttributeModule from "@/views/attribute/attribute.module";
+import ProductModule from "@/views/product/product.module";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -7,14 +11,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/DashboardView.vue'),
         name: 'DashboardView'
     },
+    ...UserModule,
+    ...PublisherModule,
+    ...AttributeModule,
+    ...ProductModule,
     ...CategoryModule,
-
-
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes : routes
+    routes
 })
 
 export default router

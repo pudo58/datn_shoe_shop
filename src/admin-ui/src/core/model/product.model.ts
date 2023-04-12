@@ -15,12 +15,7 @@ export class Product {
     createdDate?: Date;
 }
 
-export class ProductDto {
-    name?: string;
-    price?: number;
-    discount?: number;
-    imageThumbnail?: string;
-    description?: string;
+export class ProductDto extends Product{
     categoryId?: number;
     publisherId?: number;
     sizeList?: Array<SizeDto> = [] as Array<SizeDto>;

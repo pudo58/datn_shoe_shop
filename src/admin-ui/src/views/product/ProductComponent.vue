@@ -14,13 +14,9 @@
 		<div class="col"></div>
 		<div class="col">
 			<button class="btn btn-success m-1"
-			        @click.prevent="$refs.productDetail.openModal();isUpdate=false;product = {}">
+			        @click.prevent="$router.push('/admin/product')">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
-			</button>
-			<button class="btn btn-danger m-1">
-				<i class="bi bi-trash-fill"></i>
-				Xóa
 			</button>
 		</div>
 	</div>
@@ -55,7 +51,7 @@
 				</td>
 				<td>
 					<button class="btn btn-success btn-sm m-1"
-					        @click.prevent="$refs.productDetail.openModal();product = item;">
+					        @click.prevent="$router.push('/admin/product/' + item.id)">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 					<button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">
@@ -89,7 +85,6 @@
 			</div>
 		</nav>
 	</div>
-	<product-detail-action-component ref="productDetail" @onSubmit="callEmits"></product-detail-action-component>
 </template>
 
 <script lang="ts">
@@ -97,16 +92,12 @@ import {defineComponent} from 'vue'
 import {Product} from "@/core/model/product.model";
 import {Pageable} from "@/core/model/core.base";
 import {ProductService} from "@/core/service/product.service";
-import ProductDetailActionComponent from "@/views/product/ProductDetailActionComponent.vue";
+import ProductDetailActionComponent from "@/views/product/ProductDetailComponent.vue";
 
 export default defineComponent({
 	name: "ProductComponent",
-	components: {
-		ProductDetailActionComponent
-	},
 	data() {
 		return {
-			product: new Product(),
 			productList: new Pageable<Product>(),
 			productService: new ProductService(),
 			page: 0 as number,

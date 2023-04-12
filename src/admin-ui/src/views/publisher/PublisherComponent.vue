@@ -13,8 +13,7 @@
 		</div>
 		<div class="col"></div>
 		<div class="col">
-			<button class="btn btn-success m-1"
-			        @click.prevent="$refs.publisherDetail.openModal();isUpdate=false;publisher = {}">
+			<button class="btn btn-success m-1">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
 			</button>
@@ -41,7 +40,7 @@
 				</td>
 				<td>
 					<button class="btn btn-success btn-sm m-1"
-					        @click.prevent="$refs.publisherDetail.openModal();publisher = item;">
+					        @click.prevent="$router.push('/admin/publisher/'+item.id)">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 					<button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">
@@ -75,8 +74,6 @@
 			</div>
 		</nav>
 	</div>
-	<publisher-detail-component ref="publisherDetail" :publisher="publisher"
-	                            @added-publisher="getEmit"></publisher-detail-component>
 </template>
 
 <script lang="ts">
@@ -84,7 +81,7 @@ import {defineComponent} from 'vue'
 import {Publisher} from "@/core/model/publisher.model";
 import {Pageable} from "@/core/model/core.base";
 import {PublisherService} from "@/core/service/publisher.service";
-import PublisherDetailComponent from "@/views/publisher/PublisherDetail.vue";
+import PublisherDetailComponent from "@/views/publisher/PublisherDetailComponent.vue";
 import {toast} from "vue3-toastify";
 
 export default defineComponent({
@@ -95,7 +92,6 @@ export default defineComponent({
 	data() {
 		return {
 			publisherList: new Pageable<Publisher>(),
-			publisher: new Publisher(),
 			publisherService: new PublisherService(),
 			page: 0,
 			size: 10,
@@ -127,7 +123,7 @@ export default defineComponent({
 			if (this.name == null || this.name == '')
 				await this.getPublisher(this.page, this.size);
 			const res = await this.publisherService.findByName(this.name);
-			if(res){
+			if (res) {
 				this.publisherList.content?.push(res);
 			}
 		}

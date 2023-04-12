@@ -14,7 +14,7 @@
 		</div>
 		<div class="col"></div>
 		<div class="col">
-			<button class="btn btn-success m-1" @click.prevent="$refs.userDetail.openModal();isUpdate=false;user = {}">
+			<button class="btn btn-success m-1">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
 			</button>
@@ -81,12 +81,11 @@
 					{{ dateTime(item.modified + '') }}
 				</td>
 				<td>
-					<span v-if="item.status === 1" class="badge bg-success">Hoạt động</span>
+					<span v-if="item.status === UserStatusConstant.STATUS_ACTIVE" class="badge bg-success">Hoạt động</span>
 					<span v-else class="badge bg-danger">Khóa</span>
 				</td>
 				<td>
-					<button class="btn btn-success btn-sm m-1"
-					        @click.prevent="$refs.userDetail.openModal();user = item; isUpdate= true">
+					<button class="btn btn-success btn-sm m-1" @click.prevent="$router.push('/admin/user/'+item.id)">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 					<button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">
@@ -120,8 +119,6 @@
 			</div>
 		</nav>
 	</div>
-	<user-detail-component :user="user" ref="userDetail" :is-update="isUpdate"
-	                       @added-user="userAdded"></user-detail-component>
 </template>
 
 <script lang="ts">
@@ -129,17 +126,14 @@ import {defineComponent} from 'vue';
 import {toast} from 'vue3-toastify';
 import {Pageable} from "@/core/model/core.base";
 import {UserService} from '@/core/service/user.service';
-import {User, UserFindRequest} from "@/core/model/user.model";
+import {User, UserFindRequest, UserStatusConstant} from "@/core/model/user.model";
 import moment from 'moment/moment';
-import UserDetailComponent from "@/views/user/UserDetailComponent.vue";
 
 export default defineComponent({
 	name: "UserComponent",
-	components: {
-		UserDetailComponent
-	},
 	data() {
 		return {
+			UserStatusConstant: UserStatusConstant,
 			userList: new Pageable<User>(),
 			user: new User(),
 			loading: false,

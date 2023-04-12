@@ -7,6 +7,7 @@ import {Pageable} from "@/core/model/core.base";
 export class UserService {
     public userCurrent: User = new User();
     url = "/api/user/";
+
     constructor() {
     }
 
@@ -49,7 +50,12 @@ export class UserService {
         });
     }
 
-    // @ts-ignore
+    async getUserById(id: number) : Promise<User> {
+        return await axios.get(this.url + "get/" + id).then((response) => {
+            return response.data;
+        });
+    }
+
     async login(username: string, password: string): Promise<boolean> {
         try {
             if (username === null || username === undefined || username === "") {

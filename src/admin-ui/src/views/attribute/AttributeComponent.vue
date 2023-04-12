@@ -13,7 +13,7 @@
 		</div>
 		<div class="col"></div>
 		<div class="col">
-			<button class="btn btn-success m-1" @click.prevent="$router.push('/admin/dashboard/attribute/new')">
+			<button class="btn btn-success m-1" @click.prevent="$router.push('/admin/attribute/new')">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
 			</button>
@@ -88,15 +88,9 @@ import {Category} from "@/core/model/category.model";
 import moment from 'moment/moment';
 import {Attribute} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
-import AttributeDetailComponent from "@/views/attribute/AttributeDetailComponent.vue";
-
-;
 
 export default defineComponent({
 	name: "AttributeComponent",
-	components: {
-		AttributeDetailComponent,
-	},
 	data() {
 		return {
 			attributeList: new Pageable<Attribute>(),
@@ -153,7 +147,7 @@ export default defineComponent({
 			})
 		},
 		redirect(id : number) {
-			this.$router.push(`/admin/dashboard/attribute/${id}`);
+			this.$router.push(`/admin/attribute/${id}`);
 		}
 	},
 	created() {

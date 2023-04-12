@@ -42,7 +42,7 @@ export class CategoryService {
         return await axios.put(this.url + "update/" + category.id, category).then((response) => {
             return true;
         }).catch((error) => {
-            toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+            error.response.data.map((item: string) => toast.error(item));
             return false;
         });
     }

@@ -1,5 +1,8 @@
 <template>
-	<form @submit.prevent="addAttribute()">
+	<div v-if="!isUpdate">Thêm mới thuộc tính</div>
+	<div v-else>Chỉnh sửa thuộc tính</div>
+	<hr>
+	<form @submit.prevent="addAttribute()" class="form-control">
 		<div class="form-floating mb-3">
 			<input type="text" class="form-control" id="floatingCategoryName" v-model="attribute.name">
 			<label for="floatingCategoryName">Tên thuộc tính</label>
@@ -30,7 +33,8 @@ export default defineComponent({
 		return {
 			attributeService: new AttributeService(),
 			attribute : new Attribute(),
-			openModalDialog: false
+			id : 0 as number,
+			isUpdate : false as boolean
 		}
 	},
 	methods: {
@@ -38,28 +42,25 @@ export default defineComponent({
 			if (this.attribute.id != null) {
 				this.attributeService.update(this.attribute).then((res) => {
 					toast.success("Cập nhật thành công");
+					this.$router.push('/admin/attribute');
 				});
 				return;
 			}
 			this.attributeService.save(this.attribute).then((res) => {
-				this.$emit('added-attribute', res);
+				this.$router.push('/admin/attribute');
 			});
 
-		},
-		openModal() {
-			document.getElementById('show-modal')?.click();
-		},
-		onInit() {
-			const id = this.$route.params.id as string;
-			if (id) {
-				this.attributeService.findById(Number.parseInt(id)).then((res) => {
-					this.attribute = res;
-				});
-			}
-		},
+		}
 	},
 	created() {
-		this.onInit();
+		this.id = Number.parseInt(this.$route.params.id as string);
+		console.log(this.id)
+		if (this.id !== 0 && !isNaN(this.id)) {
+			this.isUpdate = true;
+			this.attributeService.findById(this.id).then((res) => {
+				this.attribute = res;
+			});
+		}
 	}
 })
 </script>

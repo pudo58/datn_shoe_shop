@@ -2,6 +2,8 @@ package org.datn.app.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.datn.app.constant.UserConstant;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -40,8 +42,8 @@ public class User  implements Serializable{
 
     private String role = "ROLE_USER";
 
-    @Column(name = "status",columnDefinition = "int default 0")
-    private Integer status;
+    @Column(name = "status")
+    private Integer status = UserConstant.USER_STATUS_ACTIVE;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date created = new Date();

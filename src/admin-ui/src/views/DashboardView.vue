@@ -20,7 +20,7 @@
 							</a>
 							<ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
 								<li class="w-100" v-for="item in component">
-									<a class="nav-link px-0 d-flex m-3" @click.prevent="hideComponent(item.name)"
+									<a class="nav-link px-0 d-flex m-3" @click.prevent="this.$router.push(item.routerLink)"
 									   role="button">
 										<span class="d-none d-sm-inline" :title="item.label">{{ item.label }}</span>
 									</a>
@@ -90,7 +90,7 @@
 				</div>
 			</div>
 			<div class="col py-3">
-			 <router-view></router-view>
+				<router-view></router-view>
 			</div>
 		</div>
 	</div>
@@ -98,15 +98,14 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import UserComponent from "@/views/user/UserComponent.vue";
 import CategoryComponent from "@/views/category/CategoryComponent.vue";
 import AttributeComponent from "@/views/attribute/AttributeComponent.vue";
 import PublisherComponent from "@/views/publisher/PublisherComponent.vue";
 import ProductComponent from "@/views/product/ProductComponent.vue";
+
 export default defineComponent({
 	name: "ProductView",
 	components: {
-		UserComponent,
 		CategoryComponent,
 		AttributeComponent,
 		PublisherComponent,
@@ -115,12 +114,12 @@ export default defineComponent({
 	data() {
 		return {
 			component: [
-				{name: 'user', show: false, label: 'Quản lý người dùng'},
-				{name: 'category', show: false, label: 'Quản lý danh mục'},
-				{name: 'publisher', show: false, label: 'Quản lý hãng'},
-				{name: 'product', show: false, label: 'Quản lý sản phẩm'},
-				{name: 'cart', show: false, label: 'Quản lý đơn hàng'},
-				{name: 'attribute', show: false, label: 'Quản lý thuộc tính'},
+				{name: 'user', show: false, label: 'Quản lý người dùng', routerLink: '/admin/user'},
+				{name: 'category', show: false, label: 'Quản lý danh mục', routerLink: '/admin/category'},
+				{name: 'publisher', show: false, label: 'Quản lý hãng', routerLink: '/admin/publisher'},
+				{name: 'product', show: false, label: 'Quản lý sản phẩm', routerLink: '/admin/product'},
+				{name: 'cart', show: false, label: 'Quản lý đơn hàng', routerLink: '/admin/cart'},
+				{name: 'attribute', show: false, label: 'Quản lý thuộc tính', routerLink: '/admin/attribute'},
 			]
 		}
 	},
@@ -131,15 +130,6 @@ export default defineComponent({
 		init() {
 
 		},
-		hideComponent(name: string) {
-			this.component.forEach((item) => {
-				if (item.name === name) {
-					item.show = true;
-				} else {
-					item.show = false;
-				}
-			})
-		}
 	}
 
 })

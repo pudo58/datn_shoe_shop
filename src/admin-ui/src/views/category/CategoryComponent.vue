@@ -13,13 +13,9 @@
 		</div>
 		<div class="col"></div>
 		<div class="col">
-			<button class="btn btn-success m-1">
+			<button class="btn btn-success m-1" @click.prevent="$router.push('/admin/category/new')">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
-			</button>
-			<button class="btn btn-danger m-1">
-				<i class="bi bi-trash-fill"></i>
-				Xóa
 			</button>
 		</div>
 	</div>
@@ -31,7 +27,6 @@
 				<th>Ngày tạo</th>
 				<th>Mô tả</th>
 				<th>Trạng thái</th>
-				<th>CHi tiết thuộc tính</th>
 				<th>Thao tác</th>
 			</tr>
 			</thead>
@@ -45,11 +40,7 @@
 					<span v-else class="badge bg-danger">Khóa</span>
 				</td>
 				<td>
-          <span class="badge text-bg-warning" role="button" @click="$refs.attributeList.openModal()
-          ;;$refs.attributeList.findAttributeByCategoryId(item.id);">Chi tiết</span>
-				</td>
-				<td>
-					<button class="btn btn-success btn-sm m-1">
+					<button class="btn btn-success btn-sm m-1" @click="$router.push('/admin/category/'+item.id)">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 					<button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">
@@ -83,7 +74,6 @@
 			</div>
 		</nav>
 	</div>
-<!--	<attribute-list-component ref="attributeList" :categoryId="categoryId"></attribute-list-component>-->
 </template>
 
 <script lang="ts">
@@ -93,15 +83,9 @@ import {Pageable} from "@/core/model/core.base";
 import {Category} from "@/core/model/category.model";
 import {CategoryService} from "@/core/service/category.service";
 import moment from 'moment/moment';
-import CategoryDetailComponent from "@/views/category/CategoryDetailComponent.vue";
-import AttributeListComponent from "@/views/attribute/AttributeListComponent.vue";
 
 export default defineComponent({
 	name: "CategoryComponent",
-	components: {
-		CategoryDetailComponent,
-		AttributeListComponent
-	},
 	data() {
 		return {
 			categoryList: new Pageable<Category>(),

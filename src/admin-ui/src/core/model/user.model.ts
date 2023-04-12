@@ -38,8 +38,8 @@ export class UserRoleConstant {
 }
 
 export class UserStatusConstant {
-    static STATUS_ACTIVE = 0;
-    static STATUS_LOCK = 1;
+    static STATUS_ACTIVE = 1;
+    static STATUS_LOCK = 0;
 }
 
 export class UserRequest extends User {
