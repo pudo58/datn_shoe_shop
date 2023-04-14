@@ -18,3 +18,13 @@ export class DeleteAttributeRequest {
     categoryId?: number;
     attributeId?: number;
 }
+
+export class ATTRIBUTE_TYPE {
+    static STRING = "String";
+    static INTEGER = "Integer";
+    static DOUBLE = "Double";
+    static BOOLEAN = "Boolean";
+    static DATE = "Date";
+    static DATETIME = "DateTime";
+    static TIME = "Time";
+}

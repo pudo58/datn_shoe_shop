@@ -52,14 +52,12 @@ export default defineComponent({
 		addUser() {
 			if(this.isUpdate){
 				this.userService.updateUser(this.user);
+				this.$router.push('/admin/user');
 			}else{
 				this.userService.register(this.user);
 				this.$router.push('/admin/user');
 			}
 		},
-		openModal() {
-			document.getElementById('show-modal')?.click();
-		}
 	},
 	created() {
 		this.id = Number.parseInt(this.$route.params.id as string);

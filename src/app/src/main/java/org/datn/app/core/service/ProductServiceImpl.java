@@ -10,6 +10,7 @@ import org.datn.app.core.dto.SizeDTO;
 import org.datn.app.core.entity.*;
 import org.datn.app.core.entity.extend.ProductResponse;
 import org.datn.app.core.repo.*;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -158,8 +159,8 @@ public class ProductServiceImpl implements ProductService {
         productRepo.save(product);
 
         // Thêm dữ liệu thuộc tính
-        for (Map.Entry<Long, String> entry : productDTO.getAttributeValues().entrySet()) {
-            Attribute attribute = attributeRepo.findById(entry.getKey()).orElseThrow(
+        for (Map.Entry<String, String> entry : productDTO.getAttributeValues().entrySet()) {
+            Attribute attribute = attributeRepo.findByName(entry.getKey()).orElseThrow(
                     () -> new RuntimeException("Thuộc tính không tồn tại")
             );
             switch (attribute.getType()) { // cây validate
@@ -176,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
                     break;
                 }
                 case AttributeConstant.DATE: {
-                    if (!entry.getValue().matches("\\d{2}-\\d{2}-\\d{4}")) {
+                    if (!entry.getValue().matches("\\d{4}-\\d{2}-\\d{2}")) {
                         throw new RuntimeException("Giá trị thuộc tính ngày không hợp lệ");
                     }
                     break;

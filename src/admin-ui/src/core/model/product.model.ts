@@ -19,7 +19,7 @@ export class ProductDto extends Product{
     categoryId?: number;
     publisherId?: number;
     sizeList?: Array<SizeDto> = [] as Array<SizeDto>;
-    attributeValues?: Map<number, string> = new Map<number, string>();
+    attributeValues?: any = {};
 }
 
 export class ProductSearchRequest{

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/attribute")
@@ -47,7 +48,7 @@ public class AttributeController {
         return attributeService.findAll(page,size);
     }
     @GetMapping("/find/{name}")
-    public Attribute findAttributeByName(@PathVariable String name){
+    public Optional<Attribute> findAttributeByName(@PathVariable String name){
         return attributeService.findByName(name);
     }
     @GetMapping("/get/{id}")

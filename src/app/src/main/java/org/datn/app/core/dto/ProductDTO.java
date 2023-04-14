@@ -15,6 +15,6 @@ public class ProductDTO {
     private Long categoryId;
     private Long publisherId;
     private List<SizeDTO> sizeList;
-    private Map<Long, String> attributeValues;
+    private Map<String, String> attributeValues;
 }
 

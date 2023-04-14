@@ -14,13 +14,9 @@
 		</div>
 		<div class="col"></div>
 		<div class="col">
-			<button class="btn btn-success m-1">
+			<button class="btn btn-success m-1" @click.prevent="$router.push('/admin/user/new')">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
-			</button>
-			<button class="btn btn-danger m-1">
-				<i class="bi bi-trash-fill"></i>
-				Xóa
 			</button>
 		</div>
 	</div>

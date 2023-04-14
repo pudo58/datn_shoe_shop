@@ -6,9 +6,10 @@ import org.datn.app.core.entity.Attribute;
 import org.datn.app.core.service.base.ServiceCore;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AttributeService extends ServiceCore<Attribute,Long> {
-    Attribute findByName(String name);
+    Optional<Attribute> findByName(String name);
     List<Attribute> addAll(AttributeAddAllRequest attributeAddAllRequest);
     List<Attribute> findByCategoryId(Long categoryId);
     void deleteAttributeByAttributeId(DeleteAttributeRequest request);

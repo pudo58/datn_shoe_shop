@@ -51,7 +51,7 @@
 				</td>
 				<td>
 					<button class="btn btn-success btn-sm m-1"
-					        @click.prevent="$router.push('/admin/product/update/' + item.id)">
+					        @click.prevent="$router.push('/admin/product/' + item.id)">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 					<button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">

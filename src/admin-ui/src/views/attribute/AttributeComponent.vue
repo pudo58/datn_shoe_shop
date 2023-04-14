@@ -79,7 +79,6 @@
 		</nav>
 	</div>
 </template>
-
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {toast} from 'vue3-toastify';
@@ -100,7 +99,7 @@ export default defineComponent({
 			attributeService: new AttributeService(),
 			page: 0 as number,
 			size: 10 as number,
-			find: '' as string,
+			find: '' as string
 		}
 	},
 	methods: {
@@ -109,7 +108,7 @@ export default defineComponent({
 				this.attributeList = response;
 			}).catch(error => {
 				toast.error(error.message);
-			})
+			});
 		},
 		dateTime(value: string) {
 			if (value == null || value == undefined || value === '') {
