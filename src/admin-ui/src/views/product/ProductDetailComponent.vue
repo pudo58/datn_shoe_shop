@@ -89,12 +89,18 @@
 								item.name
 							}}</label>
 						<div class="col-sm-5">
-							<input v-if="item.type === ATTRIBUTE_TYPE.STRING || item.type === ATTRIBUTE_TYPE.DOUBLE" type="text" :id="item.name" class="form-control" v-model="attributeValues[item.name]"/>
-							<input v-if="item.type === ATTRIBUTE_TYPE.DATE" type="date" :id="item.name" class="form-control" v-model="attributeValues[item.name]"/>
-							<input v-if="item.type === ATTRIBUTE_TYPE.DATETIME" type="datetime-local" :id="item.name" class="form-control" v-model="attributeValues[item.name]"/>
-							<input v-if="item.type === ATTRIBUTE_TYPE.INTEGER" type="number" :id="item.name" class="form-control" v-model="attributeValues[item.name]"/>
+							<input v-if="item.type === ATTRIBUTE_TYPE.STRING || item.type === ATTRIBUTE_TYPE.DOUBLE"
+							       type="text" :id="item.name" class="form-control"
+							       v-model="attributeValues[item.name]"/>
+							<input v-if="item.type === ATTRIBUTE_TYPE.DATE" type="date" :id="item.name"
+							       class="form-control" v-model="attributeValues[item.name]"/>
+							<input v-if="item.type === ATTRIBUTE_TYPE.DATETIME" type="datetime-local" :id="item.name"
+							       class="form-control" v-model="attributeValues[item.name]"/>
+							<input v-if="item.type === ATTRIBUTE_TYPE.INTEGER" type="number" :id="item.name"
+							       class="form-control" v-model="attributeValues[item.name]"/>
 							<template v-if="item.type === ATTRIBUTE_TYPE.BOOLEAN">
-								<select :id="item.name" class="form-select-sm form-control" v-model="attributeValues[item.name]">
+								<select :id="item.name" class="form-select-sm form-control"
+								        v-model="attributeValues[item.name]">
 									<option value="true">Có</option>
 									<option value="false">Không</option>
 								</select>
@@ -109,6 +115,21 @@
 						<select id="publisher" class="form-select-sm form-control" v-model="productDto.publisherId">
 							<option v-for="(item,index) in publisherList" :value="item.id">{{ item.name }}</option>
 						</select>
+					</div>
+				</div>
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+					<label class="col-sm-3 control-label fw-bold align-self-center text-center mb-1">Kích cỡ
+						(*)</label>
+					<div class="col-sm-6 form-check form-check-inline">
+						<div v-for="(item,index) in productDto.sizeList" class="d-flex justify-content-start">
+							<input type="text" class="form-control w-25" :id="item.size" v-model="productDto.sizeList[index].size"
+							       placeholder="Size" title="size">
+							<input type="text" class="form-control w-25" :id="item.quantity" v-model="productDto.sizeList[index].quantity"
+							       placeholder="Số lượng" title="số lượng">
+							<span role="button" class="w-25" @click.prevent="createSize()" title="Thêm size">
+								<i class="bi bi-plus-circle-fill"></i>
+							</span>
+						</div>
 					</div>
 				</div>
 				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
@@ -171,7 +192,7 @@ export default defineComponent({
 			id: 0 as number,
 			isUpdate: false as boolean,
 			attributeValue: new Map<string, string>(),
-			ATTRIBUTE_TYPE : ATTRIBUTE_TYPE
+			ATTRIBUTE_TYPE: ATTRIBUTE_TYPE
 		}
 	},
 	methods: {
@@ -199,6 +220,9 @@ export default defineComponent({
 				this.categoryList = res;
 			});
 		},
+		createSize(){
+			this.productDto.sizeList?.push(new SizeDto());
+		},
 		getPublisherList() {
 			this.publisherService.findAllPublisher().then((res) => {
 				this.publisherList = res;
@@ -223,6 +247,10 @@ export default defineComponent({
 				this.productDto = res;
 			});
 		}
+		const sizeDto = new SizeDto();
+		sizeDto.size = '37';
+		sizeDto.quantity = 0;
+		this.productDto.sizeList?.push(sizeDto);
 		this.getCategoryList();
 		this.getPublisherList();
 		this.getSizeList();
