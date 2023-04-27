@@ -13,7 +13,7 @@
 		</div>
 		<div class="col"></div>
 		<div class="col">
-			<button class="btn btn-success m-1">
+			<button class="btn btn-success m-1" @click="this.$router?.push('/admin/brand/new')">
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
 			</button>
@@ -33,14 +33,14 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr class="align-middle" v-for="item in publisherList.content">
+			<tr class="align-middle" v-for="item in brandList.content">
 				<td>{{ item.name }}</td>
 				<td>
 					<a :href="item.website" target="_blank">{{ item.website }}</a>
 				</td>
 				<td>
 					<button class="btn btn-success btn-sm m-1"
-					        @click.prevent="$router.push('/admin/publisher/'+item.id)">
+					        @click.prevent="$router.push('/admin/brand/'+item.id)">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
 					<button class="btn btn-danger btn-sm m-1" @click.prevent="deleteById(item.id)">
@@ -55,13 +55,13 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="getPublisher(page--,size)">Previous</a>
+					<a class="page-link" @click.prevent="getBrand(page--,size)">Previous</a>
 				</li>
-				<li class="page-item" v-for="item in publisherList?.totalPages">
-					<a class="page-link" href="#" @click="getPublisher(item-1,size)">{{ item }}</a>
+				<li class="page-item" v-for="item in brandList?.totalPages">
+					<a class="page-link" href="#" @click="getBrand(item-1,size)">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="getPublisher(page++,size)">Next</a>
+					<a class="page-link" href="#" @click.prevent="getBrand(page++,size)">Next</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">
@@ -78,58 +78,58 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {Publisher} from "@/core/model/publisher.model";
+import {Brand} from "@/core/model/brand.model";
 import {Pageable} from "@/core/model/core.base";
-import {PublisherService} from "@/core/service/publisher.service";
-import PublisherDetailComponent from "@/views/publisher/PublisherDetailComponent.vue";
+import {BrandService} from "@/core/service/brand.service";
+import BrandDetailComponent from "@/views/brand/BrandDetailComponent.vue";
 import {toast} from "vue3-toastify";
 
 export default defineComponent({
-	name: 'PublisherComponent',
+	name: 'BrandComponent',
 	components: {
-		PublisherDetailComponent,
+		BrandDetailComponent,
 	},
 	data() {
 		return {
-			publisherList: new Pageable<Publisher>(),
-			publisherService: new PublisherService(),
+			brandList: new Pageable<Brand>(),
+			brandService: new BrandService(),
 			page: 0,
 			size: 10,
 			name: '' as string,
 		}
 	},
 	methods: {
-		async getPublisher(page: number, size: number) {
-			const res = await this.publisherService.findAll(page, size) as Pageable<Publisher>;
-			this.publisherList = res;
+		async getBrand(page: number, size: number) {
+			const res = await this.brandService.findAll(page, size) as Pageable<Brand>;
+			this.brandList = res;
 		},
 		deleteById(id: number) {
 			if (confirm("Bạn có chắc chắn muốn xóa?")) {
-				this.publisherService.delete(id).then((res) => {
+				this.brandService.delete(id).then((res) => {
 					if (res) {
 						toast.success("Xóa thành công");
-						this.getPublisher(this.page, this.size);
+						this.getBrand(this.page, this.size);
 					}
 				})
 			}
 		},
-		getEmit(publisher: Publisher) {
-			this.publisherList.content?.push(publisher);
+		getEmit(brand: Brand) {
+			this.brandList.content?.push(brand);
 		},
 		onChange() {
-			this.getPublisher(this.page, this.size);
+			this.getBrand(this.page, this.size);
 		},
 		async findByName() {
 			if (this.name == null || this.name == '')
-				await this.getPublisher(this.page, this.size);
-			const res = await this.publisherService.findByName(this.name);
+				await this.getBrand(this.page, this.size);
+			const res = await this.brandService.findByName(this.name);
 			if (res) {
-				this.publisherList.content?.push(res);
+				this.brandList.content?.push(res);
 			}
 		}
 	},
 	created() {
-		this.getPublisher(this.page, this.size);
+		this.getBrand(this.page, this.size);
 	}
 })
 </script>

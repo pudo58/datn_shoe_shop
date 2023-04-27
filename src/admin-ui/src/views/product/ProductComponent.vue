@@ -44,7 +44,7 @@
 				<td class="fw-bold">{{ item.discount + '%' }}</td>
 				<td>{{ item.category.name }}</td>
 				<td>{{ item.description === null ? '' : item.description.substring(0,6).concat('...') }}</td>
-				<td>{{ item.publisher.name }}</td>
+				<td>{{ item.brand.name }}</td>
 				<td>
 					<span v-if="item.status === 1" class="badge bg-success" role="button">Hoạt động</span>
 					<span v-if="item.status === 2 " class="badge bg-danger" role="button">Hết hàng</span>

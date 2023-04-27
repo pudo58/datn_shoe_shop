@@ -1,6 +1,7 @@
 package org.datn.app.core.entity;
 
 import lombok.Data;
+import org.datn.app.constant.OrderConstant;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,10 +25,10 @@ public class Order implements Serializable {
     private String phoneNumber;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created = new Date();
+    private Date created;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date modified = new Date();
+    private Date modified;
 
     private String paymentMethod;
 
@@ -44,4 +45,11 @@ public class Order implements Serializable {
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,targetEntity = Transaction.class)
     private List<Transaction> transactions;
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+        this.modified = new Date();
+        this.status = OrderConstant.PENDING;
+    }
 }

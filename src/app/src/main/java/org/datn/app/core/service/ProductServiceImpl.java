@@ -2,16 +2,16 @@ package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.constant.AttributeConstant;
-import org.datn.app.constant.ProductDetailConstant;
 import org.datn.app.constant.ProductConstant;
-import org.datn.app.core.dto.ProductDTO;
+import org.datn.app.constant.ProductDetailConstant;
 import org.datn.app.core.dto.ProductSearchRequest;
 import org.datn.app.core.dto.SizeDTO;
 import org.datn.app.core.entity.*;
+import org.datn.app.core.entity.extend.ProductDTO;
 import org.datn.app.core.entity.extend.ProductResponse;
 import org.datn.app.core.repo.*;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -38,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     private final AttributeRepo attributeRepo;
     private final ProductDetailRepo productDetailRepo;
     private final AttributeDataRepo attributeDataRepo;
-    private final PublisherRepo publisherRepo;
+    private final BrandRepo brandRepo;
     private final SizeRepo sizeRepo;
 
     @Override
@@ -92,11 +89,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(rollbackOn = RuntimeException.class)
     public ResponseEntity<?> addProduct(ProductDTO productDTO) {
-        // Lấy thông tin category và publisher từ ID
+        // Lấy thông tin category và brand từ ID
         Category category = categoryRepo.findById(productDTO.getCategoryId()).orElseThrow(
                 () -> new RuntimeException("Danh mục không tồn tại")
         );
-        Publisher publisher = publisherRepo.findById(productDTO.getPublisherId()).orElseThrow(
+        Brand brand = brandRepo.findById(productDTO.getBrandId()).orElseThrow(
                 () -> new RuntimeException("Hãng sản xuất không tồn tại")
         );
 
@@ -108,8 +105,11 @@ public class ProductServiceImpl implements ProductService {
             product.setDiscount(productDTO.getDiscount());
             product.setDescription(productDTO.getDescription());
             product.setCategory(category);
+            product.setColor(productDTO.getColor());
+            product.setMaterial(productDTO.getMaterial());
+            product.setModel(productDTO.getModel());
             product.setStatus(ProductConstant.EFFECT);
-            product.setPublisher(publisher);
+            product.setBrand(brand);
         } catch (RuntimeException e) {
             throw new RuntimeException("có lỗi xảy ra khi thêm sản phẩm");
         }
@@ -240,34 +240,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchByMultiCondition(ProductSearchRequest model) {
-        List<Product> products = productRepo.findAll();
-        List<Product> result = new ArrayList<>();
-        for (Product product : products) {
-            if (product.getName() != null) {
-                if (product.getName().contains(model.getName().toLowerCase())) {
-                    result.add(product);
-                }
-            }
-            if (model.getCategoryId() != null) {
-                if (product.getCategory().getId() == model.getCategoryId()) {
-                    result.add(product);
-                }
-            }
-            if (model.getPublisherId() != null) {
-                if (product.getPublisher().getId() == model.getPublisherId()) {
-                    result.add(product);
-                }
-            }
-            for (int i = 0; i < model.getAttributeIdList().size(); i++) {
-                if (model.getAttributeIdList().get(i) != null) {
-                    if (product.getAttributeData().get(i).getAttribute().getId() == model.getAttributeIdList().get(i)) {
-                        result.add(product);
-                    }
-                }
-            }
-
+    public Page<Product> findByFilter(ProductSearchRequest model) {
+        String keyword = model.getKeyword();
+        Long[] brandIdList = model.getBrandIdList();
+        Long[] categoryIdList = model.getCategoryIdList();
+        String[] colorList = model.getColorList();
+        String[] modelList = model.getModelList();
+        String[] materialList = model.getMaterialList();
+        Long[] sizeIdList = model.getSizeIdList();
+        if(model.getPage() == null){
+            model.setPage(0);
         }
-        return result;
+        if(model.getSize() == null){
+            model.setSize(30);
+        }
+        Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
+        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorList, modelList, materialList, sizeIdList, pageable);
+        return productPage;
     }
 }

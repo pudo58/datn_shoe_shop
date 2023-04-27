@@ -25,7 +25,7 @@ public class Category implements Serializable {
 
     private String description;
 
-    private Boolean isTrash = Boolean.FALSE;
+    private Boolean isTrash;
 
     @ManyToMany(cascade = CascadeType.ALL,targetEntity = Attribute.class)
     @JoinTable(name = "category_attribute",
@@ -34,7 +34,7 @@ public class Category implements Serializable {
     private Set<Attribute> attributes;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created = new Date();
+    private Date created;
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @JsonIgnore
@@ -43,4 +43,10 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+        this.isTrash = false;
+    }
 }

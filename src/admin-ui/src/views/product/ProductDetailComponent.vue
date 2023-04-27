@@ -12,9 +12,9 @@
 	<!--		</div>-->
 	<!--		<div class="form-group">-->
 	<!--			<label class="col-form-label" for="productPublisher">Hãng sản xuất<span class="text-bg-danger">*</span></label>-->
-	<!--			<select class="form-control" id="productPublisher" v-model="productDto.publisher.id" :disabled="isUpdate">-->
+	<!--			<select class="form-control" id="productPublisher" v-model="productDto.brand.id" :disabled="isUpdate">-->
 	<!--				<option :value="0" disabled>Vui lòng chọn hãng sản xuất</option>-->
-	<!--				<option v-for="item in publisherList" :value="item.id">{{ item.name }}</option>-->
+	<!--				<option v-for="item in brandList" :value="item.id">{{ item.name }}</option>-->
 	<!--			</select>-->
 	<!--		</div>-->
 	<!--		<div class="form-group">-->
@@ -72,6 +72,30 @@
 					</div>
 				</div>
 				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+					<label for="material" class="col-sm-2 control-label fw-bold align-self-center text-start">Chất liệu
+						(*)</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" name="name" id="material" placeholder="Chất liệu"
+						       v-model="productDto.material">
+					</div>
+				</div>
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+					<label for="material" class="col-sm-2 control-label fw-bold align-self-center text-start">Kiểu dáng
+						(*)</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" name="name" id="model" placeholder="Kiểu dáng"
+						       v-model="productDto.model">
+					</div>
+				</div>
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+					<label for="material" class="col-sm-2 control-label fw-bold align-self-center text-start">Màu sắc
+						(*)</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" name="name" id="color" placeholder="Màu sắc"
+						       v-model="productDto.color">
+					</div>
+				</div>
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
 					<label for="category" class="col-sm-2 control-label fw-bold align-self-center text-start">Danh mục
 						(*)</label>
 					<div class="col-sm-5">
@@ -109,11 +133,11 @@
 					</div>
 				</template>
 				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
-					<label for="publisher" class="col-sm-2 control-label fw-bold align-self-center text-start">Hãng
+					<label for="brand" class="col-sm-2 control-label fw-bold align-self-center text-start">Hãng
 						(*)</label>
 					<div class="col-sm-5">
-						<select id="publisher" class="form-select-sm form-control" v-model="productDto.publisherId">
-							<option v-for="(item,index) in publisherList" :value="item.id">{{ item.name }}</option>
+						<select id="brand" class="form-select-sm form-control" v-model="productDto.brandId">
+							<option v-for="(item,index) in brandList" :value="item.id">{{ item.name }}</option>
 						</select>
 					</div>
 				</div>
@@ -122,12 +146,15 @@
 						(*)</label>
 					<div class="col-sm-6 form-check form-check-inline">
 						<div v-for="(item,index) in productDto.sizeList" class="d-flex justify-content-start">
-							<input type="text" class="form-control w-25" :id="item.size" v-model="productDto.sizeList[index].size"
+							<input type="text" class="form-control w-25" :id="item.size"
+							       v-model="productDto.sizeList[index].size"
 							       placeholder="Size" title="size">
-							<input type="text" class="form-control w-25" :id="item.quantity" v-model="productDto.sizeList[index].quantity"
+							<input type="text" class="form-control w-25" :id="item.quantity"
+							       v-model="productDto.sizeList[index].quantity"
 							       placeholder="Số lượng" title="số lượng">
-							<span role="button" class="w-25" @click.prevent="createSize()" title="Thêm size">
-								<i class="bi bi-plus-circle-fill"></i>
+							<span role="button" class="w-25 d-flex align-items-center justify-content-center">
+							  <i class="bi bi-plus-circle-fill" @click.prevent="createSize()" title="Thêm size"></i>
+							  <i class="bi bi-x-circle-fill p-2" @click.prevent="removeSize(index)" title="Xóa size"></i>
 							</span>
 						</div>
 					</div>
@@ -163,13 +190,14 @@ import {ProductService} from "@/core/service/product.service";
 import {ProductDto} from "@/core/model/product.model";
 import {CategoryService} from "@/core/service/category.service";
 import {Category} from "@/core/model/category.model";
-import {PublisherService} from "@/core/service/publisher.service";
-import {Publisher} from "@/core/model/publisher.model";
+import {BrandService} from "@/core/service/brand.service";
+import {Brand} from "@/core/model/brand.model";
 import {ProductDetailService} from "@/core/service/product-detail.service";
 import {Size, SizeDto} from "@/core/model/size.model";
 import {SizeService} from "@/core/service/size.service";
 import {Attribute, ATTRIBUTE_TYPE} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
+import {toast} from "vue3-toastify";
 
 export default defineComponent({
 	name: "ProductDetailActionComponent",
@@ -181,9 +209,9 @@ export default defineComponent({
 			productService: new ProductService(),
 			categoryService: new CategoryService(),
 			sizeService: new SizeService(),
-			publisherService: new PublisherService(),
+			brandService: new BrandService(),
 			categoryList: [] as Category[],
-			publisherList: [] as Publisher[],
+			brandList: [] as Brand[],
 			sizeList: new Array<Size>(),
 			sizeListSelected: [] as string[],
 			quantityList: [] as number[],
@@ -208,7 +236,6 @@ export default defineComponent({
 				this.productDto.sizeList?.push(sizeDto);
 			});
 			this.productDto.attributeValues = this.attributeValues;
-			console.log(this.productDto)
 			this.productService.save(this.productDto).then((res) => {
 				let file = $event.target[5].files[0];
 				this.productService.addImage(res.product.id, file).then((res) => {
@@ -220,12 +247,12 @@ export default defineComponent({
 				this.categoryList = res;
 			});
 		},
-		createSize(){
+		createSize() {
 			this.productDto.sizeList?.push(new SizeDto());
 		},
 		getPublisherList() {
-			this.publisherService.findAllPublisher().then((res) => {
-				this.publisherList = res;
+			this.brandService.findAllBrand().then((res) => {
+				this.brandList = res;
 			})
 		},
 		getSizeList() {
@@ -237,6 +264,13 @@ export default defineComponent({
 			this.attributeService.findAllByCategoryId(this.productDto.categoryId || 0).then((res) => {
 				this.attributeList = res;
 			});
+		},
+		removeSize(index: number) {
+			if(this.productDto.sizeList?.length == 1) {
+				toast.warning("Sản phẩm phải có ít nhất 1 size");
+				return;
+			}
+			this.productDto.sizeList?.splice(index, 1);
 		}
 	},
 	created() {

@@ -100,7 +100,7 @@
 import {defineComponent} from "vue";
 import CategoryComponent from "@/views/category/CategoryComponent.vue";
 import AttributeComponent from "@/views/attribute/AttributeComponent.vue";
-import PublisherComponent from "@/views/publisher/PublisherComponent.vue";
+import PublisherComponent from "@/views/brand/BrandComponent.vue";
 import ProductComponent from "@/views/product/ProductComponent.vue";
 
 export default defineComponent({
@@ -116,7 +116,7 @@ export default defineComponent({
 			component: [
 				{name: 'user', show: false, label: 'Quản lý người dùng', routerLink: '/admin/user'},
 				{name: 'category', show: false, label: 'Quản lý danh mục', routerLink: '/admin/category'},
-				{name: 'publisher', show: false, label: 'Quản lý hãng', routerLink: '/admin/publisher'},
+				{name: 'brand', show: false, label: 'Quản lý hãng', routerLink: '/admin/brand'},
 				{name: 'product', show: false, label: 'Quản lý sản phẩm', routerLink: '/admin/product'},
 				{name: 'cart', show: false, label: 'Quản lý đơn hàng', routerLink: '/admin/cart'},
 				{name: 'attribute', show: false, label: 'Quản lý thuộc tính', routerLink: '/admin/attribute'},

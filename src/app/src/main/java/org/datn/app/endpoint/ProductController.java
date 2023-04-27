@@ -1,8 +1,7 @@
 package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
-import org.datn.app.core.dto.ProductDTO;
-import org.datn.app.core.dto.ProductRequest;
+import org.datn.app.core.entity.extend.ProductDTO;
 import org.datn.app.core.dto.ProductSearchRequest;
 import org.datn.app.core.entity.Product;
 import org.datn.app.core.service.ProductService;
@@ -11,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -53,8 +51,8 @@ public class ProductController {
         return productService.addImage(file, request);
     }
 
-    @PostMapping(value = "/findBySearch")
-    public List<Product> findBySearch(@RequestBody ProductSearchRequest model) {
-        return productService.searchByMultiCondition(model);
+    @PostMapping(value = "/findByFilter")
+    public Page<Product> findByFilter(@RequestBody ProductSearchRequest model) {
+        return productService.findByFilter(model);
     }
 }

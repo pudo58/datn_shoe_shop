@@ -7,9 +7,13 @@ import java.util.List;
 
 @Data
 public class ProductSearchRequest {
-    private List<Long> attributeIdList;
-    private Long publisherId;
-    private String name;
-    private Long categoryId;
-
+    private String keyword;
+    private Long[] brandIdList;
+    private Long[] categoryIdList;
+    private String[] materialList;
+    private String[] colorList;
+    private String[] modelList;
+    private Long[] sizeIdList;
+    private Integer page;
+    private Integer size;
 }

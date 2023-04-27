@@ -23,9 +23,15 @@ public class Attribute implements Serializable {
 
     private String type;
 
-    private Boolean isTrash = Boolean.FALSE;
+    private Boolean isTrash;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date created = new Date();
+    private Date created;
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+        this.isTrash = false;
+    }
 
 }

@@ -27,4 +27,5 @@ public class AttributeData implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Product.class)
     @JoinColumn(name = "product_id")
     private Product product;
+
 }

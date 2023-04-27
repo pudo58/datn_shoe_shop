@@ -19,6 +19,7 @@ public class ProductDetail implements Serializable {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Size.class)
+    @JoinColumn(name = "size_id")
     private Size size;
 
     @ManyToOne(cascade = CascadeType.ALL,targetEntity = Product.class)

@@ -2,17 +2,19 @@ package org.datn.app.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.annotations.ColumnTransformer;
+import org.springframework.stereotype.Indexed;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "products")
 @Data
+@Indexed
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -20,12 +22,18 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_name",columnDefinition = "TEXT",length = 65535)
+    @Column(name = "product_name", columnDefinition = "TEXT", length = 65535)
     private String name;
 
     private Double price;
 
     private Double discount;
+
+    private String material; // chất liệu
+
+    private String color; // màu sắc
+
+    private String model; // kiểu dáng
 
     private String imageThumbnail;
 
@@ -34,26 +42,30 @@ public class Product implements Serializable {
     private Integer status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate = new Date();
+    private Date createdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Category.class)
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Category.class)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Publisher.class)
-    @JoinColumn(name = "publisher_id")
-    private Publisher publisher;
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Brand.class)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, targetEntity = ProductDetail.class)
     @JsonIgnore
     private List<ProductDetail> productDetails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.MERGE,targetEntity = AttributeData.class)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE, targetEntity = AttributeData.class)
     @JsonIgnore
     private List<AttributeData> attributeData = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,targetEntity = VoucherProductCategoryLink.class)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, targetEntity = VoucherProductCategoryLink.class)
     @JsonIgnore
     private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 
+    @PrePersist
+    public void prePersist() {
+        this.createdDate = new Date();
+    }
 }

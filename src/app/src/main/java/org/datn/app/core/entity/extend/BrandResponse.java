@@ -1,9 +1,9 @@
 package org.datn.app.core.entity.extend;
 
 import lombok.Data;
-import org.datn.app.core.entity.Publisher;
+import org.datn.app.core.entity.Brand;
 
 @Data
-public class PublisherResponse extends Publisher {
+public class BrandResponse extends Brand {
     private long totalProduct;
 }

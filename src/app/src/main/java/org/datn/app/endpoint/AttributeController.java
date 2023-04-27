@@ -26,9 +26,6 @@ public class AttributeController {
         if(attribute.getName().isEmpty()){
             errorList.add("Tên thuộc tính không được để trống");
         }
-        if(attributeService.findByName(attribute.getName()) != null){
-            errorList.add("Tên thuộc tính đã tồn tại");
-        }
         if(attribute.getType().trim().isEmpty() || attribute.getType() == null ){
             errorList.add("Loại thuộc tính không được để trống");
         }
