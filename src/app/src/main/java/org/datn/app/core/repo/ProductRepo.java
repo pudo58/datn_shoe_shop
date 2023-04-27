@@ -1,6 +1,7 @@
 package org.datn.app.core.repo;
 
 import org.datn.app.core.entity.Product;
+import org.datn.app.core.entity.extend.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,20 +21,19 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.status = 1 ORDER BY p.id DESC")
     Page<Product> findAll(Pageable pageable);
 
-    @Query(value = "SELECT * FROM products p " +
+    @Query(value = "SELECT DISTINCT p.* FROM products p " +
             "INNER JOIN categories c ON c.category_id = p.category_id " +
             "INNER JOIN product_details pd ON p.product_id = pd.product_id " +
             "INNER JOIN sizes s ON s.size_id = pd.size_id " +
             "WHERE p.status = 1  " +
-            "AND ((:brandIdList) IS NULL OR p.brand_id IN (:brandIdList)) " +
-            "AND ((:categoryIdList) IS NULL OR p.category_id IN (:categoryIdList)) " +
             "AND (:keyword IS NULL OR MATCH(p.product_name) AGAINST (:keyword  IN BOOLEAN MODE)) " +
-            "AND ((:colorList) IS NULL OR p.color IN (:colorList)) " +
-            "AND ((:materialList) IS NULL OR p.material IN (:materialList)) " +
-            "AND ((:modelList) IS NULL OR p.model IN (:modelList)) " +
-            "AND ((:sizeIdList) IS NULL OR pd.size_id IN (:sizeIdList)) " +
+            "AND (p.brand_id IN (COALESCE(:brandIdList,p.brand_id))) " +
+            "AND (p.category_id IN (COALESCE(:categoryIdList,p.category_id))) " +
+            "AND (p.color IN (COALESCE(:colorList,p.color)))" +
+            "AND (p.material IN (COALESCE(:materialList,p.material))) " +
+            "AND (p.model IN (COALESCE(:modelList,p.model))) " +
+            "AND (pd.size_id IN (COALESCE(:sizeIdList,pd.size_id))) " +
             "AND  c.is_trash = FALSE", nativeQuery = true)
     @QueryHints(value = {@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    Page<Product> findByFilter(String keyword, Long[] brandIdList, Long[] categoryIdList, String[] materialList, String[] colorList,String[] modelList,Long[] sizeIdList, Pageable pageable);
-
+    Page<Product> findByFilter(String keyword, List<Long> brandIdList, List<Long> categoryIdList, List<String> colorList, List<String> materialList, List<String> modelList, List<Long> sizeIdList, Pageable pageable);
 }

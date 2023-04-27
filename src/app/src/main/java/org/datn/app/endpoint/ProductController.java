@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.extend.ProductDTO;
 import org.datn.app.core.dto.ProductSearchRequest;
 import org.datn.app.core.entity.Product;
+import org.datn.app.core.entity.extend.ProductResponse;
 import org.datn.app.core.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -47,7 +48,7 @@ public class ProductController {
     }
 
     @PostMapping(value = "/addImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addImage(MultipartFile file, HttpServletRequest request) throws IOException, IOException {
+    public ResponseEntity<?> addImage(HttpServletRequest request,MultipartFile file) throws IOException, IOException {
         return productService.addImage(file, request);
     }
 

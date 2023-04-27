@@ -2,7 +2,8 @@ package org.datn.app.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import org.hibernate.annotations.ColumnTransformer;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Indexed;
 
 import javax.persistence.*;
@@ -13,7 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Data
+@Getter
+@Setter
 @Indexed
 public class Product implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -1,19 +1,22 @@
 package org.datn.app.core.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.datn.app.core.entity.Attribute;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class ProductSearchRequest {
     private String keyword;
-    private Long[] brandIdList;
-    private Long[] categoryIdList;
-    private String[] materialList;
-    private String[] colorList;
-    private String[] modelList;
-    private Long[] sizeIdList;
+    private List<Long> brandIdList;
+    private List<Long> categoryIdList;
+    private List<String>materialList;
+    private List<String> colorList;
+    private List<String> modelList;
+    private List<Long> sizeIdList;
     private Integer page;
     private Integer size;
 }

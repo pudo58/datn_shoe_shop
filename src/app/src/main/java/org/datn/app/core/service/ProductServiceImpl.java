@@ -242,12 +242,12 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> findByFilter(ProductSearchRequest model) {
         String keyword = model.getKeyword();
-        Long[] brandIdList = model.getBrandIdList();
-        Long[] categoryIdList = model.getCategoryIdList();
-        String[] colorList = model.getColorList();
-        String[] modelList = model.getModelList();
-        String[] materialList = model.getMaterialList();
-        Long[] sizeIdList = model.getSizeIdList();
+        List<Long> brandIdList = model.getBrandIdList();
+        List<Long> categoryIdList = model.getCategoryIdList();
+        List<String> colorList = model.getColorList();
+        List<String> materialList = model.getMaterialList();
+        List<String> modelList = model.getModelList();
+        List<Long> sizeIdList = model.getSizeIdList();
         if(model.getPage() == null){
             model.setPage(0);
         }
@@ -255,7 +255,7 @@ public class ProductServiceImpl implements ProductService {
             model.setSize(30);
         }
         Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
-        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorList, modelList, materialList, sizeIdList, pageable);
+        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorList, materialList, modelList, sizeIdList, pageable);
         return productPage;
     }
 }

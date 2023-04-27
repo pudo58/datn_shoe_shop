@@ -1,9 +1,12 @@
 package org.datn.app.core.entity.extend;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.datn.app.core.entity.Attribute;
 import org.datn.app.core.entity.Product;
 
-@Data
+@Getter
+@Setter
 public class ProductResponse extends Product {
-    private String[] attributeList;
+    private Attribute attribute;
 }
