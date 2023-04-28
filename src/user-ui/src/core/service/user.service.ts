@@ -74,24 +74,23 @@ export class UserService {
                 toast.error("Tài khoản không tồn tại");
                 return false;
             }
-            if (userResponse.data.status === UserStatusConstant.STATUS_LOCK) {
-                toast.error("Tài khoản đã bị khóa");
-                return false;
-            } else {
-                this.userCurrent = userResponse.data;
-            }
-
+           this.userCurrent = userResponse.data;
             const response = await axios.post("/api/login", {
                 username: username,
                 password: password
             });
 
             if (response.data !== null && response.data !== undefined) {
-                localStorage.setItem("access_token","Bearer " + response.data.access_token);
-                localStorage.setItem("user", JSON.stringify(this.userCurrent));
-                toast.success("Đăng nhập thành công");
-                router.push("/");
-                return true;
+                if(response.data?.status == 200){
+                    localStorage.setItem("access_token","Bearer " + response.data.access_token);
+                    localStorage.setItem("user", JSON.stringify(this.userCurrent));
+                    toast.success("Đăng nhập thành công");
+                    router.push("/");
+                    return true;
+                }else{
+                    toast.error(response.data.message);
+                    return false;
+                }
             } else {
                 toast.error(response.data.message);
                 return false;

@@ -5,10 +5,8 @@ import org.datn.app.core.dto.ChangePasswordRequest;
 import org.datn.app.core.dto.UserFindRequest;
 import org.datn.app.core.entity.User;
 import org.datn.app.core.service.UserService;
-import org.datn.app.util.MailSender;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -102,5 +100,15 @@ public class UserController {
     @PostMapping("/findByUsernameOrEmail")
     public List<User> findByUsernameOrEmail(@RequestBody UserFindRequest request) {
         return userService.findByUsernameOrEmail(request);
+    }
+
+    @PostMapping("/sendCode")
+    public Map<String, Object> sendCode(@RequestBody ChangePasswordRequest request) throws Exception {
+        return userService.sendCode(request.getEmail());
+    }
+
+    @PostMapping("/resetPassword")
+    public Map<String, Object> resetPassword(@RequestBody ChangePasswordRequest model) throws Exception {
+        return userService.resetPassword(model);
     }
 }

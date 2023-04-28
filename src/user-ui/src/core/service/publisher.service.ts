@@ -3,7 +3,7 @@ import {toast} from "vue3-toastify";
 import {Publisher, PublisherResponse} from "@/core/model/publisher.model";
 
 export class PublisherService {
-    url = "/api/publisher/";
+    url = "/api/brand/";
     async findAll(page: number, size: number): Promise<Array<Publisher>> {
         const response = await axios.get(this.url + "page/" + page + "/" + size);
         return response.data;

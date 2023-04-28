@@ -7,6 +7,7 @@ import org.datn.app.core.service.base.ServiceCore;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
@@ -20,4 +21,6 @@ public interface UserService extends ServiceCore<User,Long> {
     Map<String,String> changePassword(ChangePasswordRequest request);
     ResponseEntity<String> uploadFile(MultipartFile file, Principal principal);
     List<User> findByUsernameOrEmail(UserFindRequest userFindRequest);
+    Map<String,Object> sendCode(String email) throws Exception;
+    Map<String,Object> resetPassword(ChangePasswordRequest model) throws Exception;
 }

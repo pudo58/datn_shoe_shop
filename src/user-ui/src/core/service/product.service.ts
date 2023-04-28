@@ -72,7 +72,7 @@ export class ProductService {
     }
 
     async findBySearch(model : ProductSearchRequest) {
-        const response = await axios.post(this.url + "findBySearch", model);
+        const response = await axios.post(this.url + "findByFilter", model);
         return response.data;
     }
 

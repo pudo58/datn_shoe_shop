@@ -119,6 +119,7 @@ export default defineComponent({
 				{name: 'brand', show: false, label: 'Quản lý hãng', routerLink: '/admin/brand'},
 				{name: 'product', show: false, label: 'Quản lý sản phẩm', routerLink: '/admin/product'},
 				{name: 'cart', show: false, label: 'Quản lý đơn hàng', routerLink: '/admin/cart'},
+				{name:'voucher', show: false, label: 'Quản lý voucher', routerLink: '/admin/voucher'},
 				{name: 'attribute', show: false, label: 'Quản lý thuộc tính', routerLink: '/admin/attribute'},
 			]
 		}

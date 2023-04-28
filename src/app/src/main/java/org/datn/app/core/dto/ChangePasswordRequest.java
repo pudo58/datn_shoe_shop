@@ -8,5 +8,8 @@ public class ChangePasswordRequest {
     private String newPassword;
     private String confirmPassword;
     private String username;
+    private String email;
+    private String code;
+    private String password;
 }
 

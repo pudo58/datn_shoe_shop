@@ -76,6 +76,19 @@ const routes: Array<RouteRecordRaw> = [
             requiresAuth: true
         }
     },
+    {
+        path: '/forgot-password',
+        name: 'ForgotPassword',
+        component: () => import('../views/ForgotPasswordView.vue'),
+        meta: {
+            showTitle: false,
+            showFooter: true,
+            showCarousel: false,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
+    }
 ]
 
 const router = createRouter({

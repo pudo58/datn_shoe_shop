@@ -13,6 +13,7 @@ export class Product {
     publisher?: Publisher;
     category?: Category;
     createdDate?: Date;
+    viewMore?: boolean;
 }
 
 export class ProductDto {
@@ -28,8 +29,13 @@ export class ProductDto {
 }
 
 export class ProductSearchRequest{
-    attributeIdList? : Array<number>;
-    publisherId? : number;
-    categoryId? : number;
-    name? : string;
+    brandIdList? : number[];
+    categoryIdList? : number[];
+    keyword? : string;
+    colorList? : string[];
+    sizeIdList? : number[];
+    modelList? : string[];
+    materialList? : string[];
+    page? : number;
+    size? : number;
 }

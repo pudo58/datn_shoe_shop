@@ -23,13 +23,16 @@
 				</ul>
 				<ul class="navbar-nav">
 					<li class="nav-item" v-show="!isLogin">
-						<router-link to="/login" class="nav-link">Đăng nhập</router-link>
+						<router-link to="/login" class="nav-link" title="Đăng nhập">Đăng nhập</router-link>
 					</li>
 					<li class="nav-item" v-show="!isLogin">
-						<router-link to="/register" class="nav-link">Đăng ký</router-link>
+						<router-link to="/register" class="nav-link" title="Đăng ký">Đăng ký</router-link>
 					</li>
-					<li class="nav-item" v-show="isLogin === true">
-						<router-link to="/cart" class="nav-link">Giỏ hàng</router-link>
+					<li class="nav-item" v-show="isLogin === true" title="Giỏ hàng">
+						<router-link to="/cart" class="nav-link">
+							<i class="bi bi-cart-fill"></i>
+							Giỏ hàng
+						</router-link>
 					</li>
 					<li class="nav-item" v-show="isLogin === true">
 						<div class="dropdown">
@@ -45,7 +48,9 @@
 									<router-link to="/history" class="dropdown-item">Lịch sử mua hàng</router-link>
 								</li>
 								<li>
-									<router-link to="/cart" class="dropdown-item">Giỏ hàng</router-link>
+									<router-link to="/cart" class="dropdown-item">
+										Giỏ hàng
+									</router-link>
 								</li>
 								<li><a class="dropdown-item" @click.prevent="logout()">Đăng xuất</a></li>
 							</ul>

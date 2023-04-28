@@ -1,5 +1,21 @@
 <template>
 	<div class="container-fluid mt-5 mb-5">
+		<div v-show="isLoading" class="loading">
+			<div class="spinner-border text-primary spinner-center" role="status">
+			</div>
+		</div>
+		<!--	Searh input-->
+		<div class="row d-flex justify-content-end">
+			<div class="col-md-9">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm" aria-label="Recipient's username"
+					       aria-describedby="button-addon2" v-model="productSearchRequest.keyword">
+					<button title="Tìm kiếm" class="btn btn-outline-secondary" type="button" id="button-addon2" @click.prevent="onChange()">
+						<i class="bi bi-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="row g-2">
 			<div class="col-md-3">
 				<div class="t-products p-2"><h6 class="text-uppercase">Bộ lọc</h6>
@@ -7,7 +23,8 @@
 						Danh mục</h6> <span>--</span></div>
 					<div class="p-lists">
 						<div class="d-flex justify-content-between m-2" v-for="item in categoryList">
-							<input type="radio" :value="item.id" :id="'label' + item.name" name="cate" v-model="productSearchRequest.categoryId" @change.prevent="onChange">
+							<input type="checkbox" :value="item.id" :id="'label' + item.name" name="cate"
+							       v-model="categoryIdListSelected" @change.prevent="onChange()">
 							<label role="button" :for="'label' + item.name">{{ item.name }}</label>
 							<span role="button" title="Tổng số sản phẩm trong danh mục">{{ item.totalProduct }}</span>
 						</div>
@@ -16,9 +33,10 @@
 				<div class="processor p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
 						Thuộc tính</h6> <span>--</span></div>
-					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in attributeList" >
+					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in attributeList">
 						<div class="form-check">
-							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name" @change.prevent="checked();onChange">
+							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name"
+							       @change.prevent="onChange()">
 							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
 						</div>
 					</div>
@@ -30,7 +48,8 @@
 						<span>--</span></div>
 					<div class="d-flex justify-content-between mt-2" v-for="item in publisherList">
 						<div class="form-check">
-							<input class="form-check-input" type="radio" :id="item.name" :value="item.id" v-model="productSearchRequest.publisherId" name="nsx" @change.prevent="onChange">
+							<input class="form-check-input" type="checkbox" :id="item.name" :value="item.id"
+							       v-model="selectedIds" name="nsx" @change.prevent="onChange()">
 							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
 						</div>
 						<span role="button" title="Tổng số sản phẩm của nhà sản xuất">{{ item.totalProduct }}</span>
@@ -44,11 +63,13 @@
 							<div class="text-center"><img class="image"
 							                              :src="'http://localhost/image/product/'+item.imageThumbnail">
 							</div>
-							<div class="about text-center"><h5>{{ item.name }}</h5> <span>{{ item.price }} VND</span>
+							<div :title="item.name" class="about" role="button" @click.prevent="redirectDetail(item.id)"><h5>{{ !item.viewMore ? item.name.substring(0,50) + "... " : item.name}}<small @click.prevent="item.viewMore = !item.viewMore" title="xem thêm" class="text-info" role="button">Xem thêm</small></h5> <span>{{ item.price }} VND</span>
 							</div>
-							<div class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
-								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">Chi tiết</button>
-								<div class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
+							<div :title="'Chi tiết sản phẩm ' + item.name" class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
+								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">
+									Chi tiết
+								</button>
+								<div title="Thêm vào giỏ hàng" class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
 									class="product_fav"><i class="fa fa-opencart"></i></span></div>
 							</div>
 						</div>
@@ -58,15 +79,18 @@
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
 							<li class="page-item">
-								<a class="page-link" href="#" aria-label="Previous" @click.prevent="getProductList(page--,size)">
+								<a class="page-link" href="#" aria-label="Previous"
+								   @click.prevent="getProductList(page--,size)">
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 							</li>
 							<li class="page-item" v-for="item in productList.totalPages">
-								<a class="page-link" href="#" @click.prevent="getProductList(Number.parseInt(item) -1,15)">{{item}}</a>
+								<a class="page-link" href="#"
+								   @click.prevent="getProductList(Number.parseInt(item) -1,15)">{{ item }}</a>
 							</li>
 							<li class="page-item">
-								<a class="page-link" href="#" aria-label="Next" @click.prevent="getProductList(page++,size)">
+								<a class="page-link" href="#" aria-label="Next"
+								   @click.prevent="getProductList(page++,size)">
 									<span aria-hidden="true">&raquo;</span>
 								</a>
 							</li>
@@ -110,18 +134,28 @@ export default defineComponent({
 			attributeList: Array<Attribute>(),
 			attributeService: new AttributeService(),
 			attributeIdListSelected: Array<number>(),
-			productSearchRequest : new ProductSearchRequest(),
+			productSearchRequest: new ProductSearchRequest(),
 			selectedIds: Array<number>(),
+			categoryIdListSelected: Array<number>(),
 			sort: 1,
 			page: 0,
-			size: 15
+			size: 15,
+			isLoading: false as boolean
 		}
 	},
 	methods: {
-		getProductList(page : number,size : number) {
-			this.productService.findAll(page, size).then((res) => {
+		getProductList() {
+			this.isLoading = true;
+			this.productService.findBySearch(this.productSearchRequest).then((res) => {
 				this.productList = res;
-			})
+				this.productList?.content?.map((item: Product) => {
+					if(item.viewMore === null)
+						item.viewMore = false;
+				});
+			});
+			setTimeout(() => {
+				this.isLoading = false;
+			}, 1000);
 		},
 		getCategoryList() {
 			this.categoryService.findAllCategoryData().then((res) => {
@@ -139,37 +173,30 @@ export default defineComponent({
 			})
 		},
 		sortByCreatedDate() {
-			if(this.sort == 1){
-				this.productList.content?.sort((a : Product, b : Product) => {
+			if (this.sort == 1) {
+				this.productList.content?.sort((a: Product, b: Product) => {
 					return new Date(b.createdDate || new Date()).getTime() - new Date(a.createdDate || new Date()).getTime();
 				});
-			}else{
+			} else {
 				this.productList.content?.sort((a, b) => {
-					return new Date(a.createdDate|| new Date()).getTime() - new Date(b.createdDate|| new Date()).getTime();
+					return new Date(a.createdDate || new Date()).getTime() - new Date(b.createdDate || new Date()).getTime();
 				});
 			}
 		},
-		onChange(){
-			this.productService.findBySearch(this.productSearchRequest).then((res) => {
-				this.productList.content = res;
-				console.log(res);
-			})
-		},
-		checked(){
-			// Lọc ra các giá trị được chọn từ mảng attributeIdList
-			this.selectedIds = this.productSearchRequest.attributeIdList?.filter(value => value !== null) || [];
+		onChange() {
+			this.productSearchRequest.brandIdList = this.selectedIds;
+			this.productSearchRequest.categoryIdList = this.categoryIdListSelected;
+			this.getProductList();
 		},
 		redirectDetail(id: number) {
 			this.$router.push({name: 'ProductDetail', params: {id: id}});
 		}
 	},
 	created() {
-		this.getProductList(this.page,this.size);
+		this.getProductList();
 		this.getCategoryList();
 		this.getPublisherList();
 		this.getAttributeList();
-		this.productSearchRequest.name = "";
-		this.productSearchRequest.attributeIdList = [];
 	}
 })
 </script>
@@ -200,6 +227,22 @@ body {
 	border-radius: 5px;
 	position: relative;
 	border: 1px solid gray;
+}
+
+.loading {
+	background: rgba(0, 0, 0, .5);
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+}
+
+.spinner-center {
+	top: 50%;
+	left: 50%;
+	position: absolute;
 }
 
 .about span {

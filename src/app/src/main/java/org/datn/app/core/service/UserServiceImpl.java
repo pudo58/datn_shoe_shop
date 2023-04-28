@@ -6,14 +6,16 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.datn.app.config.WebConfig;
 import org.datn.app.core.dto.ChangePasswordRequest;
 import org.datn.app.core.dto.UserFindRequest;
-import org.datn.app.core.entity.Order;
 import org.datn.app.core.entity.User;
 import org.datn.app.core.repo.UserRepo;
+import org.datn.app.util.EncryptString;
+import org.datn.app.util.GenerateString;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.expression.spel.ast.ValueRef;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +25,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -38,6 +42,8 @@ import java.util.*;
 @Transactional(rollbackOn = RuntimeException.class)
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepo userRepo;
+    private final WebConfig webConfig;
+    private static Long START_TIME, END_TIME;
 
     @Override
     public User doInsert(User user) {
@@ -87,15 +93,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String authorizationHeader = request.getHeader("Authorization");
         // get Claim from token
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("vHPxbmyhXq".getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
-                if(decodedJWT.getExpiresAt().getTime() + 500_000 > System.currentTimeMillis()){
+                if (decodedJWT.getExpiresAt().getTime() + 500_000 > System.currentTimeMillis()) {
                     String username = decodedJWT.getSubject();
-                    User user =userRepo.findByUsername(username);
+                    User user = userRepo.findByUsername(username);
                     String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
                     String accessToken = JWT.create()
                             .withSubject(user.getUsername())
@@ -107,9 +113,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     tokens.put("access_token", accessToken);
                     tokens.put("refresh_token", refreshToken);
                     response.setContentType("application/json");
-                    new ObjectMapper().writeValue(response.getOutputStream(),tokens);
+                    new ObjectMapper().writeValue(response.getOutputStream(), tokens);
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 response.setHeader("error", e.getMessage());
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", e.getMessage());
@@ -149,16 +155,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public ResponseEntity<String> uploadFile(MultipartFile file, Principal principal) {
         try {
-           User user = userRepo.findByUsername(principal.getName());
-           if(user == null)
-               return ResponseEntity.ok("Bạn chưa đăng nhập");
-          else{
-               Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\user", file.getOriginalFilename());
-                   user.setAvatar(file.getOriginalFilename());
-                   if(userRepo.save(user) != null)
-                       Files.write(filePath, file.getBytes());
-                   return ResponseEntity.ok(user.getAvatar());
-           }
+            User user = userRepo.findByUsername(principal.getName());
+            if (user == null)
+                return ResponseEntity.ok("Bạn chưa đăng nhập");
+            else {
+                Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\user", file.getOriginalFilename());
+                user.setAvatar(file.getOriginalFilename());
+                if (userRepo.save(user) != null)
+                    Files.write(filePath, file.getBytes());
+                return ResponseEntity.ok(user.getAvatar());
+            }
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cập nhật ảnh đại diện thất bại");
         }
@@ -167,6 +173,69 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public List<User> findByUsernameOrEmail(UserFindRequest request) {
         return userRepo.findByUsernameOrEmail(request.getUsername(), request.getEmail());
+    }
+
+    @Override
+    public Map<String, Object> sendCode(String email) throws Exception {
+        START_TIME = System.currentTimeMillis();
+        String subject = "Mã xác nhận đổi mật khẩu";
+        Map<String, Object> result = new HashMap<>();
+        User user = userRepo.findByEmail(email);
+        if (user != null) {
+            String code = GenerateString.generateString(8);
+            webConfig.sendMail(email, code, subject);
+            user.setCode(EncryptString.encrypt(code));
+            userRepo.save(user);
+            result.put("message", "Mã xác nhận đã được gửi tới email của bạn sẽ hết hạn sau 2 phút");
+            result.put("status", String.valueOf(HttpStatus.OK.value()));
+            // set time out
+            Thread thread = new Thread(() -> {
+                while (true) {
+                    if (System.currentTimeMillis() - START_TIME > 120000) {
+                        user.setCode(null);
+                        userRepo.save(user);
+                        break;
+                    }
+                }
+            });
+            thread.start();
+        } else {
+            result.put("message", "Email không tồn tại");
+            result.put("status", String.valueOf(HttpStatus.NOT_FOUND.value()));
+        }
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> resetPassword(ChangePasswordRequest model) throws Exception {
+        String code = model.getCode();
+        if (code == null || code.equals("")){
+            Map<String,Object> result = new HashMap<>();
+            result.put("message", "Mã xác nhận không được để trống");
+            result.put("status", String.valueOf(HttpStatus.BAD_REQUEST.value()));
+            return result;
+        }
+        Map<String, Object> result = new HashMap<>();
+        User user = userRepo.findByEmail(model.getEmail());
+        if (user != null) {
+            if(user.getCode() == null)
+                user.setCode(StringUtils.EMPTY);
+            if (user.getCode().equals(EncryptString.encrypt(code))) {
+                user.setPassword(new BCryptPasswordEncoder().encode(model.getNewPassword()));
+                user.setModified(new Date());
+                user.setCode(null);
+                userRepo.save(user);
+                result.put("message", "Đổi mật khẩu thành công");
+                result.put("status", String.valueOf(HttpStatus.OK.value()));
+            } else {
+                result.put("message", "Mã xác nhận không đúng");
+                result.put("status", String.valueOf(HttpStatus.BAD_REQUEST.value()));
+            }
+        } else {
+            result.put("message", "Email không tồn tại");
+            result.put("status", String.valueOf(HttpStatus.NOT_FOUND.value()));
+        }
+        return result;
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.datn.app.core.entity.Cart;
 import org.datn.app.core.entity.Order;
 import org.datn.app.core.entity.ProductDetail;
 import org.datn.app.core.entity.User;
+import org.datn.app.core.entity.extend.CartDTO;
 import org.datn.app.core.repo.CartRepo;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -49,6 +50,12 @@ public class CartServiceImpl implements CartService {
             cartRepo.deleteAll(cartList);
         }
         return ResponseEntity.ok("Xóa sản phẩm đã chọn thành công");
+    }
+
+    @Override
+    public Page<Cart> findByUserId(CartDTO model) {
+        Pageable pageable = Pageable.ofSize(model.getSize().get()).withPage(model.getPage().get());
+        return cartRepo.findByUserId(model.getUserId(), pageable);
     }
 
     @Override
