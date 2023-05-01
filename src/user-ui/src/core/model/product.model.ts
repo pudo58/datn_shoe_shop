@@ -32,7 +32,7 @@ export class ProductSearchRequest{
     brandIdList? : number[];
     categoryIdList? : number[];
     keyword? : string;
-    colorList? : string[];
+    colorIdList? : number[];
     sizeIdList? : number[];
     modelList? : string[];
     materialList? : string[];

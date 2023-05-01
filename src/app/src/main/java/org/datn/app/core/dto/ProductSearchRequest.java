@@ -14,7 +14,7 @@ public class ProductSearchRequest {
     private List<Long> brandIdList;
     private List<Long> categoryIdList;
     private List<String>materialList;
-    private List<String> colorList;
+    private List<Long> colorIdList;
     private List<String> modelList;
     private List<Long> sizeIdList;
     private Integer page;

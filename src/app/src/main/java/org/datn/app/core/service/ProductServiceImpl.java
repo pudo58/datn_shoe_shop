@@ -252,7 +252,7 @@ public class ProductServiceImpl implements ProductService {
         String keyword = model.getKeyword();
         List<Long> brandIdList = model.getBrandIdList();
         List<Long> categoryIdList = model.getCategoryIdList();
-        List<String> colorList = model.getColorList();
+        List<Long> colorIdList = model.getColorIdList();
         List<String> materialList = model.getMaterialList();
         List<String> modelList = model.getModelList();
         List<Long> sizeIdList = model.getSizeIdList();
@@ -263,7 +263,7 @@ public class ProductServiceImpl implements ProductService {
             model.setSize(30);
         }
         Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
-        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorList, materialList, modelList, sizeIdList, pageable);
+        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
         return productPage;
     }
 }

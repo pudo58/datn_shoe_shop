@@ -1,49 +1,6 @@
 <template>
 	<div class="h2">Thêm mới sản phẩm</div>
 	<hr>
-	<!--	<form @submit.prevent="onSubmit" class="form-control">-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="productName">Tên sản phẩm<span class="text-bg-danger">*</span></label>-->
-	<!--			<input type="text" class="form-control" id="productName" v-model="productDto.name" placeholder="Vui lòng điền tên sản phẩm"/>-->
-	<!--		</div>-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="productPrice">Giá sản phẩm<span class="text-bg-danger">*</span></label>-->
-	<!--			<input type="text" class="form-control" id="productPrice" v-model="productDto.price" placeholder="Vui lòng điền giá sản phẩm"/>-->
-	<!--		</div>-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="productPublisher">Hãng sản xuất<span class="text-bg-danger">*</span></label>-->
-	<!--			<select class="form-control" id="productPublisher" v-model="productDto.brand.id" :disabled="isUpdate">-->
-	<!--				<option :value="0" disabled>Vui lòng chọn hãng sản xuất</option>-->
-	<!--				<option v-for="item in brandList" :value="item.id">{{ item.name }}</option>-->
-	<!--			</select>-->
-	<!--		</div>-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="productCategory">Danh mục<span class="text-bg-danger">*</span></label>-->
-	<!--			<select class="form-control" id="productCategory" v-model="productDto.category.id" :disabled="isUpdate">-->
-	<!--				<option :value="0" disabled>Vui lòng chọn danh mục</option>-->
-	<!--				<option v-for="item in categoryList" :value="item.id">{{ item?.name }}</option>-->
-	<!--			</select>-->
-	<!--		</div>-->
-	<!--		<div class="form-group" v-for="(size, index) in sizeList" :key="index">-->
-	<!--			<label class="col-form-label" :for="'sizeName'+index">Tên kích thước {{ index + 1 }}<span class="text-bg-danger">*</span></label>-->
-	<!--			<input type="text" class="form-control" :id="'sizeName'+index" v-model="productDto.sizeList[index].size" :placeholder="'Vui lòng điền tên kích thước '+index"/>-->
-	<!--			<label class="col-form-label" :for="'sizeQuantity'+index">Số lượng<span class="text-bg-danger">*</span></label>-->
-	<!--			<input type="number" class="form-control" :id="'sizeQuantity'+index" v-model="productDto.sizeList[index].quantity" :placeholder="'Vui lòng điền số lượng cho kích thước '+index"/>-->
-	<!--		</div>-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="productImage">Ảnh sản phẩm</label>-->
-	<!--			<input type="file" class="form-control" id="productImage" @change="handleImageChange"/>-->
-	<!--		</div>-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="discount">Giảm giá (%)</label>-->
-	<!--			<input type="number" class="form-control" id="discount" v-model="productDto.discount" placeholder="% giảm giá"/>-->
-	<!--		</div>-->
-	<!--		<div class="form-group">-->
-	<!--			<label class="col-form-label" for="desc">Mô tả</label>-->
-	<!--			<input type="text" class="form-control" id="desc" v-model="productDto.description" placeholder="Vui lòng điền mô tả"/>-->
-	<!--		</div>-->
-	<!--		<button type="submit" class="btn btn-success d-flex justify-content-start">Lưu</button>-->
-	<!--	</form>-->
 	<section class="panel panel-default">
 		<div class="panel-body">
 			<form class="form-horizontal" role="form" @submit.prevent="onSubmit($event)">
@@ -61,6 +18,13 @@
 					<div class="col-sm-5">
 						<input type="text" class="form-control" name="name" id="price" placeholder="giá sản phẩm"
 						       v-model="productDto.price">
+					</div>
+				</div>
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+					<label for="imageThumble" class="col-sm-2 control-label fw-bold align-self-center text-start">Chọn
+						ảnh (*)</label>
+					<div class="col-sm-5">
+						<input type="file" id="imageThumble" class="form-control-sm form-control"/>
 					</div>
 				</div>
 				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
@@ -154,13 +118,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
-					<label for="imageThumble" class="col-sm-2 control-label fw-bold align-self-center text-start">Chọn
-						ảnh (*)</label>
-					<div class="col-sm-5">
-						<input type="file" id="imageThumble" class="form-control-sm form-control"/>
-					</div>
-				</div>
 				<div class="form-group row mb-3 d-flex justify-content-center">
 					<label for="desc" class="col-sm-2 control-label fw-bold text-start">Mô tả</label>
 					<div class="col-sm-5">
@@ -230,9 +187,11 @@ export default defineComponent({
 				sizeDto.quantity = this.quantityList[index];
 				this.productDto.sizeList?.push(sizeDto);
 			});
+			console.log($event)
+			console.log($event.target[2].files[0]);
 			this.productDto.attributeValues = this.attributeValues;
 			this.productService.save(this.productDto).then((res) => {
-				let file = $event.target[5].files[0];
+				let file = $event.target[2].files[0];
 				this.productService.addImage(res.product.id, file).then((res) => {
 				});
 			});

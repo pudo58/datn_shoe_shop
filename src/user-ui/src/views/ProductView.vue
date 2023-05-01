@@ -41,6 +41,17 @@
 						</div>
 					</div>
 				</div>
+				<div class="processor p-2">
+					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
+						Màu sắc</h6> <span>--</span></div>
+					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in colorList">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name"
+							       v-model="colorIdListSelected" @change.prevent="onChange()">
+							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
+						</div>
+					</div>
+				</div>
 				<div class="brand p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
 						Hãng sản
@@ -120,6 +131,8 @@ import {PublisherService} from "@/core/service/publisher.service";
 import {PublisherResponse} from "@/core/model/publisher.model";
 import {Attribute} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
+import {Color} from "@/core/model/color.model";
+import {ColorService} from "@/core/service/color.service";
 
 export default defineComponent({
 	name: "Products",
@@ -131,12 +144,15 @@ export default defineComponent({
 			publisherService: new PublisherService(),
 			publisherList: Array<PublisherResponse>(),
 			productService: new ProductService(),
+			colorList: Array<Color>(),
+			colorService: new ColorService(),
 			attributeList: Array<Attribute>(),
 			attributeService: new AttributeService(),
 			attributeIdListSelected: Array<number>(),
 			productSearchRequest: new ProductSearchRequest(),
 			selectedIds: Array<number>(),
 			categoryIdListSelected: Array<number>(),
+			colorIdListSelected: Array<number>(),
 			sort: 1,
 			page: 0,
 			size: 15,
@@ -172,6 +188,11 @@ export default defineComponent({
 				this.attributeList = res;
 			})
 		},
+		getColorList() {
+			this.colorService.findAll().then((res) => {
+				this.colorList = res;
+			})
+		},
 		sortByCreatedDate() {
 			if (this.sort == 1) {
 				this.productList.content?.sort((a: Product, b: Product) => {
@@ -186,6 +207,7 @@ export default defineComponent({
 		onChange() {
 			this.productSearchRequest.brandIdList = this.selectedIds;
 			this.productSearchRequest.categoryIdList = this.categoryIdListSelected;
+			this.productSearchRequest.colorIdList = this.colorIdListSelected;
 			this.getProductList();
 		},
 		redirectDetail(id: number) {
@@ -197,6 +219,7 @@ export default defineComponent({
 		this.getCategoryList();
 		this.getPublisherList();
 		this.getAttributeList();
+		this.getColorList();
 	}
 })
 </script>
