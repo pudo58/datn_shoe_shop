@@ -88,14 +88,6 @@
 					</div>
 				</div>
 				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
-					<label for="material" class="col-sm-2 control-label fw-bold align-self-center text-start">Màu sắc
-						(*)</label>
-					<div class="col-sm-5">
-						<input type="text" class="form-control" name="name" id="color" placeholder="Màu sắc"
-						       v-model="productDto.color">
-					</div>
-				</div>
-				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
 					<label for="category" class="col-sm-2 control-label fw-bold align-self-center text-start">Danh mục
 						(*)</label>
 					<div class="col-sm-5">
@@ -149,6 +141,9 @@
 							<input type="text" class="form-control w-25" :id="item.size"
 							       v-model="productDto.sizeList[index].size"
 							       placeholder="Size" title="size">
+							<input type="text" class="form-control w-25" :id="item.color"
+							       v-model="productDto.sizeList[index].color"
+							       placeholder="Màu" title="Màu sắc">
 							<input type="text" class="form-control w-25" :id="item.quantity"
 							       v-model="productDto.sizeList[index].quantity"
 							       placeholder="Số lượng" title="số lượng">

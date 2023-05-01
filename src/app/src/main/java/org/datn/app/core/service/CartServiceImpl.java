@@ -11,6 +11,7 @@ import org.datn.app.core.repo.CartRepo;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -101,24 +103,43 @@ public class CartServiceImpl implements CartService {
      *   @return ResponseEntity<String>
      */
     @Override
-    public ResponseEntity<String> addToCart(CartRequest cartRequest) {
+    public Map<String,Object> addToCart(CartRequest cartRequest) {
         Long productDetailId = cartRequest.getProductDetailId();
         Long userId = cartRequest.getUserId();
         Integer quantity = cartRequest.getQuantity();
         ProductDetail productDetail = productDetailService.findById(productDetailId);
         User user = userService.findById(userId);
-        if (productDetail == null)
-            return ResponseEntity.badRequest().body("Sản phẩm không tồn tại");
-        if (productDetail.getQuantity() < quantity)
-            return ResponseEntity.badRequest().body("Số lượng sản phẩm không đủ");
-        if (productDetail.getQuantity() == 0)
-            return ResponseEntity.badRequest().body("Sản phẩm đã hết hàng");
-        if (user == null)
-            return ResponseEntity.badRequest().body("Không tìm thấy người dùng hoặc bạn chưa đăng nhập");
-        if (quantity.toString().isEmpty())
-            return ResponseEntity.badRequest().body("Số lượng sản phẩm không được để trống");
-        if (!quantity.toString().matches("[0-9]+"))
-            return ResponseEntity.badRequest().body("Số lượng sản phẩm phải là số nguyên dương");
+        Map<String,Object> map = Collections.emptyMap();
+        if (productDetail == null){
+            map.put("message","Không tìm thấy sản phẩm");
+            map.put("status", HttpStatus.BAD_REQUEST.value());
+            return map;
+        }
+        if (productDetail.getQuantity() < quantity){
+            map.put("message","Số lượng sản phẩm không đủ");
+            map.put("status", HttpStatus.BAD_REQUEST.value());
+            return map;
+        }
+        if (productDetail.getQuantity() == 0) {
+            map.put("message","Sản phẩm đã hết hàng");
+            map.put("status", HttpStatus.BAD_REQUEST.value());
+            return map;
+        }
+        if (user == null) {
+            map.put("message","Không tìm thấy người dùng");
+            map.put("status", HttpStatus.BAD_REQUEST.value());
+            return map;
+        }
+        if (quantity.toString().isEmpty()) {
+            map.put("message","Số lượng sản phẩm không được để trống");
+            map.put("status", HttpStatus.BAD_REQUEST.value());
+            return map;
+        }
+        if (!quantity.toString().matches("[0-9]+")) {
+            map.put("message","Số lượng sản phẩm phải là số");
+            map.put("status", HttpStatus.BAD_REQUEST.value());
+            return map;
+        }
         User user1 = userService.findById(userId);
         Cart cart = new Cart();
         cart.setUser(user1);
@@ -128,9 +149,11 @@ public class CartServiceImpl implements CartService {
             if (cart != null) {
                 cart.setQuantity(cart.getQuantity() + quantity);
                 cartRepo.save(cart);
-                return ResponseEntity.ok("Thêm số lượng của sản phẩm "
+                map.put("message","Thêm sản phẩm "
                         + cart.getProductDetail().getProduct().getName()
                         + " vào giỏ hàng thành công");
+                map.put("status", HttpStatus.OK.value());
+                return map;
             } else {
                 Cart cart1 = new Cart();
                 cart1.setQuantity(quantity);
@@ -138,9 +161,11 @@ public class CartServiceImpl implements CartService {
                 cart1.setPrice(productDetail.getProduct().getPrice() * quantity);
                 cart1.setUser(user1);
                 cartRepo.save(cart1);
-                return ResponseEntity.ok("Thêm sản phẩm "
+                map.put("message","Thêm sản phẩm "
                         + cart1.getProductDetail().getProduct().getName()
                         + " vào giỏ hàng thành công");
+                map.put("status", HttpStatus.OK.value());
+                return map;
             }
         }
     }

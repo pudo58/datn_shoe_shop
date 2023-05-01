@@ -5,4 +5,5 @@ export class Size {
 export class SizeDto {
     size: string = '';
     quantity: number = 0;
+    color: string = '';
 }

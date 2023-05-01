@@ -63,7 +63,7 @@
 							<div class="text-center"><img class="image"
 							                              :src="'http://localhost/image/product/'+item.imageThumbnail">
 							</div>
-							<div :title="item.name" class="about" role="button" @click.prevent="redirectDetail(item.id)"><h5>{{ !item.viewMore ? item.name.substring(0,50) + "... " : item.name}}<small @click.prevent="item.viewMore = !item.viewMore" title="xem thêm" class="text-info" role="button">Xem thêm</small></h5> <span>{{ item.price }} VND</span>
+							<div :title="item.name" class="about" role="button"><h5>{{ !item.viewMore && item.name.length > 50 ? item.name.substring(0,50) + "... " : item.name}}<small v-if="item.name.length > 50" @click.prevent="item.viewMore = !item.viewMore" title="xem thêm" class="text-info" role="button">Xem thêm</small></h5> <span>{{ item.price }} VND</span>
 							</div>
 							<div :title="'Chi tiết sản phẩm ' + item.name" class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
 								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">

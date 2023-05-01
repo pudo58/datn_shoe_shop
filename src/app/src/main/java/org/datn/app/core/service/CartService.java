@@ -8,9 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CartService extends ServiceCore<Cart,Long> {
-    ResponseEntity<String> addToCart(CartRequest cartRequest);
+    Map<String,Object> addToCart(CartRequest cartRequest);
     Cart findByUserIdAndAndProductDetailId(Long userId, Long productDetailId);
     ResponseEntity<String> deleteMultiCart(List<Long> cardIdList);
     Page<Cart> findByUserId(CartDTO model);

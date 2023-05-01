@@ -37,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
     private final AttributeDataRepo attributeDataRepo;
     private final BrandRepo brandRepo;
     private final SizeRepo sizeRepo;
+    private final ColorRepo colorRepo;
 
     @Override
     public Product doInsert(Product product) {
@@ -105,7 +106,6 @@ public class ProductServiceImpl implements ProductService {
             product.setDiscount(productDTO.getDiscount());
             product.setDescription(productDTO.getDescription());
             product.setCategory(category);
-            product.setColor(productDTO.getColor());
             product.setMaterial(productDTO.getMaterial());
             product.setModel(productDTO.getModel());
             product.setStatus(ProductConstant.EFFECT);
@@ -119,6 +119,12 @@ public class ProductServiceImpl implements ProductService {
         }
         for (int i = 0; i < sizeList.size(); i++) {
             ProductDetail productDetail = new ProductDetail();
+            Color color = new Color();
+            Color color1 = new Color();
+            if(colorRepo.findByName(productDTO.getSizeList().get(i).getColor()) == null){
+                color.setName(productDTO.getSizeList().get(i).getColor());
+                color1 = colorRepo.save(color);
+            }
             if (sizeRepo.findBySize(sizeList.get(i).getSize()) == null) {
                 try {
                     Size size = new Size();
@@ -126,6 +132,7 @@ public class ProductServiceImpl implements ProductService {
                     sizeRepo.save(size);
                     productDetail.setSize(sizeRepo.findBySize(size.getSize()));
                     productDetail.setProduct(product);
+                    productDetail.setColor(color1);
                     Integer quantity = productDTO.getSizeList().get(i).getQuantity();
                     if (quantity < 0) {
                         throw new RuntimeException("Số lượng không hợp lệ");
@@ -141,6 +148,7 @@ public class ProductServiceImpl implements ProductService {
                 try {
                     productDetail.setSize(sizeRepo.findBySize(sizeList.get(i).getSize()));
                     productDetail.setProduct(product);
+                    productDetail.setColor(colorRepo.findByName(productDTO.getSizeList().get(i).getColor()));
                     Integer quantity = productDTO.getSizeList().get(i).getQuantity();
                     if (quantity < 0) {
                         throw new RuntimeException("Số lượng không hợp lệ");

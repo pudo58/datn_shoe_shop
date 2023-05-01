@@ -33,8 +33,6 @@ public class Product implements Serializable {
 
     private String material; // chất liệu
 
-    private String color; // màu sắc
-
     private String model; // kiểu dáng
 
     private String imageThumbnail;
