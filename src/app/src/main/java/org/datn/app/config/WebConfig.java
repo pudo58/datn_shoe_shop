@@ -33,8 +33,8 @@ public class WebConfig {
     }
 
     @Async
-    public void sendMail(String email, String code,String subject) throws MessagingException {
-        String content = mailSenderUtil.sendMail(subject,code);
+    public void sendMail(String email, String code,String subject,String url) throws MessagingException {
+        String content = mailSenderUtil.sendMail(subject,code,url);
         MimeMessageHelper helper = new MimeMessageHelper(mailSender.createMimeMessage(), StandardCharsets.UTF_8.name());
         helper.setCc(email);
         helper.setSubject(subject);

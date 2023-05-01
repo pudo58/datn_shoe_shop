@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class MailSenderUtil {
     @Value("${frontend.urlRedirect}")
     private String urlRedirect;
-    public  String sendMail(String subject,String code) {
+    public  String sendMail(String subject,String code,String url) {
         StringBuilder stringBuilder = new StringBuilder();
         String emailHTML = "<!DOCTYPE html>\n" +
                 "<html>\n" +
@@ -93,8 +93,8 @@ public class MailSenderUtil {
                 "            <p>Chào bạn,</p>\n" +
                 "            <p>Bạn đang lấy lại mật khẩu tại Aboo Shop. Mã xác nhận của bạn là:</p>\n" +
                 "            <p><strong>"+ code +"</strong></p>\n" +
-                "            <p>Vui lòng nhập mã xác nhận này vào trang đăng ký để hoàn tất quá trình đăng ký.</p>\n" +
-                "            <a href=\""+ urlRedirect +"\" class=\"button\">Đăng ký</a>\n" +
+                "            <p>Vui lòng nhập mã xác nhận này vào trang để hoàn tất quá trình.</p>\n" +
+                "            <a href=\""+ urlRedirect.concat(url) +"\" class=\"button\">Đăng ký</a>\n" +
                 "        </div>\n" +
                 "\n" +
                 "        <div class=\"footer\">\n" +

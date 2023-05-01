@@ -88,6 +88,19 @@ const routes: Array<RouteRecordRaw> = [
             showNav: true,
             requiresAuth: true
         }
+    },
+    {
+        path: '/reset-password/:email/:code',
+        name: 'ResetPassword',
+        component: () => import('../views/ResetPasswordView.vue'),
+        meta: {
+            showTitle: false,
+            showFooter: true,
+            showCarousel: false,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
     }
 ]
 
@@ -97,9 +110,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product', '/admin/dashboard', '/product/:id'];
+    const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product', '/admin/dashboard', '/product/:id', '/forgot-password','/reset-password/:email/:code'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('access_token');
+    if (to.matched.some(record => record.path === '/reset-password/:email/:code')) {
+        // Allow access without authentication
+        return next();
+    }
 
     // trying to access a restricted page + not logged in
     // redirect to login page

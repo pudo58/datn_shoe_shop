@@ -26,7 +26,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
@@ -43,7 +42,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepo userRepo;
     private final WebConfig webConfig;
-    private static Long START_TIME, END_TIME;
+    private static Long START_TIME;
 
     @Override
     public User doInsert(User user) {
@@ -183,7 +182,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = userRepo.findByEmail(email);
         if (user != null) {
             String code = GenerateString.generateString(8);
-            webConfig.sendMail(email, code, subject);
+            String url = "/reset-password/" + user.getEmail() + "/" + code;
+            webConfig.sendMail(email, code, subject, url);
             user.setCode(EncryptString.encrypt(code));
             userRepo.save(user);
             result.put("message", "Mã xác nhận đã được gửi tới email của bạn sẽ hết hạn sau 2 phút");
@@ -209,8 +209,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Map<String, Object> resetPassword(ChangePasswordRequest model) throws Exception {
         String code = model.getCode();
-        if (code == null || code.equals("")){
-            Map<String,Object> result = new HashMap<>();
+        if (code == null || code.equals("")) {
+            Map<String, Object> result = new HashMap<>();
             result.put("message", "Mã xác nhận không được để trống");
             result.put("status", String.valueOf(HttpStatus.BAD_REQUEST.value()));
             return result;
@@ -218,7 +218,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Map<String, Object> result = new HashMap<>();
         User user = userRepo.findByEmail(model.getEmail());
         if (user != null) {
-            if(user.getCode() == null)
+            if (user.getCode() == null)
                 user.setCode(StringUtils.EMPTY);
             if (user.getCode().equals(EncryptString.encrypt(code))) {
                 user.setPassword(new BCryptPasswordEncoder().encode(model.getNewPassword()));
