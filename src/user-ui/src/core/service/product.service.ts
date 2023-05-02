@@ -76,4 +76,9 @@ export class ProductService {
         return response.data;
     }
 
+    async findByBrandId(id : number) {
+        const response = await axios.get(this.url + "findByBrandId/" + id);
+        return response.data;
+    }
+
 }

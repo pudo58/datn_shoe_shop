@@ -18,6 +18,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.status = 1")
     List<Product> findAll();
 
+    List<Product> findByBrandId(Long id);
+
     @Query("select p from Product p where p.status = 1 ORDER BY p.id DESC")
     Page<Product> findAll(Pageable pageable);
 

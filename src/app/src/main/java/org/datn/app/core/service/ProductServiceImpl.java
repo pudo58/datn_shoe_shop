@@ -1,5 +1,6 @@
 package org.datn.app.core.service;
 
+import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import org.datn.app.constant.AttributeConstant;
 import org.datn.app.constant.ProductConstant;
@@ -24,7 +25,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -38,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepo brandRepo;
     private final SizeRepo sizeRepo;
     private final ColorRepo colorRepo;
+    private final SocketIOServer socketIOServer;
 
     @Override
     public Product doInsert(Product product) {
@@ -63,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findById(Long aLong) {
-
         return productRepo.findById(aLong).orElse(null);
     }
 
@@ -121,7 +124,7 @@ public class ProductServiceImpl implements ProductService {
             ProductDetail productDetail = new ProductDetail();
             Color color = new Color();
             Color color1 = new Color();
-            if(colorRepo.findByName(productDTO.getSizeList().get(i).getColor()) == null){
+            if (colorRepo.findByName(productDTO.getSizeList().get(i).getColor()) == null) {
                 color.setName(productDTO.getSizeList().get(i).getColor());
                 color1 = colorRepo.save(color);
             }
@@ -231,7 +234,14 @@ public class ProductServiceImpl implements ProductService {
         response.put("product", product);
         response.put("message", "Thêm sản phẩm thành công");
         response.put("status", HttpStatus.OK.value());
+        // add event connect socket
+        socketIOServer.getBroadcastOperations().sendEvent("product", product);
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public List<Product> findByBrandId(Long id) {
+        return productRepo.findByBrandId(id);
     }
 
     @Override
@@ -256,14 +266,35 @@ public class ProductServiceImpl implements ProductService {
         List<String> materialList = model.getMaterialList();
         List<String> modelList = model.getModelList();
         List<Long> sizeIdList = model.getSizeIdList();
-        if(model.getPage() == null){
+        if (model.getPage() == null) {
             model.setPage(0);
         }
-        if(model.getSize() == null){
+        if (model.getSize() == null) {
             model.setSize(30);
         }
         Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
         Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
         return productPage;
+    }
+
+    @Override
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepo.findById(id).orElseThrow(
+                () -> new RuntimeException("Sản phẩm không tồn tại")
+        );
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setId(product.getId());
+        productResponse.setName(product.getName());
+        productResponse.setPrice(product.getPrice());
+        productResponse.setDiscount(product.getDiscount());
+        productResponse.setBrand(product.getBrand());
+        productResponse.setCategory(product.getCategory());
+        productResponse.setMaterial(product.getMaterial());
+        productResponse.setModel(product.getModel());
+        productResponse.setProductDetailList(productDetailRepo.findByProductId(id));
+        productResponse.setAttributeData(product.getAttributeData());
+        productResponse.setImageThumbnail(product.getImageThumbnail());
+        productResponse.setCreatedDate(product.getCreatedDate());
+        return productResponse;
     }
 }

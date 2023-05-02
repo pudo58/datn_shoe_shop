@@ -102,13 +102,14 @@
 						(*)</label>
 					<div class="col-sm-6 form-check form-check-inline">
 						<div v-for="(item,index) in productDto.sizeList" class="d-flex justify-content-start">
-							<input type="text" class="form-control w-25" :id="item.size"
+							<input type="text" class="form-control w-25  m-1" :id="item.size"
 							       v-model="productDto.sizeList[index].size"
 							       placeholder="Size" title="size">
-							<input type="text" class="form-control w-25" :id="item.color"
-							       v-model="productDto.sizeList[index].color"
-							       placeholder="Màu" title="Màu sắc">
-							<input type="text" class="form-control w-25" :id="item.quantity"
+							<select v-model="productDto.sizeList[index].color" class="m-1">
+								<option value="" disabled>Chọn màu</option>
+								<option v-for="(item,index) in colorList" :value="item.name">{{ item.name }}</option>
+							</select>
+							<input type="text" class="form-control w-25 m-1" :id="item.quantity"
 							       v-model="productDto.sizeList[index].quantity"
 							       placeholder="Số lượng" title="số lượng">
 							<span role="button" class="w-25 d-flex align-items-center justify-content-center">
@@ -150,6 +151,7 @@ import {SizeService} from "@/core/service/size.service";
 import {Attribute, ATTRIBUTE_TYPE} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
 import {toast} from "vue3-toastify";
+import {COLOR} from "@/core/model/core.base";
 
 export default defineComponent({
 	name: "ProductDetailActionComponent",
@@ -166,6 +168,7 @@ export default defineComponent({
 			brandList: [] as Brand[],
 			sizeList: new Array<Size>(),
 			sizeListSelected: [] as string[],
+			colorList : COLOR,
 			quantityList: [] as number[],
 			attributeList: new Array<Attribute>(),
 			attributeService: new AttributeService(),

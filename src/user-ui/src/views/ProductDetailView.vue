@@ -18,7 +18,7 @@
 						<div class="mt-2 pr-3 content"><p>
 							{{product.description}}
 						</p></div>
-						<h3>{{product.price}} VND</h3>
+						<h3>{{product.price}}</h3>
 						<div class="ratings d-flex flex-row align-items-center">
 							<div class="d-flex flex-row"><i class='bx bxs-star'></i> <i class='bx bxs-star'></i> <i
 								class='bx bxs-star'></i> <i class='bx bxs-star'></i> <i class='bx bx-star'></i></div>
@@ -54,9 +54,9 @@ export default defineComponent({
 	},
 	methods : {
 		getProduct(){
-			console.log(this.productId);
 			this.productService.findById(Number.parseInt(this.productId)).then((response) => {
 				this.product = response;
+				console.log(this.product);
 				//this.productDetailList = this.product.productDetailList;
 			}).catch((error) => {
 				console.log(error);

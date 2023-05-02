@@ -74,7 +74,7 @@
 							<div class="text-center"><img class="image"
 							                              :src="'http://localhost/image/product/'+item.imageThumbnail">
 							</div>
-							<div :title="item.name" class="about" role="button"><h5>{{ !item.viewMore && item.name.length > 50 ? item.name.substring(0,50) + "... " : item.name}}<small v-if="item.name.length > 50" @click.prevent="item.viewMore = !item.viewMore" title="xem thêm" class="text-info" role="button">Xem thêm</small></h5> <span>{{ item.price }} VND</span>
+							<div :title="item.name" class="about" role="button"><h5>{{ !item.viewMore && item.name.length > 50 ? item.name.substring(0,50) + "... " : item.name}}<small v-if="item.name.length > 50" @click.prevent="item.viewMore = !item.viewMore" title="xem thêm" class="text-info" role="button">Xem thêm</small></h5> <span>{{ item.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) }} VND</span>
 							</div>
 							<div :title="'Chi tiết sản phẩm ' + item.name" class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
 								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">
@@ -133,6 +133,8 @@ import {Attribute} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
 import {Color} from "@/core/model/color.model";
 import {ColorService} from "@/core/service/color.service";
+import { io, Socket } from 'socket.io-client';
+const socket: Socket = io('http://127.0.0.1:9092');
 
 export default defineComponent({
 	name: "Products",
@@ -212,6 +214,20 @@ export default defineComponent({
 		},
 		redirectDetail(id: number) {
 			this.$router.push({name: 'ProductDetail', params: {id: id}});
+		},
+		listenEvent(){
+			//check connect socket
+			console.log(socket.connected)
+			socket.on('connect', () => {
+				console.log('connect');
+			});
+			//send event
+			socket.emit('client-send', 'hello server');
+			//receive event
+			socket.on('product', (data: any) => {
+				console.log(data);
+			});
+
 		}
 	},
 	created() {
@@ -220,6 +236,7 @@ export default defineComponent({
 		this.getPublisherList();
 		this.getAttributeList();
 		this.getColorList();
+		this.listenEvent();
 	}
 })
 </script>

@@ -23,8 +23,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/get/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productService.findById(id);
+    public ProductResponse getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -55,5 +55,10 @@ public class ProductController {
     @PostMapping(value = "/findByFilter")
     public Page<Product> findByFilter(@RequestBody ProductSearchRequest model) {
         return productService.findByFilter(model);
+    }
+
+    @GetMapping("/findByBrand/{id}")
+    public List<Product> findByBrandId(@PathVariable Long id) {
+        return productService.findByBrandId(id);
     }
 }

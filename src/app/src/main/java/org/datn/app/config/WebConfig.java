@@ -1,7 +1,9 @@
 package org.datn.app.config;
 
+import com.corundumstudio.socketio.SocketIOServer;
 import lombok.RequiredArgsConstructor;
 import org.datn.app.util.MailSenderUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -40,5 +42,15 @@ public class WebConfig {
         helper.setSubject(subject);
         helper.setText(content, true);
         mailSender.send(helper.getMimeMessage());
+    }
+
+    @Bean
+    public SocketIOServer getSocketIOServer(@Value("${socketio.server.host}") String host,@Value("${socketio.server.port}") int port){
+        com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
+        config.setHostname(host);
+        config.setPort(port);
+        SocketIOServer server = new SocketIOServer(config);
+        server.start();
+        return server;
     }
 }

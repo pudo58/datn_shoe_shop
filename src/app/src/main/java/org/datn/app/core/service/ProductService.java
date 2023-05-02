@@ -11,12 +11,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 public interface ProductService extends ServiceCore<Product,Long> {
     Page<ProductResponse> findAllProduct(Integer page, Integer size);
     ResponseEntity<?> addProduct(ProductDTO productDTO);
 
+    List<Product> findByBrandId(Long id);
+
     ResponseEntity<?> addImage(MultipartFile file, HttpServletRequest request) throws IOException;
 
     Page<Product> findByFilter(ProductSearchRequest model);
+
+    ProductResponse getProductById(Long id);
 }
