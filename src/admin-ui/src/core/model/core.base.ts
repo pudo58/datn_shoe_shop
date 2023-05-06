@@ -7,6 +7,7 @@ export class Pageable<Type> {
     public numberOfElements?: number;
     public first?: boolean;
     public empty?: boolean;
+    public last?: boolean;
 }
 
 export const PAGEABLE_DEFAULT  = {

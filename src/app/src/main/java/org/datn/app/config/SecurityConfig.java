@@ -37,11 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login**", "/api/user/add","/api/user/username/**").permitAll();
-        http.authorizeRequests().antMatchers("/api/cart/**").access("hasAnyRole('USER', 'ADMIN') and @customSecurityService.checkUserStatus()");
+        http.authorizeRequests().antMatchers("/api/cart/**").permitAll();
         http.authorizeRequests().antMatchers("/api/product/top10").permitAll();
         http.authorizeRequests().anyRequest().permitAll();
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilter(customAuthenticationFilter);
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.cors().and().csrf().disable();
     }
 

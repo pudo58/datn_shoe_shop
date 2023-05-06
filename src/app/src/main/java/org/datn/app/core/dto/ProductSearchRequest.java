@@ -13,6 +13,7 @@ public class ProductSearchRequest {
     private String keyword;
     private List<Long> brandIdList;
     private List<Long> categoryIdList;
+    private List<Long> attributeIdList;
     private List<String>materialList;
     private List<Long> colorIdList;
     private List<String> modelList;

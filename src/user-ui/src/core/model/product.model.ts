@@ -1,6 +1,8 @@
-import {Publisher} from "@/core/model/publisher.model";
+import {Brand} from "@/core/model/brand.model";
 import {Category} from "@/core/model/category.model";
-import {SizeDto} from "@/core/model/size.model";
+import {Size, SizeDto} from "@/core/model/size.model";
+import {ProductDetail} from "@/core/model/product-detail.model";
+import {Color} from "@/core/model/color.model";
 
 export class Product {
     id?: number;
@@ -10,7 +12,9 @@ export class Product {
     discount?: number;
     status?: number;
     imageThumbnail?: string;
-    publisher?: Publisher;
+    model?: string;
+    material?: string;
+    brand?: Brand;
     category?: Category;
     createdDate?: Date;
     viewMore?: boolean;
@@ -33,9 +37,14 @@ export class ProductSearchRequest{
     categoryIdList? : number[];
     keyword? : string;
     colorIdList? : number[];
+    attributeIdList? : number[];
     sizeIdList? : number[];
     modelList? : string[];
     materialList? : string[];
     page? : number;
     size? : number;
+}
+
+export class ProductResponse extends Product{
+    productDetailList? : ProductDetail[];
 }

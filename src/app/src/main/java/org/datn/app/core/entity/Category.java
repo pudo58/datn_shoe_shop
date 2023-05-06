@@ -27,7 +27,7 @@ public class Category implements Serializable {
 
     private Boolean isTrash;
 
-    @ManyToMany(cascade = CascadeType.ALL,targetEntity = Attribute.class)
+    @ManyToMany(cascade = CascadeType.PERSIST,targetEntity = Attribute.class)
     @JoinTable(name = "category_attribute",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_id"))
@@ -36,7 +36,7 @@ public class Category implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Product> products;
 

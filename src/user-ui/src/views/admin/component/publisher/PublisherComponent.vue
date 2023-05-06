@@ -81,9 +81,9 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {Publisher} from "@/core/model/publisher.model";
+import {Brand} from "@/core/model/brand.model";
 import {Pageable} from "@/core/model/core.base";
-import {PublisherService} from "@/core/service/publisher.service";
+import {BrandService} from "@/core/service/brand.service";
 import PublisherDetailComponent from "@/views/admin/component/publisher/PublisherDetail.vue";
 import {toast} from "vue3-toastify";
 
@@ -94,9 +94,9 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			publisherList: new Pageable<Publisher>(),
-			publisher: new Publisher(),
-			publisherService: new PublisherService(),
+			publisherList: new Pageable<Brand>(),
+			publisher: new Brand(),
+			publisherService: new BrandService(),
 			page: 0,
 			size: 10,
 			name: '' as string,
@@ -104,7 +104,7 @@ export default defineComponent({
 	},
 	methods: {
 		async getPublisher(page: number, size: number) {
-			const res = await this.publisherService.findAll(page, size) as Pageable<Publisher>;
+			const res = await this.publisherService.findAll(page, size) as Pageable<Brand>;
 			this.publisherList = res;
 		},
 		deleteById(id: number) {
@@ -117,7 +117,7 @@ export default defineComponent({
 				})
 			}
 		},
-		getEmit(publisher: Publisher) {
+		getEmit(publisher: Brand) {
 			this.publisherList.content?.push(publisher);
 		},
 		onChange() {

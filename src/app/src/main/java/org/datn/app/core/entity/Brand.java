@@ -23,7 +23,7 @@ public class Brand implements Serializable {
     @Column(name = "`website`")
     private String website;
 
-    @OneToMany(mappedBy = "brand",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand")
     @JsonIgnore
     private List<Product> products;
 }

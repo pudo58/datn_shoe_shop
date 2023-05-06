@@ -34,7 +34,7 @@ public class CartController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public Cart deleteCart(Long id) {
+    public Cart deleteCart(@PathVariable Long id) {
         return cartService.doDeleteById(id);
     }
 

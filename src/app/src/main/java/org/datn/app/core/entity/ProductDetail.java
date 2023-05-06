@@ -18,25 +18,25 @@ public class ProductDetail implements Serializable {
     @Column(name = "product_detail_id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Size.class)
+    @ManyToOne(targetEntity = Size.class)
     @JoinColumn(name = "size_id")
     private Size size;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Color.class)
+    @ManyToOne(targetEntity = Color.class)
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Product.class)
+    @ManyToOne(targetEntity = Product.class)
     @JoinColumn(name = "product_id")
     private Product product;
     private Integer quantity;
     private Integer status;
 
-    @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = Cart.class)
+    @OneToMany(mappedBy = "productDetail",targetEntity = Cart.class)
     @JsonIgnore
     private List<Cart> carts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "productDetail",cascade = CascadeType.ALL,targetEntity = OrderDetail.class)
+    @OneToMany(mappedBy = "productDetail",targetEntity = OrderDetail.class)
     @JsonIgnore
     private List<OrderDetail> orderDetails = new ArrayList<>();
 }

@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -109,7 +106,7 @@ public class CartServiceImpl implements CartService {
         Integer quantity = cartRequest.getQuantity();
         ProductDetail productDetail = productDetailService.findById(productDetailId);
         User user = userService.findById(userId);
-        Map<String,Object> map = Collections.emptyMap();
+        Map<String,Object> map = new HashMap<>();
         if (productDetail == null){
             map.put("message","Không tìm thấy sản phẩm");
             map.put("status", HttpStatus.BAD_REQUEST.value());
@@ -145,28 +142,36 @@ public class CartServiceImpl implements CartService {
         cart.setUser(user1);
         cart.setProductDetail(productDetail);
         cart = cartRepo.findOne(Example.of(cart)).orElse(null);
-        synchronized (cart) {
-            if (cart != null) {
-                cart.setQuantity(cart.getQuantity() + quantity);
-                cartRepo.save(cart);
-                map.put("message","Thêm sản phẩm "
-                        + cart.getProductDetail().getProduct().getName()
-                        + " vào giỏ hàng thành công");
-                map.put("status", HttpStatus.OK.value());
-                return map;
-            } else {
-                Cart cart1 = new Cart();
-                cart1.setQuantity(quantity);
-                cart1.setProductDetail(productDetail);
-                cart1.setPrice(productDetail.getProduct().getPrice() * quantity);
-                cart1.setUser(user1);
-                cartRepo.save(cart1);
-                map.put("message","Thêm sản phẩm "
-                        + cart1.getProductDetail().getProduct().getName()
-                        + " vào giỏ hàng thành công");
-                map.put("status", HttpStatus.OK.value());
-                return map;
+        if (cart == null) {
+            Cart cart1 = new Cart();
+            cart1.setQuantity(quantity);
+            cart1.setProductDetail(productDetail);
+            cart1.setPrice(productDetail.getProduct().getPrice() * quantity);
+            cart1.setUser(user1);
+            cartRepo.save(cart1);
+            map.put("message","Thêm sản phẩm "
+                    + cart1.getProductDetail().getProduct().getName()
+                    + " vào giỏ hàng thành công");
+            map.put("status", HttpStatus.OK.value());
+            return map;
+        }else{
+            synchronized (cart) {
+                if (cart != null) {
+                    if(cart.getQuantity() + quantity > productDetail.getQuantity()) {
+                        map.put("message", "Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm trong kho");
+                        map.put("status", HttpStatus.BAD_REQUEST.value());
+                        return map;
+                    }
+                    cart.setQuantity(cart.getQuantity() + quantity);
+                    cartRepo.save(cart);
+                    map.put("message", "Thêm sản phẩm "
+                            + cart.getProductDetail().getProduct().getName()
+                            + " vào giỏ hàng thành công");
+                    map.put("status", HttpStatus.OK.value());
+                    return map;
+                }
             }
         }
+        return map;
     }
 }

@@ -30,7 +30,7 @@ public class Rank implements Serializable {
     @Column(name = "target_money")
     private Double targetMoney;
 
-    @OneToMany(mappedBy = "rank",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "rank")
     @JsonIgnore
     private List<User> users;
 }

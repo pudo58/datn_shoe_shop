@@ -6,26 +6,79 @@
 					<div class="d-flex flex-column justify-content-center">
 						<div class="main_image">
 							<img :src="'http://localhost/image/product/' + product.imageThumbnail"
-						                             width="450">
+							     width="450">
 						</div>
 					</div>
 				</div>
 				<div class="col-md-6">
 					<div class="p-3 right-side">
-						<div class="d-flex justify-content-between align-items-center"><h3>{{product.name}}</h3>  <span
+						<div class="d-flex justify-content-between align-items-center"><h4>{{ product?.name }}</h4><span
 							class="heart"><i
 							class='bx bx-heart'></i></span></div>
 						<div class="mt-2 pr-3 content"><p>
-							{{product.description}}
+							{{ product.description }}
 						</p></div>
-						<h3>{{product.price}}</h3>
+						<div class="text-start">
+							Giá bán: <span class="fw-bold"> {{
+								formatMoney(product.price - (product.price * product.discount / 100))
+							}}</span><br>
+							Giá gốc: <span class="fw-bold"> {{ formatMoney(product.price) }}</span>
+						</div>
+						<div class="text-start">
+							Giảm giá: <span class="fw-bold text-danger">{{ product.discount + '%' }}</span>
+						</div>
+						<!--						thuôc tính-->
+						<div class="text-start">
+							Danh mục : <span class="fw-bold">{{ product.category?.name }}</span>
+						</div>
+						<div class="text-start">
+							Thương hiệu : <span class="fw-bold">{{ product.brand?.name }}</span>
+						</div>
+						<div class="text-start">
+							Kiểu dáng : <span class="fw-bold">{{ product?.model }}</span>
+						</div>
+						<div class="text-start">
+							Chất liệu : <span class="fw-bold">{{ product?.material }}</span>
+						</div>
+						<div v-if="product?.attributeDataList?.length" class="text-start">
+							<span class="fw-bold">Kích cỡ</span>
+							<div class="d-flex flex-row ">
+								<button :class="{'bg-success text-light' : size == item.size.size}" type="button" class="m-1" v-for="item in product?.productDetailList" @click.prevent="size = item.size.size;getQuantity()">
+									{{ item?.size?.size }}
+								</button>
+							</div>
+						</div>
+						<div v-if="product?.productDetailList?.length" class="text-start">
+							<span class="fw-bold">Màu sắc</span>
+							<div class="d-flex flex-row ">
+							<button :class="{'bg-success text-light' : color == item.color.name}" class="m-1" v-for="item in product?.productDetailList" @click.prevent="color = item.color.name;getQuantity()">
+								{{ item?.color?.name }}
+							</button>
+							</div>
+						</div>
+						<div class="text-start">
+							Số lượng còn : <span class="fw-bold">{{ quantity}}</span>
+						</div>
+						<div class="text-start">
+							Mô tả : <span
+							class="fw-bold">{{ product.description == null ? 'Không có' : product.description }}</span>
+						</div>
+<!--						 chọn số lượng kiểu số-->
+						<div class="text-start">
+							<span>Chọn số lượng : </span>
+							<div class="d-flex justify-content-start">
+								<button class="btn btn-outline-dark" @click="userQuantity = userQuantity - 1" :disabled="userQuantity <= 0">-</button>
+								<input type="text" class="form-control w-25" v-model="userQuantity" min="0" :max="quantity">
+								<button class="btn btn-outline-dark" @click="userQuantity = userQuantity + 1" :disabled="userQuantity >= quantity">+</button>
+							</div>
+
+						</div>
 						<div class="ratings d-flex flex-row align-items-center">
 							<div class="d-flex flex-row"><i class='bx bxs-star'></i> <i class='bx bxs-star'></i> <i
 								class='bx bxs-star'></i> <i class='bx bxs-star'></i> <i class='bx bx-star'></i></div>
 							<span>441 reviews</span></div>
 						<div class="buttons d-flex flex-row mt-5 gap-3">
-							<button class="btn btn-outline-dark">Mua ngay</button>
-							<button class="btn btn-dark">Thêm vào giỏ hàng</button>
+							<button type="button" class="btn btn-dark" @click.prevent="addToCart()">Thêm vào giỏ hàng</button>
 						</div>
 						<div class="search-option"><i class='bx bx-search-alt-2 first-search'></i>
 							<div class="inputs"><input type="text" name=""></div>
@@ -40,27 +93,67 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {ProductDetail} from "@/core/model/product-detail.model";
-import {Product} from "@/core/model/product.model";
+import {ProductResponse} from "@/core/model/product.model";
 import {ProductService} from "@/core/service/product.service";
+import {CartService} from "@/core/service/cart.service";
+import {toast} from "vue3-toastify";
+import {CardRequest} from "@/core/model/cart.model";
 export default defineComponent({
 	name: "ProductDetailView",
-	data () {
+	data() {
 		return {
-			productId : this.$route.params.id as string ,
-			product : new Product(),
-			productService : new ProductService(),
-			productDetailList : new Array<ProductDetail>(),
+			productId: this.$route.params.id as string,
+			product: new ProductResponse(),
+			productService: new ProductService(),
+			productDetailList: new Array<ProductDetail>(),
+			cartService: new CartService(),
+			color : '',
+			size : '',
+			quantity : 0 as any,
+			userQuantity : 0 as any,
+			productDetailId : 0 as any
 		}
 	},
-	methods : {
-		getProduct(){
+	methods: {
+		getProduct() {
 			this.productService.findById(Number.parseInt(this.productId)).then((response) => {
 				this.product = response;
-				console.log(this.product);
-				//this.productDetailList = this.product.productDetailList;
 			}).catch((error) => {
 				console.log(error);
 			});
+		},
+		formatMoney(money: number) {
+			return money?.toLocaleString('it-IT', {style: 'currency', currency: 'VND'});
+		},
+		getQuantity(){
+			let flag = false;
+			if(this.product?.productDetailList && this.product?.productDetailList.length > 0){
+				this.product?.productDetailList?.forEach((item) => {
+					if(item.color?.name == this.color && item.size?.size == this.size){
+						flag = true;
+						this.quantity = item.quantity;
+						this.productDetailId = item.id;
+						console.log(this.productDetailId)
+					}
+				});
+				if(!flag){
+					this.quantity = 0;
+				}
+			}
+		},
+		addToCart(){
+			if(this.userQuantity > 0){
+				const payload = {
+					userId : Number(localStorage.getItem('userId')),
+					productDetailId : this.productDetailId,
+					quantity : this.userQuantity
+				} as CardRequest;
+				this.cartService.addToCart(payload).then(() => {
+				}).catch((error) => {
+				});
+			}else{
+				toast.error('Số lượng phải lớn hơn 0');
+			}
 		}
 	},
 	created() {

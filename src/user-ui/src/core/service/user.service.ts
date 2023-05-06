@@ -84,6 +84,7 @@ export class UserService {
                 if(response.data?.status == 200){
                     localStorage.setItem("access_token","Bearer " + response.data.access_token);
                     localStorage.setItem("user", JSON.stringify(this.userCurrent));
+                    localStorage.setItem("userId", <string>this.userCurrent.id?.toString());
                     toast.success("Đăng nhập thành công");
                     router.push("/");
                     return true;

@@ -101,6 +101,32 @@ const routes: Array<RouteRecordRaw> = [
             showNav: true,
             requiresAuth: true
         }
+    },
+    {
+        path: '/cart',
+        name: 'Cart',
+        component: () => import('../views/CartView.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/cart/checkout',
+        name: 'Checkout',
+        component: () => import('../views/OrderView.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
     }
 ]
 

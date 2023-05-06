@@ -60,7 +60,6 @@ export default defineComponent({
 		onSubmit(){
 			const response = axios.post('/api/user/sendCode', this.changePasswordRequest);
 			response.then((res)=>{
-				console.log(res)
 				if (res.data.status == 200) {
 					toast.success(res.data?.message);
 					this.count = true;
@@ -68,6 +67,7 @@ export default defineComponent({
 						this.secondCount--;
 						if (this.secondCount === 0) {
 							this.count = false;
+							this.secondCount = 120;
 						}
 					}, 1000);
 				}

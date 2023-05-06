@@ -34,16 +34,16 @@ public class Order implements Serializable {
 
     private String note;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
 
     private Integer status;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,targetEntity = OrderDetail.class)
+    @OneToMany(mappedBy = "order",targetEntity = OrderDetail.class)
     private List<OrderDetail> orderDetails;
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,targetEntity = Transaction.class)
+    @OneToMany(mappedBy = "order",targetEntity = Transaction.class)
     private List<Transaction> transactions;
 
     @PrePersist
@@ -51,5 +51,10 @@ public class Order implements Serializable {
         this.created = new Date();
         this.modified = new Date();
         this.status = OrderConstant.PENDING;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.modified = new Date();
     }
 }

@@ -4,18 +4,14 @@ import UserModule from "@/views/user/user.module";
 import PublisherModule from "@/views/brand/brand.module";
 import AttributeModule from "@/views/attribute/attribute.module";
 import ProductModule from "@/views/product/product.module";
-
+import OrderModule from "@/views/order/order.module";
 const routes: Array<RouteRecordRaw> = [
-    // {
-    //     path: '/admin',
-    //     component: () => import('@/views/DashboardView.vue'),
-    //     name: 'DashboardView'
-    // },
     ...UserModule,
     ...PublisherModule,
     ...AttributeModule,
     ...ProductModule,
     ...CategoryModule,
+    ...OrderModule,
 ]
 
 const router = createRouter({

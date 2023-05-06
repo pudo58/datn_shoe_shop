@@ -58,15 +58,15 @@ public class User implements Serializable, UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Rank.class)
+    @ManyToOne(targetEntity = Rank.class)
     @JoinColumn(name = "rank_id", referencedColumnName = "rank_id")
     private Rank rank;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, targetEntity = Order.class)
+    @OneToMany(mappedBy = "user", targetEntity = Order.class)
     @JsonIgnore
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, targetEntity = Cart.class)
+    @OneToMany(mappedBy = "user", targetEntity = Cart.class)
     @JsonIgnore
     private List<Cart> carts;
 

@@ -266,6 +266,7 @@ public class ProductServiceImpl implements ProductService {
         List<String> materialList = model.getMaterialList();
         List<String> modelList = model.getModelList();
         List<Long> sizeIdList = model.getSizeIdList();
+        List<Long> attributeIdList = model.getAttributeIdList();
         if (model.getPage() == null) {
             model.setPage(0);
         }
@@ -273,7 +274,7 @@ public class ProductServiceImpl implements ProductService {
             model.setSize(30);
         }
         Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
-        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
+        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList,attributeIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
         return productPage;
     }
 
@@ -292,7 +293,7 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setMaterial(product.getMaterial());
         productResponse.setModel(product.getModel());
         productResponse.setProductDetailList(productDetailRepo.findByProductId(id));
-        productResponse.setAttributeData(product.getAttributeData());
+        productResponse.setAttributeDataList(product.getAttributeData());
         productResponse.setImageThumbnail(product.getImageThumbnail());
         productResponse.setCreatedDate(product.getCreatedDate());
         return productResponse;

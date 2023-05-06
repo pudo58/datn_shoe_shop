@@ -8,9 +8,11 @@
 		<div class="row d-flex justify-content-end">
 			<div class="col-md-9">
 				<div class="input-group mb-3">
-					<input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm" aria-label="Recipient's username"
+					<input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm"
+					       aria-label="Recipient's username"
 					       aria-describedby="button-addon2" v-model="productSearchRequest.keyword">
-					<button title="Tìm kiếm" class="btn btn-outline-secondary" type="button" id="button-addon2" @click.prevent="onChange()">
+					<button title="Tìm kiếm" class="btn btn-outline-secondary" type="button" id="button-addon2"
+					        @click.prevent="onChange()">
 						<i class="bi bi-search"></i>
 					</button>
 				</div>
@@ -36,7 +38,7 @@
 					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in attributeList">
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name"
-							       @change.prevent="onChange()">
+							       @change.prevent="onChange()" v-model="attributeIdListSelected">
 							<label class="form-check-label" :for="item.name"> {{ item.name }} </label>
 						</div>
 					</div>
@@ -74,13 +76,20 @@
 							<div class="text-center"><img class="image"
 							                              :src="'http://localhost/image/product/'+item.imageThumbnail">
 							</div>
-							<div :title="item.name" class="about" role="button"><h5>{{ !item.viewMore && item.name.length > 50 ? item.name.substring(0,50) + "... " : item.name}}<small v-if="item.name.length > 50" @click.prevent="item.viewMore = !item.viewMore" title="xem thêm" class="text-info" role="button">Xem thêm</small></h5> <span>{{ item.price.toLocaleString('it-IT', {style : 'currency', currency : 'VND'}) }} VND</span>
+							<div :title="item.name" class="about" role="button"><h5>
+								{{ !item.viewMore && item.name.length > 50 ? item.name.substring(0, 50) + "... " : item.name }}<small
+								v-if="item.name.length > 50" @click.prevent="item.viewMore = !item.viewMore"
+								title="xem thêm" class="text-info" role="button">Xem thêm</small></h5><span>{{
+									item.price.toLocaleString('it-IT', {style: 'currency', currency: 'VND'})
+								}} VND</span>
 							</div>
-							<div :title="'Chi tiết sản phẩm ' + item.name" class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
+							<div :title="'Chi tiết sản phẩm ' + item.name"
+							     class="cart-button mt-3 px-2 d-flex justify-content-between align-items-center">
 								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">
 									Chi tiết
 								</button>
-								<div title="Thêm vào giỏ hàng" class="add"><span class="product_fav"><i class="fa fa-heart-o"></i></span> <span
+								<div title="Thêm vào giỏ hàng" class="add"><span class="product_fav"><i
+									class="fa fa-heart-o"></i></span> <span
 									class="product_fav"><i class="fa fa-opencart"></i></span></div>
 							</div>
 						</div>
@@ -127,13 +136,14 @@ import {Product, ProductSearchRequest} from "@/core/model/product.model";
 import {ProductService} from "@/core/service/product.service";
 import {CategoryService} from "@/core/service/category.service";
 import {CategoryResponse} from "@/core/model/category.model";
-import {PublisherService} from "@/core/service/publisher.service";
-import {PublisherResponse} from "@/core/model/publisher.model";
+import {BrandService} from "@/core/service/brand.service";
+import {BrandResponse} from "@/core/model/brand.model";
 import {Attribute} from "@/core/model/attribute.model";
 import {AttributeService} from "@/core/service/attribute.service";
 import {Color} from "@/core/model/color.model";
 import {ColorService} from "@/core/service/color.service";
-import { io, Socket } from 'socket.io-client';
+import {io, Socket} from 'socket.io-client';
+
 const socket: Socket = io('http://127.0.0.1:9092');
 
 export default defineComponent({
@@ -143,8 +153,8 @@ export default defineComponent({
 			productList: new Pageable<Product>(),
 			categoryList: Array<CategoryResponse>(),
 			categoryService: new CategoryService(),
-			publisherService: new PublisherService(),
-			publisherList: Array<PublisherResponse>(),
+			publisherService: new BrandService(),
+			publisherList: Array<BrandResponse>(),
 			productService: new ProductService(),
 			colorList: Array<Color>(),
 			colorService: new ColorService(),
@@ -167,7 +177,7 @@ export default defineComponent({
 			this.productService.findBySearch(this.productSearchRequest).then((res) => {
 				this.productList = res;
 				this.productList?.content?.map((item: Product) => {
-					if(item.viewMore === null)
+					if (item.viewMore === null)
 						item.viewMore = false;
 				});
 			});
@@ -210,12 +220,13 @@ export default defineComponent({
 			this.productSearchRequest.brandIdList = this.selectedIds;
 			this.productSearchRequest.categoryIdList = this.categoryIdListSelected;
 			this.productSearchRequest.colorIdList = this.colorIdListSelected;
+			this.productSearchRequest.attributeIdList = this.attributeIdListSelected;
 			this.getProductList();
 		},
 		redirectDetail(id: number) {
 			this.$router.push({name: 'ProductDetail', params: {id: id}});
 		},
-		listenEvent(){
+		listenEvent() {
 			//check connect socket
 			console.log(socket.connected)
 			socket.on('connect', () => {

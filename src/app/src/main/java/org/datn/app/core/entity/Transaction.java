@@ -28,12 +28,12 @@ public class Transaction implements Serializable {
 
     private Double total;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Order.class)
+    @ManyToOne(targetEntity = Order.class)
     @JoinColumn(name = "order_id")
     private Order order;
 
    // one transaction have many voucher
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = Voucher.class)
+    @ManyToOne(targetEntity = Voucher.class)
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
 

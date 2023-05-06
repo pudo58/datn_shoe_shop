@@ -118,7 +118,7 @@ export default defineComponent({
 				{name: 'category', show: false, label: 'Quản lý danh mục', routerLink: '/admin/category'},
 				{name: 'brand', show: false, label: 'Quản lý hãng', routerLink: '/admin/brand'},
 				{name: 'product', show: false, label: 'Quản lý sản phẩm', routerLink: '/admin/product'},
-				{name: 'cart', show: false, label: 'Quản lý đơn hàng', routerLink: '/admin/cart'},
+				{name: 'cart', show: false, label: 'Quản lý đơn hàng', routerLink: '/admin/order'},
 				{name:'voucher', show: false, label: 'Quản lý voucher', routerLink: '/admin/voucher'},
 				{name: 'attribute', show: false, label: 'Quản lý thuộc tính', routerLink: '/admin/attribute'},
 			]

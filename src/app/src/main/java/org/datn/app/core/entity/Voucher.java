@@ -47,11 +47,11 @@ public class Voucher implements Serializable {
 
     private Integer status;
 
-    @OneToMany(mappedBy = "voucher",cascade = CascadeType.ALL,targetEntity = Transaction.class)
+    @OneToMany(mappedBy = "voucher",targetEntity = Transaction.class)
     @JsonIgnore
     private List<Transaction> transactions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "voucher",cascade = CascadeType.ALL,targetEntity = VoucherProductCategoryLink.class)
+    @OneToMany(mappedBy = "voucher",targetEntity = VoucherProductCategoryLink.class)
     @JsonIgnore
     private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 }

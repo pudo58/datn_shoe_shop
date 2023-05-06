@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User doInsert(User user) {
-        user.setCreated(new Date());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepo.save(user);
     }
@@ -191,10 +190,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             // set time out
             Thread thread = new Thread(() -> {
                 while (true) {
-                    if (System.currentTimeMillis() - START_TIME > 120000) {
+                    if (System.currentTimeMillis() - START_TIME > 120_000) {
                         user.setCode(null);
-                        userRepo.save(user);
-                        break;
+                        user.setPassword(user.getPassword());
+                        if(userRepo.save(user) != null){
+                            break;
+                        }
                     }
                 }
             });

@@ -1,13 +1,13 @@
 <template>
 	<!-- Button trigger modal -->
 	<button v-show="false" type="button" class="btn btn-primary" data-bs-toggle="modal"
-	        data-bs-target="#create-publisher"
+	        data-bs-target="#create-brand"
 	        id="show-modal">
 		Launch static backdrop modal
 	</button>
 
 	<!-- Modal -->
-	<div class="modal hide" id="create-publisher" aria-hidden="true">
+	<div class="modal hide" id="create-brand" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -17,12 +17,12 @@
 				<div class="modal-body">
 					<form @submit.prevent="addPublisher()">
 						<div class="form-floating mb-3">
-							<input type="text" class="form-control" id="floatingPublisherName" v-model="publisher.name">
+							<input type="text" class="form-control" id="floatingPublisherName" v-model="brand.name">
 							<label for="floatingPublisherName">Tên nhà sản xuất</label>
 						</div>
 						<div class="form-floating mb-3">
 							<input class="form-control" placeholder="example.com" id="floatingDesc"
-							       v-model="publisher.website">
+							       v-model="brand.website">
 							<label for="floatingDesc">Link website</label>
 						</div>
 						<button type="submit" class="btn btn-success">Lưu</button>
@@ -38,34 +38,34 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {PublisherService} from "@/core/service/publisher.service";
-import {Publisher} from "@/core/model/publisher.model";
+import {BrandService} from "@/core/service/brand.service";
+import {Brand} from "@/core/model/brand.model";
 import {toast} from 'vue3-toastify';
 
 export default defineComponent({
-	name: 'publisherDetailComponent',
+	name: 'brandDetailComponent',
 	data() {
 		return {
-			publisherService: new PublisherService(),
+			brandService: new BrandService(),
 			openModalDialog: false
 		}
 	},
 	props: {
-		publisher: {
-			type: Publisher,
+		brand: {
+			type: Brand,
 			required: true
 		},
 	},
 	methods: {
 		addPublisher() {
-			if (this.publisher.id != null) {
-				this.publisherService.update(this.publisher).then((res) => {
+			if (this.brand.id != null) {
+				this.brandService.update(this.brand).then((res) => {
 					toast.success("Cập nhật thành công");
 				});
 				return;
 			} else {
-				this.publisherService.save(this.publisher).then((res) => {
-					this.$emit('added-publisher', res);
+				this.brandService.save(this.brand).then((res) => {
+					this.$emit('added-brand', res);
 				});
 			}
 		},

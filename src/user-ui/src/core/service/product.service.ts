@@ -1,5 +1,5 @@
 import axios from "axios";
-import {Product, ProductDto, ProductSearchRequest} from "@/core/model/product.model";
+import {Product, ProductDto, ProductResponse, ProductSearchRequest} from "@/core/model/product.model";
 import {toast} from "vue3-toastify";
 
 export class ProductService {
@@ -10,7 +10,7 @@ export class ProductService {
         return response.data;
     }
 
-    async findById(id: number) {
+    async findById(id: number) : Promise<ProductResponse> {
         const response = await axios.get(this.url + "get/"+ id);
         return response.data;
     }

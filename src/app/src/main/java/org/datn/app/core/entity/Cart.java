@@ -14,7 +14,7 @@ public class Cart implements Serializable,Comparable<Cart> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = ProductDetail.class)
+    @ManyToOne(targetEntity = ProductDetail.class)
     @JoinColumn(name = "product_detail_id")
     private ProductDetail productDetail;
 
@@ -22,7 +22,7 @@ public class Cart implements Serializable,Comparable<Cart> {
 
     private Double price;
 
-    @ManyToOne(cascade = CascadeType.ALL,targetEntity = User.class)
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
 

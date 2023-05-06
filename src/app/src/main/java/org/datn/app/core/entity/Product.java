@@ -43,15 +43,15 @@ public class Product implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Category.class)
+    @ManyToOne( targetEntity = Category.class)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Brand.class)
+    @ManyToOne( targetEntity = Brand.class)
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, targetEntity = ProductDetail.class)
+    @OneToMany(mappedBy = "product", targetEntity = ProductDetail.class)
     @JsonIgnore
     private List<ProductDetail> productDetails = new ArrayList<>();
 
@@ -59,7 +59,7 @@ public class Product implements Serializable {
     @JsonIgnore
     private List<AttributeData> attributeData = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, targetEntity = VoucherProductCategoryLink.class)
+    @OneToMany(mappedBy = "product", targetEntity = VoucherProductCategoryLink.class)
     @JsonIgnore
     private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 

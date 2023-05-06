@@ -17,11 +17,11 @@ public class OrderDetail implements Serializable {
     private Long id;
     private Integer quantity;
     private Double price;
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Order.class)
+    @ManyToOne( targetEntity = Order.class)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = ProductDetail.class)
+    @ManyToOne( targetEntity = ProductDetail.class)
     @JoinColumn(name = "product_detail_id")
     private ProductDetail productDetail;
 }

@@ -7,4 +7,7 @@ public class VoucherConstant {
     public static final Integer PERCENT = 1;    // giảm theo %
     public static final Integer MONEY = 2;      // giảm theo tiền
 
+    public static final Integer AUTO = 1;       // tự động
+    public static final Integer MANUAL = 2;     // thủ công
+
 }

@@ -36,14 +36,14 @@
 			<tr v-if="!!productList.content?.length > 0" class="align-middle"
 			    v-for="(item,index) in productList.content">
 				<td class="fw-bold">{{ '#' + (index + 1) }}</td>
-				<td class="fw-bold link-primary" role="button">{{ item.name }}</td>
+				<td class="fw-bold link-primary text-start" role="button">{{ item.name }}</td>
 				<td>
 					<img :src="'http://localhost/image/product/' + item.imageThumbnail" alt="" width="100px">
 				</td>
 				<td class="fw-bold">{{ formatMoney(item.price) }}</td>
 				<td class="fw-bold">{{ item.discount + '%' }}</td>
 				<td>{{ item.category.name }}</td>
-				<td>{{ item.description === null ? '' : item.description.substring(0,6).concat('...') }}</td>
+				<td>{{ item.description === null ? '' : item.description.substring(0, 6).concat('...') }}</td>
 				<td>{{ item.brand.name }}</td>
 				<td>
 					<span v-if="item.status === 1" class="badge bg-success" role="button">Hoạt động</span>
@@ -66,13 +66,15 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="findAll(page--,size)">Trước</a>
+					<a class="page-link" @click.prevent="findAll(page--,size)"
+					   :class="{disabled : disablePrev}" role="button">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in productList?.totalPages">
-					<a class="page-link" href="#" @click="findAll(item-1,size)">{{ item }}</a>
+					<a class="page-link" href="#" @click="findAll(item-1,size)" role="button">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="findAll(page++,size)">Sau</a>
+					<a role="button" class="page-link" href="#" @click.prevent="findAll(page++,size)"
+					   :class="{disabled : disableNext}">Sau</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">
@@ -92,7 +94,6 @@ import {defineComponent} from 'vue'
 import {Product} from "@/core/model/product.model";
 import {Pageable} from "@/core/model/core.base";
 import {ProductService} from "@/core/service/product.service";
-import ProductDetailActionComponent from "@/views/product/ProductDetailComponent.vue";
 
 export default defineComponent({
 	name: "ProductComponent",
@@ -104,6 +105,8 @@ export default defineComponent({
 			size: 10 as number,
 			name: "" as string,
 			isUpdate: false as boolean,
+			disablePrev: false as boolean,
+			disableNext: false as boolean,
 			columns: [
 				'STT',
 				'Tên sản phẩm',
@@ -122,7 +125,13 @@ export default defineComponent({
 		findAll(page: number, size: number) {
 			this.productService.findAll(page, size).then((res) => {
 				this.productList = res;
-			})
+				this.disablePrev = page === 0 ? true : false;
+				if (this.productList.last) {
+					this.disableNext = true;
+				} else {
+					this.disableNext = false;
+				}
+			});
 		},
 		formatMoney(value: number) {
 			return value.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
@@ -132,14 +141,9 @@ export default defineComponent({
 		},
 		deleteById(id: number) {
 			this.productService.delete(id).then((res) => {
-				this.findAll(this.page, this.size);
+				this.productList.content?.splice(this.productList.content?.findIndex((item) => item.id === id), 1);
 			})
 		},
-		callEmits(data : boolean) {
-			if(data){
-				this.findAll(this.page, this.size);
-			}
-		}
 	},
 	created() {
 		this.findAll(this.page, this.size);

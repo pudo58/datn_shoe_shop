@@ -20,11 +20,11 @@ public class AttributeData implements Serializable {
 
     private String type;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Attribute.class)
+    @ManyToOne( targetEntity = Attribute.class)
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Product.class)
+    @ManyToOne(targetEntity = Product.class)
     @JoinColumn(name = "product_id")
     private Product product;
 

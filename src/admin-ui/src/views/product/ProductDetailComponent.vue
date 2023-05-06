@@ -190,8 +190,6 @@ export default defineComponent({
 				sizeDto.quantity = this.quantityList[index];
 				this.productDto.sizeList?.push(sizeDto);
 			});
-			console.log($event)
-			console.log($event.target[2].files[0]);
 			this.productDto.attributeValues = this.attributeValues;
 			this.productService.save(this.productDto).then((res) => {
 				let file = $event.target[2].files[0];

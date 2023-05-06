@@ -154,8 +154,8 @@ import {ProductService} from "@/core/service/product.service";
 import {ProductDto} from "@/core/model/product.model";
 import {CategoryService} from "@/core/service/category.service";
 import {Category} from "@/core/model/category.model";
-import {PublisherService} from "@/core/service/publisher.service";
-import {Publisher} from "@/core/model/publisher.model";
+import {BrandService} from "@/core/service/brand.service";
+import {Brand} from "@/core/model/brand.model";
 import {ProductDetailService} from "@/core/service/product-detail.service";
 import {Size, SizeDto} from "@/core/model/size.model";
 import {SizeService} from "@/core/service/size.service";
@@ -174,9 +174,9 @@ export default defineComponent({
 			productService: new ProductService(),
 			categoryService: new CategoryService(),
 			sizeService: new SizeService(),
-			publisherService: new PublisherService(),
+			publisherService: new BrandService(),
 			categoryList: [] as Category[],
-			publisherList: [] as Publisher[],
+			publisherList: [] as Brand[],
 			sizeList: new Array<Size>(),
 			sizeListSelected: [] as string[],
 			quantityList: [] as number[],

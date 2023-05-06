@@ -28,6 +28,10 @@ public class Attribute implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @OneToMany(mappedBy = "attribute")
+    @JsonIgnore
+    private List<AttributeData> attributeDataList;
+
     @PrePersist
     public void prePersist() {
         this.created = new Date();
