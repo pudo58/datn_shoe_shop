@@ -7,6 +7,7 @@ import org.datn.app.core.entity.Product;
 import org.datn.app.core.entity.extend.ProductResponse;
 import org.datn.app.core.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,5 +63,13 @@ public class ProductController {
     @GetMapping("/findByBrand/{id}")
     public List<Product> findByBrandId(@PathVariable Long id) {
         return productService.findByBrandId(id);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", ex.getMessage());
+        data.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 }

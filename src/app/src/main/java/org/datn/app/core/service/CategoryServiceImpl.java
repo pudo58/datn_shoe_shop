@@ -7,11 +7,15 @@ import org.datn.app.core.entity.extend.CategoryResponse;
 import org.datn.app.core.repo.CategoryRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackOn = RuntimeException.class)
@@ -34,8 +38,8 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category doDeleteById(Long aLong) {
         Category category = categoryRepo.findById(aLong).get();
-        categoryRepo.delete(category);
-        return null;
+        category.setIsTrash(true);
+        return categoryRepo.save(category);
     }
 
     @Override
@@ -73,5 +77,28 @@ public class CategoryServiceImpl implements CategoryService{
             responseList.add(response);
         }
         return responseList;
+    }
+
+    @Override
+    public Map<String, Object> restore(Long id) {
+       try{
+           Category category = categoryRepo.findById(id).get();
+           category.setIsTrash(false);
+           Map<String, Object> map = new HashMap<>();
+           categoryRepo.save(category);
+           map.put("message", "Khôi phục thành công");
+           map.put("status", HttpStatus.OK.value());
+           return map;
+       }catch (RuntimeException e){
+              Map<String, Object> map = new HashMap<>();
+              map.put("message", "Có lỗi xảy ra vui lòng thử lại sau");
+              map.put("status", HttpStatus.BAD_REQUEST.value());
+              return map;
+       }
+    }
+
+    @Override
+    public List<Category> findAllTrash() {
+        return categoryRepo.findAllByIsTrash(true);
     }
 }

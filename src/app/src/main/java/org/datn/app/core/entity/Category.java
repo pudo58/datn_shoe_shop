@@ -27,7 +27,7 @@ public class Category implements Serializable {
 
     private Boolean isTrash;
 
-    @ManyToMany(cascade = CascadeType.PERSIST,targetEntity = Attribute.class)
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST},targetEntity = Attribute.class)
     @JoinTable(name = "category_attribute",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "attribute_id"))

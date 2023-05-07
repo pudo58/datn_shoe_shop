@@ -6,9 +6,12 @@
 					<div class="d-flex justify-content-between align-items-center">
 						<h3 class="fw-normal mt-4 text-black">Giỏ hàng</h3>
 					</div>
-					<div v-if="cartPage.content.length > 0" class="card rounded-3 mb-4" v-for="item in cartPage.content">
+					<div v-if="cartPage?.content?.length > 0" class="card rounded-3 mb-4" v-for="item in cartPage.content">
 						<div class="card-body p-4">
 							<div class="row d-flex justify-content-between align-items-center">
+								<div class="col-md-1">
+									<input type="checkbox" class="check" :value="item.id">
+								</div>
 								<div class="col-md-2 col-lg-2 col-xl-2">
 									<img
 										:src="'http://localhost/image/product/' + item.productDetail.product.imageThumbnail"
@@ -31,7 +34,9 @@
 									</button>
 								</div>
 								<div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-									<h5 title="Giá" class="mb-0">Giá : <span class="fw-bold">{{ + item.productDetail.product.price}}</span></h5>
+									<h5 title="Giá" class="mb-0">Giá : <span class="fw-bold">
+										{{ currency('VND',(item.productDetail.product.price * (100 - item.productDetail.product.discount) / 100) * item.quantity)}}
+									</span></h5>
 								</div>
 								<div class="col-md-1 col-lg-1 col-xl-1 text-end">
 									<a role="button" title="Xóa" class="text-danger" @click.prevent="deleteCart(item.id)"><i class="bi bi-trash"></i></a>
@@ -39,12 +44,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="card"  v-if="cartPage.content.length > 0">
+					<div class="card"  v-if="cartPage?.content?.length > 0">
 						<div class="card-body">
-							<button type="button" class="btn btn-warning btn-block btn-lg" @click.prevent="$router.push('/cart/checkout')">Thanh toán</button>
+							<button type="button" class="btn btn-warning btn-block btn-lg" @click.prevent="redirectToCheckout()">Thanh toán</button>
 						</div>
 					</div>
-					<div class="card"  v-if="cartPage.content.length == 0">
+					<div class="card"  v-if="cartPage?.content?.length == 0">
 						<div class="card-body">
 							<p class="lead fw-normal mb-2">Giỏ hàng trống</p>
 						</div>
@@ -61,6 +66,7 @@ import { defineComponent } from 'vue'
 import {Pageable} from "@/core/model/core.base";
 import {CartService} from "@/core/service/cart.service";
 import {CardRequest, Cart} from "@/core/model/cart.model";
+import {toast} from  "vue3-toastify"
 export default defineComponent({
 	name: 'Cart',
 	data() {
@@ -72,7 +78,7 @@ export default defineComponent({
 	methods: {
 		findAllCartByUserId() {
 			const payload = {
-				userId : localStorage.getItem('userId')
+				userId : Number(localStorage.getItem('userId'))
 			} as CardRequest
 			this.cartService.getCartByUserId(payload).then(response => {
 				this.cartPage = response;
@@ -81,9 +87,27 @@ export default defineComponent({
 		deleteCart(id: number) {
 			if(confirm('Bạn có chắc chắn muốn xóa sản phẩm này không ?')) {
 				this.cartService.deleteById(id).then(response => {
-					this.cartPage.content = this.cartPage.content.filter(item => item.id != id);
+					this.cartPage.content = this.cartPage?.content?.filter(item => item.id != id);
 				})
 			}
+		},
+		redirectToCheckout() {
+			let cartIdSelected = [] as number[];
+			let check = document.querySelectorAll('.check') as NodeListOf<HTMLInputElement>;
+			check.forEach(item => {
+				if(item.checked) {
+					cartIdSelected.push(+item.value);
+				}
+			})
+			if(cartIdSelected.length > 0) {
+				this.$router.push('/cart/checkout/' + cartIdSelected.join(','));
+			} else {
+				toast.warning('Vui lòng chọn sản phẩm cần thanh toán');
+			}
+
+		},
+		currency(currency: string, value: number) {
+			return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: currency }).format(value);
 		}
 	},
 	created() {

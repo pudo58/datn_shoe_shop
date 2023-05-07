@@ -18,6 +18,8 @@ export class Order {
     note?: string;
     user?: User;
     status?: number;
+    name?: string;
+    email?: string;
 }
 
 export class OrderRequest {
@@ -27,4 +29,12 @@ export class OrderRequest {
     phoneNumber?: string;
     voucherId?: number;
     paymentMethod?: string;
+    name?: string;
+    email?: string;
+}
+
+export class PaymentMethod {
+    public static COD = "Tiền mặt";
+    // chuyển khoản ngân hàng
+    public static BANK_TRANSFER = "Thẻ ATM/Internet Banking";
 }

@@ -12,4 +12,6 @@ public class OrderRequest {
     private String phoneNumber;
     private Long voucherId;
     private String paymentMethod;
+    private String name;
+    private String email;
 }

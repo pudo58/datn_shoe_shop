@@ -24,6 +24,10 @@ public class Order implements Serializable {
 
     private String phoneNumber;
 
+    private String name;
+
+    private String email;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 

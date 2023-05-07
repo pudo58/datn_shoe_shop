@@ -53,5 +53,5 @@ public class Voucher implements Serializable {
 
     @OneToMany(mappedBy = "voucher",targetEntity = VoucherProductCategoryLink.class)
     @JsonIgnore
-    private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
+    private List<VoucherProductCategoryLink> voucherProductCategoryLinkList = new ArrayList<>();
 }

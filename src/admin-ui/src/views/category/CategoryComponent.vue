@@ -17,6 +17,10 @@
 				<i class="bi bi-pencil-fill"></i>
 				Thêm mới
 			</button>
+			<button class="btn btn-success m-1 " data-bs-toggle="modal" data-bs-target="#exampleModal">
+				<i class="bi bi-trash"></i>
+				Thùng rác
+			</button>
 		</div>
 	</div>
 	<div class="table table-responsive" id="table">
@@ -74,6 +78,49 @@
 			</div>
 		</nav>
 	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-bordered table-hover table-striped">
+						<thead>
+						<tr>
+							<th>Tên danh mục</th>
+							<th>Ngày tạo</th>
+							<th>Mô tả</th>
+							<th>Trạng thái</th>
+							<th>Khôi phục</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr class="align-middle" v-for="item in categoryTrashList">
+							<td>{{ item.name }}</td>
+							<td>{{ dateTime(item.created + '') }}</td>
+							<td>{{ item.description }}</td>
+							<td>
+								<span v-if="item.isTrash === false" class="badge bg-success">Hoạt động</span>
+								<span v-else class="badge bg-danger">Khóa</span>
+							</td>
+							<td>
+								<button class="btn btn-success btn-sm m-1" @click.prevent="restoreById(item.id)">
+									<i class="bi bi-arrow-counterclockwise"></i>
+								</button>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
@@ -96,12 +143,20 @@ export default defineComponent({
 			size: 10 as number,
 			find: '' as string,
 			categoryId: null,
+			categoryTrashList : [] as Category[]
 		}
 	},
 	methods: {
 		getCategory(page: number, size: number) {
 			this.categoryService.findAll(page, size).then(response => {
 				this.categoryList = response;
+			}).catch(error => {
+				toast.error(error.message);
+			})
+		},
+		getCategoryTrash() {
+			this.categoryService.findAllTrash().then(response => {
+				this.categoryTrashList = response;
 			}).catch(error => {
 				toast.error(error.message);
 			})
@@ -118,18 +173,18 @@ export default defineComponent({
 			this.getCategory(this.page, this.size);
 		},
 		deleteById(id: number) {
-			if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+			if (confirm("Bạn có chắc chắn muốn cho danh mục này vào thùng rác không?")) {
 				this.categoryService.delete(id).then(data => {
 					if (data === true) {
-						toast.success("Xóa thành công");
+						toast.success("Cho danh mục này vào thùng rác thành công");
 						this.getCategory(this.page, this.size);
+						this.getCategoryTrash();
+						document.getElementById('close')?.click();
 					}
 				}).catch(error => {
 					toast.error(error.message);
 				})
 			}
-		}, categoryAdded(category: Category) {
-			this.categoryList.content?.push(category);
 		},
 		findByName() {
 			if (this.find === '' || this.find == null || this.find == undefined) {
@@ -142,11 +197,25 @@ export default defineComponent({
 			}).catch(error => {
 				toast.error(error.message);
 			})
+		},
+		restoreById(id: number) {
+			if (confirm("Bạn có chắc chắn muốn khôi phục danh mục này không?")) {
+				this.categoryService.restore(id).then(data => {
+					if(data?.status == 200){
+						toast.success(data?.message);
+						this.getCategory(this.page, this.size);
+						this.getCategoryTrash();
+					}
+				}).catch(error => {
+					toast.error(error.message);
+				})
+			}
 		}
 	},
 	created() {
 		this.getCategory(this.page, this.size);
-	}
+		this.getCategoryTrash();
+	},
 })
 </script>
 

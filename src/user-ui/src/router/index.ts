@@ -116,7 +116,7 @@ const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        path: '/cart/checkout',
+        path: '/cart/checkout/:cartIdList',
         name: 'Checkout',
         component: () => import('../views/OrderView.vue'),
         meta: {
@@ -140,6 +140,10 @@ router.beforeEach((to, from, next) => {
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('access_token');
     if (to.matched.some(record => record.path === '/reset-password/:email/:code')) {
+        // Allow access without authentication
+        return next();
+    }
+    if (to.matched.some(record => record.path === '/product/:id')) {
         // Allow access without authentication
         return next();
     }

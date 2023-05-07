@@ -23,7 +23,18 @@ public class Brand implements Serializable {
     @Column(name = "`website`")
     private String website;
 
+
+    private Boolean isTrash;
+
     @OneToMany(mappedBy = "brand")
     @JsonIgnore
     private List<Product> products;
+
+    @PrePersist
+    public void prePersist() {
+        if(this.isTrash == null){
+            this.isTrash = false;
+        }
+        this.isTrash = false;
+    }
 }

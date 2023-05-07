@@ -2,12 +2,11 @@ package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.dto.CartRequest;
-import org.datn.app.core.entity.Cart;
-import org.datn.app.core.entity.Order;
-import org.datn.app.core.entity.ProductDetail;
-import org.datn.app.core.entity.User;
+import org.datn.app.core.entity.*;
 import org.datn.app.core.entity.extend.CartDTO;
 import org.datn.app.core.repo.CartRepo;
+import org.datn.app.core.repo.VoucherAccountLinkDao;
+import org.datn.app.core.repo.VoucherProductCategoryLinkRepo;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
@@ -29,12 +31,14 @@ public class CartServiceImpl implements CartService {
     private final ProductService productService;
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
+    private final VoucherAccountLinkDao voucherAccountLinkDao;
+    private final VoucherProductCategoryLinkRepo voucherProductCategoryLinkRepo;
 
     @Override
     public Cart findByUserIdAndAndProductDetailId(Long userId, Long productDetailId) {
         User user = userService.findById(userId);
-        for(Cart cart : user.getCarts()) {
-            if(cart.getProductDetail().getId().equals(productDetailId))
+        for (Cart cart : user.getCarts()) {
+            if (cart.getProductDetail().getId().equals(productDetailId))
                 return cart;
         }
         return null;
@@ -55,6 +59,45 @@ public class CartServiceImpl implements CartService {
     public Page<Cart> findByUserId(CartDTO model) {
         Pageable pageable = Pageable.ofSize(model.getSize().get()).withPage(model.getPage().get());
         return cartRepo.findByUserId(model.getUserId(), pageable);
+    }
+
+    @Override
+    public Integer getPriceByCartIdList(List<Long> cartIdList, Long voucherId) {
+        List<Cart> cartList = cartRepo.findAllById(cartIdList);
+        if(cartList == null || cartList.isEmpty())
+           throw new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng");
+        User user = cartList.get(0).getUser();
+        int price = 0;
+        List<VoucherAccountLink> voucherAccountLinkList = voucherAccountLinkDao.findAllByUserIdAndIsUsed(user.getId(), false);
+        if (voucherAccountLinkList != null) {
+            List<VoucherProductCategoryLink> voucherProductCategoryLinkList = voucherProductCategoryLinkRepo.findAllByVoucherIdIn(voucherAccountLinkList.stream().map(VoucherAccountLink::getVoucher).map(Voucher::getId).collect(Collectors.toList()));
+            for (VoucherProductCategoryLink item : voucherProductCategoryLinkList) {
+                if ((item.getCategory() != null && item.getProduct() == null)) {
+                    for (Cart cart : cartList) {
+                        if (cart.getProductDetail().getProduct().getCategory().getId().equals(item.getCategory().getId())) {
+                            price +=  cartList.stream().mapToInt(cart1 -> cart1.getPrice().intValue()).sum() - item.getVoucher().getDiscountValue();
+                        }
+                    }
+                } else if (item.getCategory() == null && item.getProduct() != null) {
+                    for (Cart cart : cartList) {
+                        if (cart.getProductDetail().getProduct().getId().equals(item.getProduct().getId())) {
+                            // price discount
+                            price += cartList.stream().mapToInt(cart1 -> cart1.getPrice().intValue()).sum() - item.getVoucher().getDiscountValue();
+                        }
+                    }
+                }
+            }
+        }
+        if(voucherId == 0){
+            voucherId = null;
+        }
+        if (voucherId != null) {
+            Voucher voucher = voucherAccountLinkDao.findById(voucherId).orElse(null).getVoucher();
+            if(voucher != null)
+                price +=  cartList.stream().mapToInt(cart -> cart.getPrice().intValue()).sum() - voucher.getDiscountValue();
+        }
+        price +=  cartList.stream().mapToInt(cart -> cart.getPrice().intValue()).sum();
+        return price;
     }
 
     @Override
@@ -100,40 +143,40 @@ public class CartServiceImpl implements CartService {
      *   @return ResponseEntity<String>
      */
     @Override
-    public Map<String,Object> addToCart(CartRequest cartRequest) {
+    public Map<String, Object> addToCart(CartRequest cartRequest) {
         Long productDetailId = cartRequest.getProductDetailId();
         Long userId = cartRequest.getUserId();
         Integer quantity = cartRequest.getQuantity();
         ProductDetail productDetail = productDetailService.findById(productDetailId);
         User user = userService.findById(userId);
-        Map<String,Object> map = new HashMap<>();
-        if (productDetail == null){
-            map.put("message","Không tìm thấy sản phẩm");
+        Map<String, Object> map = new HashMap<>();
+        if (productDetail == null) {
+            map.put("message", "Không tìm thấy sản phẩm");
             map.put("status", HttpStatus.BAD_REQUEST.value());
             return map;
         }
-        if (productDetail.getQuantity() < quantity){
-            map.put("message","Số lượng sản phẩm không đủ");
+        if (productDetail.getQuantity() < quantity) {
+            map.put("message", "Số lượng sản phẩm không đủ");
             map.put("status", HttpStatus.BAD_REQUEST.value());
             return map;
         }
         if (productDetail.getQuantity() == 0) {
-            map.put("message","Sản phẩm đã hết hàng");
+            map.put("message", "Sản phẩm đã hết hàng");
             map.put("status", HttpStatus.BAD_REQUEST.value());
             return map;
         }
         if (user == null) {
-            map.put("message","Không tìm thấy người dùng");
+            map.put("message", "Không tìm thấy người dùng");
             map.put("status", HttpStatus.BAD_REQUEST.value());
             return map;
         }
         if (quantity.toString().isEmpty()) {
-            map.put("message","Số lượng sản phẩm không được để trống");
+            map.put("message", "Số lượng sản phẩm không được để trống");
             map.put("status", HttpStatus.BAD_REQUEST.value());
             return map;
         }
         if (!quantity.toString().matches("[0-9]+")) {
-            map.put("message","Số lượng sản phẩm phải là số");
+            map.put("message", "Số lượng sản phẩm phải là số");
             map.put("status", HttpStatus.BAD_REQUEST.value());
             return map;
         }
@@ -146,18 +189,23 @@ public class CartServiceImpl implements CartService {
             Cart cart1 = new Cart();
             cart1.setQuantity(quantity);
             cart1.setProductDetail(productDetail);
-            cart1.setPrice(productDetail.getProduct().getPrice() * quantity);
+            // get price when discount
+            if (productDetail.getProduct().getDiscount() != null) {
+                cart1.setPrice(productDetail.getProduct().getPrice() * (100 - productDetail.getProduct().getDiscount()) / 100 * quantity);
+            } else {
+                cart1.setPrice(productDetail.getProduct().getPrice() * quantity);
+            }
             cart1.setUser(user1);
             cartRepo.save(cart1);
-            map.put("message","Thêm sản phẩm "
+            map.put("message", "Thêm sản phẩm "
                     + cart1.getProductDetail().getProduct().getName()
                     + " vào giỏ hàng thành công");
             map.put("status", HttpStatus.OK.value());
             return map;
-        }else{
+        } else {
             synchronized (cart) {
                 if (cart != null) {
-                    if(cart.getQuantity() + quantity > productDetail.getQuantity()) {
+                    if (cart.getQuantity() + quantity > productDetail.getQuantity()) {
                         map.put("message", "Số lượng sản phẩm trong giỏ hàng vượt quá số lượng sản phẩm trong kho");
                         map.put("status", HttpStatus.BAD_REQUEST.value());
                         return map;

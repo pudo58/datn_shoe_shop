@@ -9,125 +9,55 @@
 							<h5 class="mb-0">Thanh toán hóa đơn</h5>
 						</div>
 						<div class="card-body">
-							<form>
+							<form @submit.prevent="doOrder()">
 								<!-- 2 column grid layout with text inputs for the first and last names -->
 								<div class="row mb-4">
-									<div class="col">
-										<div class="form-outline">
-											<input type="text" id="form6Example1" class="form-control"/>
+									<div>
+										<div class="form-floating">
+											<input type="text" id="form6Example1" class="form-control" v-model="orderRequest.name"/>
 											<label class="form-label" for="form6Example1">Họ tên</label>
 										</div>
 									</div>
-									<div class="col">
-										<div class="form-outline">
-											<input type="text" id="form6Example2" class="form-control"/>
-											<label class="form-label" for="form6Example2">Last name</label>
-										</div>
-									</div>
 								</div>
-
 								<!-- Text input -->
-								<div class="form-outline mb-4">
-									<input type="text" id="form6Example3" class="form-control"/>
-									<label class="form-label" for="form6Example3">Company name</label>
-								</div>
-
-								<!-- Text input -->
-								<div class="form-outline mb-4">
-									<input type="text" id="form6Example4" class="form-control"/>
-									<label class="form-label" for="form6Example4">Address</label>
+								<div class="form-floating mb-4">
+									<input type="text" id="form6Example4" class="form-control" v-model="orderRequest.address"/>
+									<label class="form-label" for="form6Example4">Địa chỉ</label>
 								</div>
 
 								<!-- Email input -->
-								<div class="form-outline mb-4">
-									<input type="email" id="form6Example5" class="form-control"/>
+								<div class="form-floating mb-4">
+									<input type="email" id="form6Example5" class="form-control" v-model="orderRequest.email"/>
 									<label class="form-label" for="form6Example5">Email</label>
 								</div>
 
 								<!-- Number input -->
-								<div class="form-outline mb-4">
-									<input type="number" id="form6Example6" class="form-control"/>
-									<label class="form-label" for="form6Example6">Phone</label>
+								<div class="form-floating mb-4">
+									<input type="number" id="form6Example6" class="form-control" v-model="orderRequest.phoneNumber"/>
+									<label class="form-label" for="form6Example6">Số điện thoại</label>
 								</div>
-
 								<hr class="my-4"/>
 
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" value="" id="checkoutForm1"/>
-									<label class="form-check-label" for="checkoutForm1">
-										Shipping address is the same as my billing address
-									</label>
-								</div>
+								<h5 class="mb-4">Hình thức thanh toán</h5>
 
-								<div class="form-check mb-4">
-									<input class="form-check-input" type="checkbox" value="" id="checkoutForm2"
-									       checked/>
-									<label class="form-check-label" for="checkoutForm2">
-										Save this information for next time
-									</label>
-								</div>
-
-								<hr class="my-4"/>
-
-								<h5 class="mb-4">Payment</h5>
-
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="flexRadioDefault"
-									       id="checkoutForm3"
-									       checked/>
-									<label class="form-check-label" for="checkoutForm3">
-										Credit card
-									</label>
-								</div>
-
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="flexRadioDefault"
-									       id="checkoutForm4"/>
-									<label class="form-check-label" for="checkoutForm4">
-										Debit card
-									</label>
-								</div>
-
-								<div class="form-check mb-4">
-									<input class="form-check-input" type="radio" name="flexRadioDefault"
-									       id="checkoutForm5"/>
-									<label class="form-check-label" for="checkoutForm5">
-										Paypal
-									</label>
-								</div>
-
-								<div class="row mb-4">
-									<div class="col">
-										<div class="form-outline">
-											<input type="text" id="formNameOnCard" class="form-control"/>
-											<label class="form-label" for="formNameOnCard">Name on card</label>
-										</div>
+								<div class="d-flex justify-content-start">
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="flexRadioDefault"
+										       @change.prevent="isShowQRCode = true " id="checkoutForm3" :value="PaymentMethod.BANK_TRANSFER" v-model="orderRequest.paymentMethod"/>
+										<label class="form-check-label" for="checkoutForm3">
+											Chuyển khoản
+										</label>
 									</div>
-									<div class="col">
-										<div class="form-outline">
-											<input type="text" id="formCardNumber" class="form-control"/>
-											<label class="form-label" for="formCardNumber">Credit card number</label>
-										</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" name="flexRadioDefault" v-model="orderRequest.paymentMethod"
+										       @change.prevent="isShowQRCode = false " id="checkoutForm4" :value="PaymentMethod.COD"/>
+										<label class="form-check-label" for="checkoutForm4">
+											Tiền mặt
+										</label>
 									</div>
 								</div>
-
-								<div class="row mb-4">
-									<div class="col-3">
-										<div class="form-outline">
-											<input type="text" id="formExpiration" class="form-control"/>
-											<label class="form-label" for="formExpiration">Expiration</label>
-										</div>
-									</div>
-									<div class="col-3">
-										<div class="form-outline">
-											<input type="text" id="formCVV" class="form-control"/>
-											<label class="form-label" for="formCVV">CVV</label>
-										</div>
-									</div>
-								</div>
-
 								<button class="btn btn-primary btn-lg btn-block" type="submit">
-									Continue to checkout
+									Tiến hành thanh toán
 								</button>
 							</form>
 						</div>
@@ -137,29 +67,30 @@
 				<div class="col-md-4 mb-4">
 					<div class="card mb-4">
 						<div class="card-header py-3">
-							<h5 class="mb-0">Summary</h5>
+							<h5 class="mb-0">Tóm tắt</h5>
 						</div>
 						<div class="card-body">
 							<ul class="list-group list-group-flush">
 								<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-									Products
-									<span>$53.98</span>
+									Giá sản phẩm
+									<span>{{currency('VND',price)}}</span>
 								</li>
 								<li class="list-group-item d-flex justify-content-between align-items-center px-0">
-									Shipping
-									<span>Gratis</span>
+									Phí vận chuyển
+									<span>{{currency('VND',feeShip)}}</span>
 								</li>
 								<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 									<div>
-										<strong>Total amount</strong>
-										<strong>
-											<p class="mb-0">(including VAT)</p>
-										</strong>
+										<strong>Tổng tiền</strong>
 									</div>
-									<span><strong>$53.98</strong></span>
+									<span><strong>{{ currency('VND',(feeShip + price)) }}</strong></span>
 								</li>
 							</ul>
 						</div>
+					</div>
+					<div class="card mb-4" v-if="isShowQRCode">
+						Mã QR Code thanh toán
+						<img :src="qrCode">
 					</div>
 				</div>
 			</div>
@@ -169,14 +100,77 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-
+import {OrderRequest} from "@/core/model/order.model";
+import {OrderService} from "@/core/service/order.service";
+import {PaymentMethod} from "@/core/model/order.model";
+import axios from "axios";
 export default defineComponent({
 	name: 'Checkout',
 	data() {
-		return {}
+		return {
+			orderRequest : new OrderRequest(),
+			orderService : new OrderService(),
+			PaymentMethod: PaymentMethod,
+			voucherId: 0,
+			price : 0,
+			feeShip : 0,
+			qrCode : '',
+			isShowQRCode : false
+		}
 	},
-	methods: {},
+	methods: {
+		doOrder() {
+			let idString = this.$route.params.cartIdList as string;
+			let ids = idString.split(',').map(Number);
+			this.orderRequest.cartIdList = ids;
+			this.orderRequest.voucherId = this.voucherId;
+			this.orderRequest.userId = Number(localStorage.getItem('userId'));
+			this.orderService.doOrder(this.orderRequest).then((res) => {
+
+			});
+		},
+		async getPrice() {
+			try {
+				const idString = this.$route.params.cartIdList as string;
+				const ids = idString?.split(',').map(Number);
+				const payload = {
+					cartIdList: ids,
+					voucherId: this.voucherId
+				} as OrderRequest;
+				const res = await this.orderService.getPrice(payload);
+				this.price = res.price;
+				this.feeShip = res?.fee_ship;
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		async makeQRCode() {
+			await this.getPrice();
+			const api = "https://api.vietqr.io/v2/generate";
+			const username = JSON.parse(localStorage.getItem("user") as string)?.username;
+			const payload = {
+				accountNo : "0704145768",
+				accountName: "LA VAN THO",
+				acqId: 970432,
+				amount: this.price + this.feeShip,
+				addInfo: username + "- Thanh toan don hang gia tri " + (this.price + this.feeShip) + " VND",
+				format: "text",
+				template: "compact2"
+			};
+			try {
+				const response = await axios.post(api, payload);
+				this.qrCode = response.data?.data.qrDataURL;
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		currency(currency: string, value: number) {
+			return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: currency }).format(value);
+		}
+	},
 	created() {
+		this.getPrice();
+		this.makeQRCode();
 	}
 })
 </script>

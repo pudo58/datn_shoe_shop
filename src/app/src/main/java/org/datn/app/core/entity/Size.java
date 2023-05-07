@@ -19,7 +19,7 @@ public class Size implements Serializable {
 
     private String size;
 
-    @OneToMany(mappedBy = "size")
+    @OneToMany(mappedBy = "size",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ProductDetail> productDetails;
 }

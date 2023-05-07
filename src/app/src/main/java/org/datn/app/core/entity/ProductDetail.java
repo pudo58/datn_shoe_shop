@@ -22,11 +22,11 @@ public class ProductDetail implements Serializable {
     @JoinColumn(name = "size_id")
     private Size size;
 
-    @ManyToOne(targetEntity = Color.class)
+    @ManyToOne(targetEntity = Color.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @ManyToOne(targetEntity = Product.class)
+    @ManyToOne(targetEntity = Product.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
     private Integer quantity;

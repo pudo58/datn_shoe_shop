@@ -15,4 +15,5 @@ public interface CartService extends ServiceCore<Cart,Long> {
     Cart findByUserIdAndAndProductDetailId(Long userId, Long productDetailId);
     ResponseEntity<String> deleteMultiCart(List<Long> cardIdList);
     Page<Cart> findByUserId(CartDTO model);
+    Integer getPriceByCartIdList(List<Long> cartIdList,Long voucherId);
 }

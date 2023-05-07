@@ -51,15 +51,15 @@ public class Product implements Serializable {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", targetEntity = ProductDetail.class)
+    @OneToMany(mappedBy = "product", targetEntity = ProductDetail.class, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ProductDetail> productDetails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.MERGE, targetEntity = AttributeData.class)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, targetEntity = AttributeData.class)
     @JsonIgnore
     private List<AttributeData> attributeData = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", targetEntity = VoucherProductCategoryLink.class)
+    @OneToMany(mappedBy = "product", targetEntity = VoucherProductCategoryLink.class, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<VoucherProductCategoryLink> voucherProductCategoryLinks = new ArrayList<>();
 

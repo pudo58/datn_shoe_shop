@@ -15,12 +15,13 @@ import java.util.List;
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
 
-    @Query("select p from Product p where p.status = 1")
+    @Query("select p from Product p,Category c where p.status = 1 AND p.category.id = c.id AND c.isTrash = false ORDER BY p.id DESC")
     List<Product> findAll();
 
+    @Query("select p from Product p,Category c where p.status = 1 AND p.brand.id = ?1 AND p.category.id = c.id AND c.isTrash = false ORDER BY p.id DESC")
     List<Product> findByBrandId(Long id);
 
-    @Query("select p from Product p where p.status = 1 ORDER BY p.id DESC")
+    @Query("select p from Product p,Category c where p.status = 1 AND p.category.id = c.id AND c.isTrash = false ORDER BY p.id DESC")
     Page<Product> findAll(Pageable pageable);
 
     @Query(value = "SELECT DISTINCT p.* FROM products p " +

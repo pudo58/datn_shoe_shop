@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.Category;
 import org.datn.app.core.entity.extend.CategoryResponse;
 import org.datn.app.core.service.CategoryService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/category")
@@ -77,5 +80,23 @@ public class CategoryController {
     @GetMapping("/findAllData")
     public List<CategoryResponse> findAllCategoryData() {
         return categoryService.findAllData();
+    }
+
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<?> restoreCategory(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.restore(id));
+    }
+
+    @GetMapping("/findAllTrash")
+    public List<Category> findAllTrash() {
+        return categoryService.findAllTrash();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", ex.getMessage());
+        data.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 }

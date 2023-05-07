@@ -64,4 +64,18 @@ export class CategoryService {
             return response.data;
         });
     }
+
+    async findAllTrash(): Promise<Category[]> {
+        return await axios.get(this.url + "findAllTrash").then((response) => {
+            return response.data;
+        });
+    }
+
+    async restore(id: number){
+        return await axios.put(this.url + "restore/" + id).then((response) => {
+            return response.data;
+        }).catch((error) => {
+            return error.response.data;
+        });
+    }
 }

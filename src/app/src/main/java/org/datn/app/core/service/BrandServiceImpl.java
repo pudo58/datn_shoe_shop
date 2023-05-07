@@ -32,8 +32,9 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Brand doDeleteById(Long aLong) {
-        brandRepo.deleteById(aLong);
-        return null;
+        Brand brand = brandRepo.findById(aLong).get();
+        brand.setIsTrash(true);
+        return brandRepo.save(brand);
     }
 
     @Override

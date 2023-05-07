@@ -18,7 +18,7 @@ public class Color implements Serializable {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "color",targetEntity = ProductDetail.class)
+    @OneToMany(mappedBy = "color",targetEntity = ProductDetail.class,cascade =CascadeType.ALL)
     @JsonIgnore
     private List<ProductDetail> productDetails;
 }

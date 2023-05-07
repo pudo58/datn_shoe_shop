@@ -13,6 +13,7 @@ public class Transaction implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "transaction_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String code;

@@ -250,7 +250,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepo.findById(id).orElseThrow(
                 () -> new RuntimeException("Sản phẩm không tồn tại")
         );
-        Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\product", file.getOriginalFilename());
+        // get OS name
+        String osName = System.getProperty("os.name");
+        Path filePath = null;
+        if(osName.toLowerCase().startsWith("windows")){
+            // windows
+             filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\product", file.getOriginalFilename());
+        }else{
+            // linux
+             filePath = Paths.get("/var/www/html/image/product", file.getOriginalFilename());
+        }
+        //Path filePath = Paths.get("C:\\Users\\Admin\\Desktop\\code\\datn_shoe_shop\\src\\server\\html\\image\\product", file.getOriginalFilename());
         product.setImageThumbnail(file.getOriginalFilename());
         if (productRepo.save(product) != null)
             Files.write(filePath, file.getBytes());

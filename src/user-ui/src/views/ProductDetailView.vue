@@ -40,7 +40,7 @@
 						<div class="text-start">
 							Chất liệu : <span class="fw-bold">{{ product?.material }}</span>
 						</div>
-						<div v-if="product?.attributeDataList?.length" class="text-start">
+						<div v-if="product?.productDetailList?.length > 0" class="text-start">
 							<span class="fw-bold">Kích cỡ</span>
 							<div class="d-flex flex-row ">
 								<button :class="{'bg-success text-light' : size == item.size.size}" type="button" class="m-1" v-for="item in product?.productDetailList" @click.prevent="size = item.size.size;getQuantity()">

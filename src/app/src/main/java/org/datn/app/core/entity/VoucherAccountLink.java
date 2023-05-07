@@ -19,8 +19,16 @@ public class VoucherAccountLink implements java.io.Serializable{
     @JoinColumn(name = "user_id")
     private User user;
 
+    private Boolean isUsed;
+
     @ManyToOne(targetEntity = Voucher.class)
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
-    private Date created = new Date();
+    private Date created;
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+        this.isUsed = false;
+    }
 }
