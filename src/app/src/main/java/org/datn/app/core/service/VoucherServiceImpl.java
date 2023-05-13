@@ -2,9 +2,11 @@ package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.Voucher;
+import org.datn.app.core.entity.extend.VoucherResponse;
 import org.datn.app.core.repo.VoucherRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -47,5 +49,30 @@ public class VoucherServiceImpl implements VoucherService{
     public Page<Voucher> findAll(Integer page, Integer size) {
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         return voucherRepo.findAll(pageable);
+    }
+
+    @Override
+    public Page<VoucherResponse> findAllVoucher(Integer page, Integer size) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> addVoucher(Voucher voucher) {
+        return null;
+    }
+
+    @Override
+    public VoucherResponse findVoucherByID(Long id) {
+        return null;
+    }
+
+    @Override
+    public void deleteVoucher(Long id) {
+
+    }
+
+    @Override
+    public ResponseEntity<?> updateVoucher(Voucher voucher) {
+        return null;
     }
 }
