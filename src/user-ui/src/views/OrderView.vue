@@ -57,7 +57,7 @@
 									</div>
 								</div>
 								<button class="btn btn-primary btn-lg btn-block" type="submit">
-									Tiến hành thanh toán
+									Xác nhận thanh toán
 								</button>
 							</form>
 						</div>

@@ -127,6 +127,19 @@ const routes: Array<RouteRecordRaw> = [
             showNav: true,
             requiresAuth: true
         }
+    },
+    {
+        path: '/order',
+        name: 'OrderList',
+        component: () => import('../views/OrderListView.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
     }
 ]
 

@@ -1,34 +1,31 @@
 package org.datn.app.core.service;
 
-//import com.sun.deploy.config.Config;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.datn.app.constant.OrderConstant;
 import org.datn.app.constant.PaymentMethodConstant;
 import org.datn.app.core.dto.OrderRequest;
+import org.datn.app.core.dto.OrderStatisticalDto;
 import org.datn.app.core.entity.*;
 import org.datn.app.core.repo.*;
-import org.datn.app.util.EncryptString;
 import org.datn.app.util.GenerateString;
-import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Transactional(rollbackOn = RuntimeException.class)
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderServiceImpl implements OrderService {
     private final OrderDetailRepo orderDetailRepo;
     private final CartRepo cartRepo;
@@ -75,6 +72,69 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<Order> findAllByStatus(OrderStatisticalDto model) {
+        Pageable pageable = Pageable.ofSize(model.getSize()).withPage(model.getPage());
+        if(model.getFromDate() == null){
+            model.setFromDate(new Date(0));
+        }
+        if(model.getToDate() == null){
+            model.setToDate(new Date());
+        }
+        // so sánh  ngày bắt đầu và ngày kết thúc
+        if(model.getFromDate().compareTo(model.getToDate()) > 0){
+            throw new RuntimeException("Ngày bắt đầu không thể lớn hơn ngày kết thúc");
+        }
+        Page<Order> orderPage = orderRepo.findAllByStatus(model.getStatus(), model.getFromDate(), model.getToDate(), pageable);
+        return orderPage;
+    }
+
+    @Override
+    public ResponseEntity<?> deliveryOrder(Long id) {
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new RuntimeException("Đơn hàng không tồn tại")
+        );
+        if (order.getStatus().equals(OrderConstant.PENDING)) {
+            throw new RuntimeException("Đơn hàng không thể giao");
+        }
+        order.setStatus(OrderConstant.DELIVERING);
+        orderRepo.save(order);
+        Map response = new HashMap();
+        response.put("message", "Giao hàng thành công");
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+
+    }
+
+    @Override
+    public ResponseEntity<?> receiveOrder(Long id) {
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new RuntimeException("Đơn hàng không tồn tại")
+        );
+        if (order.getStatus().equals(OrderConstant.PENDING)) {
+            throw new RuntimeException("Đơn hàng không thể nhận");
+        }
+        order.setStatus(OrderConstant.RECEIVED);
+        orderRepo.save(order);
+        Map response = new HashMap();
+        response.put("message", "Nhận hàng thành công");
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<?> detailOrder(Long id) {
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new RuntimeException("Đơn hàng không tồn tại")
+        );
+        List<OrderDetail> orderDetailList = orderDetailRepo.findAllByOrderId(id);
+        Map response = new HashMap();
+        response.put("order", order);
+        response.put("orderDetailList", orderDetailList);
+        response.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
     public Order findByCode(String code) {
         return orderRepo.findByCode(code);
     }
@@ -86,8 +146,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackOn = RuntimeException.class)
-    public Map<String,Object> doOrder(OrderRequest model) {
-        if(orderRepo.findByUserId(model.getUserId()).size() > 0){
+    public Map<String, Object> doOrder(OrderRequest model) {
+        if (orderRepo.findByUserIdAndStatus(model.getUserId(), OrderConstant.PENDING).size() > 0) {
             throw new RuntimeException("Bạn đã có đơn hàng đang chờ xử lý");
         }
         List<Cart> cartList = cartRepo.findAllById(model.getCartIdList());
@@ -185,10 +245,16 @@ public class OrderServiceImpl implements OrderService {
                     productDetail.setQuantity(productDetail.getQuantity() - orderDetail.getQuantity());
                     productDetailRepo.save(productDetail);
                 });
-                return ResponseEntity.ok("Duyệt đơn hàng thành công");
+                Map<String, Object> data = new HashMap<>();
+                data.put("message", "Duyệt đơn hàng thành công");
+                data.put("status", HttpStatus.OK.value());
+                return ResponseEntity.ok(data);
             }
         }
-        return ResponseEntity.ok("Đơn hàng đã được duyệt");
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", "Đơn hàng đã được duyệt");
+        data.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(data);
     }
 
     @Override
@@ -201,20 +267,39 @@ public class OrderServiceImpl implements OrderService {
                     || order.getStatus().equals(OrderConstant.PENDING_BANK_TRANSFER)) {
                 order.setStatus(OrderConstant.CANCELLED);
                 orderRepo.save(order);
-                return ResponseEntity.ok("Hủy đơn hàng thành công");
+                Map<String, Object> data = new HashMap<>();
+                data.put("message", "Hủy đơn hàng thành công");
+                data.put("status", HttpStatus.OK.value());
+                return ResponseEntity.ok(data);
+            } else if (order.getStatus().equals(OrderConstant.CONFIRMED)) {
+                Map<String, Object> data = new HashMap<>();
+                data.put("message", "Đơn hàng đã được duyệt không thể hủy");
+                data.put("status", HttpStatus.OK.value());
+                return ResponseEntity.ok(data);
             }
         }
-        return ResponseEntity.ok("Đơn hàng đã được hủy");
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", "Đơn hàng đã được hủy");
+        data.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(data);
     }
 
     @Override
-    public ResponseEntity<?> returnOrder(Long id) {
+    public ResponseEntity<?> returnOrder(Long id, String note) {
         Order order = orderRepo.findById(id).orElseThrow(
                 () -> new RuntimeException("Đơn hàng không tồn tại")
         );
+        // đơn hàng quá 7 ngày không được trả
+        if (order.getModified().getTime() + 7 * 24 * 60 * 60 * 1000 < new Date().getTime()) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("message", "Đơn hàng đã quá 7 ngày không thể trả lại");
+            data.put("status", HttpStatus.OK.value());
+            return ResponseEntity.ok(data);
+        }
         synchronized (order) {
             if (order.getStatus().equals(OrderConstant.CONFIRMED)) {
-                order.setStatus(OrderConstant.EXCHANGED);
+                order.setStatus(OrderConstant.RETURNED);
+                order.setNote(note);
                 orderRepo.save(order);
                 List<OrderDetail> orderDetailList = order.getOrderDetails();
                 orderDetailList.forEach(orderDetail -> {
@@ -222,113 +307,21 @@ public class OrderServiceImpl implements OrderService {
                     productDetail.setQuantity(productDetail.getQuantity() + orderDetail.getQuantity());
                     productDetailRepo.save(productDetail);
                 });
-                return ResponseEntity.ok("Trả hàng thành công");
+                Map<String, Object> data = new HashMap<>();
+                data.put("message", "Trả đơn hàng thành công");
+                data.put("status", HttpStatus.OK.value());
+                return ResponseEntity.ok(data);
+            } else {
+                Map<String, Object> data = new HashMap<>();
+                data.put("message", "Đơn hàng chưa được duyệt không thể trả");
+                data.put("status", HttpStatus.OK.value());
+                return ResponseEntity.ok(data);
             }
         }
-        return ResponseEntity.ok("Đơn hàng đã được trả");
     }
 
     @Override
-    public ResponseEntity<?> test(HttpServletRequest req, HttpServletResponse response) throws UnsupportedEncodingException {
-        String vnp_Version = "2.1.0";
-        String vnp_Command = "pay";
-        String vnp_OrderInfo = req.getParameter("vnp_OrderInfo");
-        String orderType = req.getParameter("ordertype");
-        String vnp_TxnRef = new Random().nextInt(1000000000) + "";
-        String vnp_IpAddr = req.getRemoteAddr();
-        String vnp_TmnCode = "LMLNPHDC";
-
-        int amount = Integer.parseInt(req.getParameter("amount")) * 100;
-        Map vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", vnp_Version);
-        vnp_Params.put("vnp_Command", vnp_Command);
-        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        String bank_code = req.getParameter("bankcode");
-        if (bank_code != null && !bank_code.isEmpty()) {
-            vnp_Params.put("vnp_BankCode", bank_code);
-        }
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
-        vnp_Params.put("vnp_OrderType", orderType);
-
-        String locate = req.getParameter("language");
-        if (locate != null && !locate.isEmpty()) {
-            vnp_Params.put("vnp_Locale", locate);
-        } else {
-            vnp_Params.put("vnp_Locale", "vn");
-        }
-        vnp_Params.put("vnp_ReturnUrl", "http://localhost:8000/api/callback");
-        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
-
-        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-        cld.add(Calendar.MINUTE, 15);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
-        //Add Params of 2.1.0 Version
-        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-        //Billing
-        vnp_Params.put("vnp_Bill_Mobile", req.getParameter("txt_billing_mobile"));
-        vnp_Params.put("vnp_Bill_Email", req.getParameter("txt_billing_email"));
-        String fullName = (req.getParameter("txt_billing_fullname")).trim();
-        if (fullName != null && !fullName.isEmpty()) {
-            int idx = fullName.indexOf(' ');
-            String firstName = fullName.substring(0, idx);
-            String lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
-            vnp_Params.put("vnp_Bill_FirstName", firstName);
-            vnp_Params.put("vnp_Bill_LastName", lastName);
-
-        }
-        vnp_Params.put("vnp_Bill_Address", req.getParameter("txt_inv_addr1"));
-        vnp_Params.put("vnp_Bill_City", req.getParameter("txt_bill_city"));
-        vnp_Params.put("vnp_Bill_Country", req.getParameter("txt_bill_country"));
-        if (req.getParameter("txt_bill_state") != null && !req.getParameter("txt_bill_state").isEmpty()) {
-            vnp_Params.put("vnp_Bill_State", req.getParameter("txt_bill_state"));
-        }
-        // Invoice
-        vnp_Params.put("vnp_Inv_Phone", req.getParameter("txt_inv_mobile"));
-        vnp_Params.put("vnp_Inv_Email", req.getParameter("txt_inv_email"));
-        vnp_Params.put("vnp_Inv_Customer", req.getParameter("txt_inv_customer"));
-        vnp_Params.put("vnp_Inv_Address", req.getParameter("txt_inv_addr1"));
-        vnp_Params.put("vnp_Inv_Company", req.getParameter("txt_inv_company"));
-        vnp_Params.put("vnp_Inv_Taxcode", req.getParameter("txt_inv_taxcode"));
-        vnp_Params.put("vnp_Inv_Type", req.getParameter("cbo_inv_type"));
-        //Build data to hash and querystring
-        List fieldNames = new ArrayList(vnp_Params.keySet());
-        Collections.sort(fieldNames);
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
-        Iterator itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = (String) itr.next();
-            String fieldValue = (String) vnp_Params.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                //Build hash data
-                hashData.append(fieldName);
-                hashData.append('=');
-                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                //Build query
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                if (itr.hasNext()) {
-                    query.append('&');
-                    hashData.append('&');
-                }
-            }
-        }
-        String queryUrl = query.toString();
-        String vnp_SecureHash = EncryptString.encryptSHA512("ICPAWVEQOBTCRAEAQXHISNEANCVDILVG" , hashData.toString());
-        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"+ "?" + queryUrl;
-        JSONObject jo = new JSONObject();
-        jo.append("code", "00");
-        jo.append("message", "success");
-        jo.append("data", paymentUrl);
-        return new ResponseEntity<>(jo.toString(), HttpStatus.OK);
+    public Page<Order> findAllByUserId(Long userId, Pageable pageable) {
+        return orderRepo.findAllByUserId(userId, pageable);
     }
 }

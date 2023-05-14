@@ -26,7 +26,7 @@ const options = {
 	rtl: false,
 };
 
-axios.defaults.baseURL = "http://54.254.81.154:8000";
+axios.defaults.baseURL = "http://localhost:8000";
 app.use(Vue3Toast, options);
 app.use(router);
 app.config.globalProperties.$toast = toast;

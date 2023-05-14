@@ -5,11 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.User;
-import org.datn.app.core.repo.UserRepo;
-import org.hibernate.annotations.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,11 +16,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
-public class CustomAuthorizationFilter  extends OncePerRequestFilter {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/user/add/") ||request.getServletPath().equals("/api/user/username/**"))
+        if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/user/add/") || request.getServletPath().equals("/api/user/username/**"))
             filterChain.doFilter(request, response);
         else {
             String authorizationHeader = request.getHeader("Authorization");

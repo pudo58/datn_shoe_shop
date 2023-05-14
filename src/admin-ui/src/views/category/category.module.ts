@@ -5,17 +5,26 @@ const CategoryModule: Array<RouteRecordRaw> = [
     {
         path: '/admin/category',
         component: CategoryComponent,
-        name: 'CategoryComponent'
+        name: 'CategoryComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/category/new',
         component: CategoryDetailComponent,
-        name: 'CategoryAddComponent'
+        name: 'CategoryAddComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/category/:id',
         component: CategoryDetailComponent,
-        name: 'CategoryEditComponent'
+        name: 'CategoryEditComponent',
+        meta: {
+            requiresAuth: true
+        }
     }
 ]
 export default CategoryModule

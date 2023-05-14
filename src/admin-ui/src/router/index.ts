@@ -12,11 +12,39 @@ const routes: Array<RouteRecordRaw> = [
     ...ProductModule,
     ...CategoryModule,
     ...OrderModule,
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import('../views/LoginView.vue'),
+    },
+    {
+        path: '/chart',
+        name: 'Chart',
+        component: () => import('../views/chart/ChatComponent.vue'),
+        meta: {
+            requiresAuth: true
+        }
+    }
 ]
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem("access_token");
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (token === null || token === undefined || token === "") {
+            next({
+                path: '/login',
+                query: {redirect: to.fullPath}
+            })
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+});
 
 export default router

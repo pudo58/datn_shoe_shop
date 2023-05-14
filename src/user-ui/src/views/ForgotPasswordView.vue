@@ -70,6 +70,8 @@ export default defineComponent({
 							this.secondCount = 120;
 						}
 					}, 1000);
+				}else{
+					toast.error(res.data?.message);
 				}
 			})
 

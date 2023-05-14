@@ -94,7 +94,7 @@ public class MailSenderUtil {
                 "            <p>Bạn đang lấy lại mật khẩu tại Aboo Shop. Mã xác nhận của bạn là:</p>\n" +
                 "            <p><strong>"+ code +"</strong></p>\n" +
                 "            <p>Vui lòng nhập mã xác nhận này vào trang để hoàn tất quá trình.</p>\n" +
-                "            <a href=\""+ urlRedirect.concat(url) +"\" class=\"button\">Đăng ký</a>\n" +
+                "            <a href=\""+ urlRedirect.concat(url) +"\" class=\"button\">Đổi mật khẩu</a>\n" +
                 "        </div>\n" +
                 "\n" +
                 "        <div class=\"footer\">\n" +

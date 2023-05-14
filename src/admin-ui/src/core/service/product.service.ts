@@ -16,12 +16,13 @@ export class ProductService {
     }
 
     async save(productDto: ProductDto) {
-
         const response = await axios.post(this.url + "addDetail", productDto);
         try {
             if (response.data !== null && response.data.status == 200) {
                 toast.success("Thêm sản phẩm thành công");
                 return response.data;
+            }else if(response?.data?.status == 500){
+                toast.error(response.data.message);
             }
         } catch (e) {
             toast.error("Thêm sản phẩm thất bại");

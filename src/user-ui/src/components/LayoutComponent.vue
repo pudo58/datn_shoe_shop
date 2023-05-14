@@ -8,7 +8,7 @@
 		<main>
 			<router-view/>
 		</main>
-		<div class="footer">
+		<div class="footer mt-auto">
 			<footer-component v-if="$route.meta.showFooter == undefined ? true : $route.meta.showFooter"/>
 		</div>
 	</div>

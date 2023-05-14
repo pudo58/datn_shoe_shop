@@ -29,6 +29,12 @@
 						<router-link to="/register" class="nav-link" title="Đăng ký">Đăng ký</router-link>
 					</li>
 					<li class="nav-item" v-show="isLogin === true" title="Giỏ hàng">
+						<router-link to="/order" class="nav-link">
+							<i class="bi bi-truck-front-fill"></i>
+							Đơn hàng
+						</router-link>
+					</li>
+					<li class="nav-item" v-show="isLogin === true" title="Giỏ hàng">
 						<router-link to="/cart" class="nav-link">
 							<i class="bi bi-cart-fill"></i>
 							Giỏ hàng

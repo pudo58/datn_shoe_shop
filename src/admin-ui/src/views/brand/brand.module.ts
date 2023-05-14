@@ -5,17 +5,26 @@ const BrandModule: Array<RouteRecordRaw> = [
     {
         path: '/admin/brand',
         component: PublisherComponent,
-        name: 'BrandComponent'
+        name: 'BrandComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/brand/new',
         component: PublisherDetailComponent,
-        name: 'BrandAddComponent'
+        name: 'BrandAddComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/brand/:id',
         component: PublisherDetailComponent,
-        name: 'BrandEditComponent'
+        name: 'BrandEditComponent',
+        meta: {
+            requiresAuth: true
+        }
     }
 ]
 export default BrandModule

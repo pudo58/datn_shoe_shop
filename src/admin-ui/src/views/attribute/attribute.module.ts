@@ -5,17 +5,26 @@ const AttributeModule: Array<RouteRecordRaw> = [
     {
         path: '/admin/attribute',
         component: AttributeComponent,
-        name: 'AttributeComponent'
+        name: 'AttributeComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/attribute/new',
         component: AttributeDetailComponent,
-        name: 'AttributeDetailComponent'
+        name: 'AttributeDetailComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/attribute/:id',
         component: AttributeDetailComponent,
-        name: 'AttributeDetailComponent'
+        name: 'AttributeDetailComponent',
+        meta: {
+            requiresAuth: true
+        }
     }
 ]
 export default AttributeModule

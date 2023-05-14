@@ -6,17 +6,26 @@ const OrderModule: Array<RouteRecordRaw> = [
     {
         path: '/admin/order',
         component: OrderComponent,
-        name: 'OrderComponent'
+        name: 'OrderComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/order/new',
         component: OrderDetailComponent,
-        name: 'OrderAddComponent'
+        name: 'OrderAddComponent',
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/admin/order/:id',
         component: OrderDetailComponent,
-        name: 'OrderEditComponent'
+        name: 'OrderEditComponent',
+        meta: {
+            requiresAuth: true
+        }
     }
 ]
 export default OrderModule;

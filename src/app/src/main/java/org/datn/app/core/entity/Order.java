@@ -1,5 +1,6 @@
 package org.datn.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.datn.app.constant.OrderConstant;
 
@@ -40,6 +41,7 @@ public class Order implements Serializable {
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     private Integer status;
@@ -48,6 +50,7 @@ public class Order implements Serializable {
     private List<OrderDetail> orderDetails;
 
     @OneToMany(mappedBy = "order",targetEntity = Transaction.class)
+    @JsonIgnore
     private List<Transaction> transactions;
 
     @PrePersist

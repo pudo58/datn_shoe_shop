@@ -22,7 +22,7 @@
 			<div class="col-md-3">
 				<div class="t-products p-2"><h6 class="text-uppercase">Bộ lọc</h6>
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
-						Danh mục</h6> <span>--</span></div>
+						Danh mục</h6></div>
 					<div class="p-lists">
 						<div class="d-flex justify-content-between m-2" v-for="item in categoryList">
 							<input type="checkbox" :value="item.id" :id="'label' + item.name" name="cate"
@@ -34,7 +34,7 @@
 				</div>
 				<div class="processor p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
-						Thuộc tính</h6> <span>--</span></div>
+						Thuộc tính</h6></div>
 					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in attributeList">
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name"
@@ -45,7 +45,7 @@
 				</div>
 				<div class="processor p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
-						Màu sắc</h6> <span>--</span></div>
+						Màu sắc</h6></div>
 					<div class="d-flex justify-content-between mt-2" v-for="(item,index) in colorList">
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" :value="item.id" :id="item.name"
@@ -58,7 +58,7 @@
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
 						Hãng sản
 						xuất</h6>
-						<span>--</span></div>
+						</div>
 					<div class="d-flex justify-content-between mt-2" v-for="item in publisherList">
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" :id="item.name" :value="item.id"
@@ -71,6 +71,7 @@
 			</div>
 			<div class="col-md-9">
 				<div class="row g-2">
+					<div v-if="productList.content?.length === 0" class="text-dark h3"> Không có sản phẩm </div>
 					<div class="col-md-4" v-for="item in productList.content">
 						<div class="product py-4"><span class="off bg-success" v-if="item?.discount">{{ item.discount }} % OFF</span>
 							<div class="text-center"><img class="image"
@@ -88,14 +89,11 @@
 								<button class="btn btn-primary text-uppercase" @click.prevent="redirectDetail(item.id)">
 									Chi tiết
 								</button>
-								<div title="Thêm vào giỏ hàng" class="add"><span class="product_fav"><i
-									class="fa fa-heart-o"></i></span> <span
-									class="product_fav"><i class="fa fa-opencart"></i></span></div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="d-flex justify-content-between">
+				<div class="d-flex justify-content-between" v-if="productList.content?.length > 0">
 					<nav aria-label="Page navigation example">
 						<ul class="pagination">
 							<li class="page-item">
@@ -116,7 +114,7 @@
 							</li>
 						</ul>
 					</nav>
-					<div class="mt-4">
+					<div class="mt-4" v-if="productList.content?.length > 0">
 						<span>Hiển thị</span>
 						<select v-model="sort" @change="sortByCreatedDate">
 							<option value="1">Hàng mới nhất</option>
@@ -314,33 +312,6 @@ button:active {
 	color: #fff;
 	background-color: #5629c0;
 	box-shadow: none
-}
-
-.product_fav i {
-	line-height: 40px;
-	color: #5629c0;
-	font-size: 15px
-}
-
-.product_fav {
-	display: inline-block;
-	width: 36px;
-	height: 39px;
-	background: #FFFFFF;
-	box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1);
-	border-radius: 11%;
-	text-align: center;
-	cursor: pointer;
-	margin-left: 3px;
-	-webkit-transition: all 200ms ease;
-	-moz-transition: all 200ms ease;
-	-ms-transition: all 200ms ease;
-	-o-transition: all 200ms ease;
-	transition: all 200ms ease
-}
-
-.product_fav:hover {
-	background: #5629c0
 }
 
 .product_fav:hover i {

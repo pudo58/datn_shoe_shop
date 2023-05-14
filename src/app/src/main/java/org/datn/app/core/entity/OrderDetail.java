@@ -1,5 +1,6 @@
 package org.datn.app.core.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class OrderDetail implements Serializable {
     private Double price;
     @ManyToOne( targetEntity = Order.class)
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     @ManyToOne( targetEntity = ProductDetail.class)
