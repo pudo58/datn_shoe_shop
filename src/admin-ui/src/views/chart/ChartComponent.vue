@@ -83,13 +83,15 @@ import {CategoryService} from "@/core/service/category.service";
 import {OrderService} from "@/core/service/order.service";
 import {Pageable} from "@/core/model/core.base";
 import {toast} from "vue3-toastify"
+import {Brand} from "@/core/model/brand.model";
+import {Category} from "@/core/model/category.model";
 export default defineComponent({
 	name: "ChatComponent",
 	data() {
 		return {
 			ORDER_STATUS_LIST: ORDER_STATUS_LIST,
-			brandIdList: [],
-			categoryIdList: [],
+			brandIdList: [] as Brand[],
+			categoryIdList: [] as Category[],
 			brandService: new BrandService(),
 			orderPage : new Pageable<Order>(),
 			categoryService : new CategoryService(),
@@ -137,9 +139,11 @@ export default defineComponent({
 			}
 		},
 		nextPage(){
-			if(this.page < this.orderPage.totalPages - 1){
-				this.page++;
-				this.findAllOrderStatistical();
+			if(this.orderPage && this.orderPage.totalPages){
+				if(this.page < this.orderPage?.totalPages - 1){
+					this.page++;
+					this.findAllOrderStatistical();
+				}
 			}
 		},
 		clickPage(page: number){

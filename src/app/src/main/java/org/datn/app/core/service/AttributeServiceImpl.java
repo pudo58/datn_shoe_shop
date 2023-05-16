@@ -41,7 +41,8 @@ public class AttributeServiceImpl implements AttributeService {
     @Override
     public Attribute doDeleteById(Long aLong) {
         Attribute attribute = attributeRepo.findById(aLong).orElse(null);
-        attributeRepo.delete(attribute);
+        attribute.setIsTrash(true);
+        attributeRepo.save(attribute);
         return null;
     }
 

@@ -11,13 +11,16 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.mail.MessagingException;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebConfig {
+public class WebConfig extends WebMvcConfigurerAdapter {
     private final JavaMailSender mailSender;
     private final MailSenderUtil mailSenderUtil;
 
@@ -52,4 +55,10 @@ public class WebConfig {
         server.start();
         return server;
     }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoggingInterceptor());
+    }
+
 }

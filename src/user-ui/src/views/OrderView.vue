@@ -77,7 +77,10 @@
 								</li>
 								<li class="list-group-item d-flex justify-content-between align-items-center px-0">
 									Phí vận chuyển
-									<span>{{currency('VND',feeShip)}}</span>
+									<span>{{currency('VND',feeShip)}}</span><br>
+								</li>
+								<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+									<small class="text-danger">Lưu ý : Đơn hàng trên 1.000.000 VND miễn phí vận chuyển</small>
 								</li>
 								<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
 									<div>

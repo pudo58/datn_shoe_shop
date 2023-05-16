@@ -20,7 +20,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/chart',
         name: 'Chart',
-        component: () => import('../views/chart/ChatComponent.vue'),
+        component: () => import('../views/chart/ChartComponent.vue'),
         meta: {
             requiresAuth: true
         }
