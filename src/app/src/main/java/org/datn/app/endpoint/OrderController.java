@@ -71,6 +71,11 @@ public class OrderController {
         return orderService.detailOrder(id);
     }
 
+    @PostMapping("/findFirstByUserId/{userId}")
+    public Order findFirstByUserId(@PathVariable Long userId) {
+        return orderService.findFirstByUserId(userId);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> data = new HashMap<>();
@@ -78,4 +83,5 @@ public class OrderController {
         data.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
         return ResponseEntity.status(HttpStatus.OK).body(data);
     }
+
 }

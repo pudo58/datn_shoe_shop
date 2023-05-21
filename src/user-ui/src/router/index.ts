@@ -51,19 +51,6 @@ const routes: Array<RouteRecordRaw> = [
         }
     },
     {
-        path: '/admin/dashboard',
-        name: 'AdminDashboard',
-        component: () => import('../views/admin/DashboardView.vue'),
-        meta: {
-            showTitle: false,
-            showFooter: false,
-            showCarousel: false,
-            showHeader: false,
-            showNav: false,
-            requiresAuth: true
-        }
-    },
-    {
         path: '/product/:id',
         name: 'ProductDetail',
         component: () => import('../views/ProductDetailView.vue'),
@@ -140,7 +127,33 @@ const routes: Array<RouteRecordRaw> = [
             showNav: true,
             requiresAuth: true
         }
-    }
+    },
+    {
+        path: '/contact',
+        name: 'Contact',
+        component: () => import('../views/ContactView.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () => import('../views/HomeView.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
+    },
 ]
 
 const router = createRouter({
@@ -149,7 +162,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product', '/admin/dashboard', '/product/:id', '/forgot-password','/reset-password/:email/:code'];
+    const publicPages = ['/login', '/register', '/', '/home', '/cart', '/product', '/product/:id', '/forgot-password','/reset-password/:email/:code', '/contact', '/home'];
     const authRequired = !publicPages.includes(to.path);
     const loggedIn = localStorage.getItem('access_token');
     if (to.matched.some(record => record.path === '/reset-password/:email/:code')) {

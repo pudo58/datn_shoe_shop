@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Transactional(rollbackOn = RuntimeException.class)
@@ -135,6 +132,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order findFirstByUserId(Long userId) {
+        Collection<Order> orderList = orderRepo.findByUserId(userId);
+        if (orderList.size() == 0) {
+            return null;
+        }
+        return orderList.stream().findFirst().get();
+    }
+
+    @Override
     public Order findByCode(String code) {
         return orderRepo.findByCode(code);
     }
@@ -156,6 +162,26 @@ public class OrderServiceImpl implements OrderService {
         );
         AtomicReference<Double> total = new AtomicReference<>((double) 0);
         Order order = new Order();
+        if(model.getAddress() == null || model.getAddress().equals("")){
+            throw new RuntimeException("Địa chỉ không được để trống");
+        }
+        if(model.getPhoneNumber() == null || model.getPhoneNumber().equals("")){
+            throw new RuntimeException("Số điện thoại không được để trống");
+        }
+        if(model.getName() == null || model.getName().equals("")){
+            throw new RuntimeException("Tên người nhận không được để trống");
+        }
+        if(model.getEmail() == null || model.getEmail().equals("")){
+            throw new RuntimeException("Email không được để trống");
+        }
+        // regex kiểm tra định dạng email
+        if(!model.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")){
+            throw new RuntimeException("Email không đúng định dạng");
+        }
+        // regex kiểm tra định dạng số điện thoại
+        if(!model.getPhoneNumber().matches("^[0-9]{10}+$")){
+            throw new RuntimeException("Số điện thoại không đúng định dạng");
+        }
         order.setAddress(model.getAddress());
         order.setPhoneNumber(model.getPhoneNumber());
         order.setName(model.getName());

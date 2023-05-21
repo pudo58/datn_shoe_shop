@@ -15,26 +15,34 @@
 									<div>
 										<div class="form-floating">
 											<input type="text" id="form6Example1" class="form-control" v-model="orderRequest.name"/>
-											<label class="form-label" for="form6Example1">Họ tên</label>
+											<label class="form-label" for="form6Example1">Họ tên
+												<span class="text-danger">*</span>
+											</label>
 										</div>
 									</div>
 								</div>
 								<!-- Text input -->
 								<div class="form-floating mb-4">
 									<input type="text" id="form6Example4" class="form-control" v-model="orderRequest.address"/>
-									<label class="form-label" for="form6Example4">Địa chỉ</label>
+									<label class="form-label" for="form6Example4">Địa chỉ
+										<span class="text-danger">*</span>
+									</label>
 								</div>
 
 								<!-- Email input -->
 								<div class="form-floating mb-4">
 									<input type="email" id="form6Example5" class="form-control" v-model="orderRequest.email"/>
-									<label class="form-label" for="form6Example5">Email</label>
+									<label class="form-label" for="form6Example5">Email
+										<span class="text-danger">*</span>
+									</label>
 								</div>
 
 								<!-- Number input -->
 								<div class="form-floating mb-4">
 									<input type="number" id="form6Example6" class="form-control" v-model="orderRequest.phoneNumber"/>
-									<label class="form-label" for="form6Example6">Số điện thoại</label>
+									<label class="form-label" for="form6Example6">Số điện thoại
+										<span class="text-danger">*</span>
+									</label>
 								</div>
 								<hr class="my-4"/>
 
@@ -67,17 +75,17 @@
 				<div class="col-md-4 mb-4">
 					<div class="card mb-4">
 						<div class="card-header py-3">
-							<h5 class="mb-0">Tóm tắt</h5>
+							<h5 class="mb-0">Chi tiết hóa đơn</h5>
 						</div>
 						<div class="card-body">
 							<ul class="list-group list-group-flush">
 								<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-									Giá sản phẩm
+									Giá sản phẩm(bao gồm Giảm giá)
 									<span>{{currency('VND',price)}}</span>
 								</li>
-								<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+								<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
 									Phí vận chuyển
-									<span>{{currency('VND',feeShip)}}</span><br>
+									<span>{{currency('VND',feeShip)}}</span>
 								</li>
 								<li class="list-group-item d-flex justify-content-between align-items-center px-0">
 									<small class="text-danger">Lưu ý : Đơn hàng trên 1.000.000 VND miễn phí vận chuyển</small>
@@ -103,7 +111,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue'
-import {OrderRequest} from "@/core/model/order.model";
+import {Order, OrderRequest} from "@/core/model/order.model";
 import {OrderService} from "@/core/service/order.service";
 import {PaymentMethod} from "@/core/model/order.model";
 import axios from "axios";
@@ -113,6 +121,7 @@ export default defineComponent({
 		return {
 			orderRequest : new OrderRequest(),
 			orderService : new OrderService(),
+			order : {} as Order,
 			PaymentMethod: PaymentMethod,
 			voucherId: 0,
 			price : 0,
@@ -129,7 +138,7 @@ export default defineComponent({
 			this.orderRequest.voucherId = this.voucherId;
 			this.orderRequest.userId = Number(localStorage.getItem('userId'));
 			this.orderService.doOrder(this.orderRequest).then((res) => {
-
+				this.$router.push("/order");
 			});
 		},
 		async getPrice() {
@@ -169,11 +178,24 @@ export default defineComponent({
 		},
 		currency(currency: string, value: number) {
 			return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: currency }).format(value);
+		},
+		loadData() {
+			this.orderService.findFirstByUserId(Number(localStorage.getItem('userId'))).then((res) => {
+				this.order = res;
+				if(this.order){
+					this.orderRequest.address = this.order.address;
+					this.orderRequest.phoneNumber = this.order.phoneNumber;
+					this.orderRequest.name = this.order.name;
+					this.orderRequest.email = this.order.email;
+					this.orderRequest.paymentMethod = this.order.paymentMethod;
+				}
+			});
 		}
 	},
 	created() {
 		this.getPrice();
 		this.makeQRCode();
+		this.loadData();
 	}
 })
 </script>

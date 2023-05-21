@@ -308,4 +308,9 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setCreatedDate(product.getCreatedDate());
         return productResponse;
     }
+
+    @Override
+    public List<Product> findTop10ByOrderByIdDesc() {
+        return productRepo.findTop10ByOrderByIdDesc();
+    }
 }

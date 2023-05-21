@@ -81,4 +81,8 @@ export class ProductService {
         return response.data;
     }
 
+    async findTop10() {
+        const response = await axios.get(this.url + "findTop10");
+        return response.data;
+    }
 }

@@ -1,11 +1,12 @@
 package org.datn.app.core.entity.extend;
 
 import lombok.Data;
+import org.datn.app.core.entity.Voucher;
 
 import java.util.Date;
 
 @Data
-public class VoucherResponse {
+public class VoucherResponse  extends Voucher {
     private Long id;
     private String code;
     private String name;

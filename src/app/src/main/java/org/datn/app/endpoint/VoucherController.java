@@ -3,10 +3,13 @@ package org.datn.app.endpoint;
 import lombok.RequiredArgsConstructor;
 import org.datn.app.core.entity.Voucher;
 import org.datn.app.core.service.VoucherService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,7 +20,7 @@ public class VoucherController {
     @PostMapping("/add")
     public ResponseEntity<?> addVoucher(@RequestBody Voucher voucher) {
 
-        return ResponseEntity.ok(voucherService.doInsert(voucher));
+        return ResponseEntity.ok(voucherService.addVoucher(voucher));
     }
 
     @PutMapping("/update/{id}")
@@ -27,8 +30,8 @@ public class VoucherController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteVoucher(@PathVariable Long id) {
-        return ResponseEntity.ok(voucherService.doDeleteById(id));
+    public void deleteVoucher(@PathVariable Long id) {
+        voucherService.deleteVoucher(id);
     }
 
     @GetMapping("/get/{id}")
@@ -45,5 +48,18 @@ public class VoucherController {
     @GetMapping("/findAll")
     public List<Voucher> findAllVoucher() {
         return voucherService.findAll();
+    }
+
+    @GetMapping("/findByCode/{code}")
+    public Voucher findByCode(@PathVariable String code) {
+        return voucherService.findByCode(code);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("message", ex.getMessage());
+        data.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return ResponseEntity.status(HttpStatus.OK).body(data);
     }
 }

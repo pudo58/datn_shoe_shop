@@ -152,7 +152,6 @@ export default defineComponent({
 			if(confirm("Bạn có chắc chắn muốn hủy đơn hàng này?")){
 				this.orderService.cancelOrder(id).then(res => {
 					if (res) {
-						toast.success("Hủy đơn hàng thành công!");
 						this.findAll();
 					}
 				});

@@ -24,4 +24,6 @@ public interface ProductService extends ServiceCore<Product,Long> {
     Page<Product> findByFilter(ProductSearchRequest model);
 
     ProductResponse getProductById(Long id);
+
+    List<Product> findTop10ByOrderByIdDesc();
 }

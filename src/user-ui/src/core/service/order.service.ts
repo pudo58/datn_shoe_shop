@@ -56,4 +56,9 @@ export class OrderService {
             return false;
         }
     }
+
+    async findFirstByUserId(userId : number) {
+        const response = await axios.post(this.url + "findFirstByUserId/" + userId);
+        return response.data;
+    }
 }

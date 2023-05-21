@@ -25,4 +25,7 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
             "AND (o.created IS NULL OR o.created >= ?2) " +
             "AND (o.created IS NULL OR o.created <= ?3)")
     Page<Order> findAllByStatus(Integer status, Date fromDate, Date toDate, Pageable pageable);
+
+    @Query("select o from Order o where o.user.id = ?1 ORDER BY o.created DESC  ")
+    List<Order> findByUserId(Long userId);
 }

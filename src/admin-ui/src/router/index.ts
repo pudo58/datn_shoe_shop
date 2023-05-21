@@ -5,6 +5,7 @@ import PublisherModule from "@/views/brand/brand.module";
 import AttributeModule from "@/views/attribute/attribute.module";
 import ProductModule from "@/views/product/product.module";
 import OrderModule from "@/views/order/order.module";
+import VoucherModule from "@/views/voucher/voucher.module";
 const routes: Array<RouteRecordRaw> = [
     ...UserModule,
     ...PublisherModule,
@@ -12,6 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     ...ProductModule,
     ...CategoryModule,
     ...OrderModule,
+    ...VoucherModule,
     {
         path: '/login',
         name: 'Login',

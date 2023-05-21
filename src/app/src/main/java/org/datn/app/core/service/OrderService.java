@@ -39,4 +39,6 @@ public interface OrderService extends ServiceCore<Order, Long> {
 
     // xem chi tiết đơn hàng
     ResponseEntity<?> detailOrder(Long id);
+
+    Order findFirstByUserId(Long userId);
 }

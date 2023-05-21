@@ -65,6 +65,11 @@ public class ProductController {
         return productService.findByBrandId(id);
     }
 
+    @GetMapping("/findTop10")
+    public List<Product> findTop10ByOrderByIdDesc() {
+        return productService.findTop10ByOrderByIdDesc();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> data = new HashMap<>();

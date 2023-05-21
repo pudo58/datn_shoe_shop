@@ -21,6 +21,10 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("select p from Product p,Category c where p.status = 1 AND p.brand.id = ?1 AND p.category.id = c.id AND c.isTrash = false ORDER BY p.id DESC")
     List<Product> findByBrandId(Long id);
 
+    // find top 10 sản phẩm mới
+    @Query("select p from Product p,Category c where p.status = 1 AND p.category.id = c.id AND c.isTrash = false ORDER BY p.id DESC")
+    List<Product> findTop10ByOrderByIdDesc();
+
     @Query("select p from Product p,Category c where p.status = 1 AND p.category.id = c.id AND c.isTrash = false ORDER BY p.id DESC")
     Page<Product> findAll(Pageable pageable);
 

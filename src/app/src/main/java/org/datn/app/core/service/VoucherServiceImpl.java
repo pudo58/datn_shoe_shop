@@ -1,21 +1,30 @@
 package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
+import org.datn.app.constant.VoucherConstant;
+import org.datn.app.core.entity.Product;
 import org.datn.app.core.entity.Voucher;
+import org.datn.app.core.entity.VoucherProductCategoryLink;
 import org.datn.app.core.entity.extend.VoucherResponse;
 import org.datn.app.core.repo.VoucherRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(rollbackOn = RuntimeException.class)
 @RequiredArgsConstructor
-public class VoucherServiceImpl implements VoucherService{
+public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepo voucherRepo;
+
     @Override
     public Voucher doInsert(Voucher voucher) {
         return voucherRepo.save(voucher);
@@ -24,15 +33,65 @@ public class VoucherServiceImpl implements VoucherService{
     @Override
     public Voucher doUpdateById(Voucher voucher, Long aLong) {
         Voucher voucher1 = voucherRepo.findById(aLong).get();
+        if (voucher.getName() == null || voucher.getName().equals("")) {
+            throw new RuntimeException("Tên voucher không được để trống");
+        }
+        if(voucher.getEffectFrom() == null){
+            throw new RuntimeException("Ngày bắt đầu không được để trống");
+        }
+        if(voucher.getEffectUntil() == null){
+            throw new RuntimeException("Ngày kết thúc không được để trống");
+        }
+        if(voucher.getEffectFrom().after(voucher.getEffectUntil())){
+            throw new RuntimeException("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+        }
+        if(voucher.getDiscountType() == null){
+            throw new RuntimeException("Giảm giá không được để trống");
+        }
+        if(voucher.getDiscountValue() == null){
+            throw new RuntimeException("Giá trị giảm giá không được để trống");
+        }
+        if(voucher.getDiscountValue() < 0){
+            throw new RuntimeException("Giá trị giảm giá không được nhỏ hơn 0");
+        }
+        if(voucher.getQuantity() == null){
+            throw new RuntimeException("Số lượng không được để trống");
+        }
+        if(voucher.getQuantity() < 0){
+            throw new RuntimeException("Số lượng không được nhỏ hơn 0");
+        }
+        if(voucher.getQuantity() > 100){
+            throw new RuntimeException("Số lượng không được lớn hơn 100");
+        }
+        if(voucher.getLimitPerUser() == null){
+            throw new RuntimeException("Số lượng cho mỗi người không được để trống");
+        }
+        if(voucher.getLimitPerUser() < 0){
+            throw new RuntimeException("Số lượng cho mỗi người không được nhỏ hơn 0");
+        }
+        if(voucher.getLimitPerUser() > 100){
+            throw new RuntimeException("Số lượng cho mỗi người không được lớn hơn 100");
+        }
+        if(voucher.getLimitPerUser() > voucher.getQuantity()){
+            throw new RuntimeException("Số lượng cho mỗi người không được lớn hơn số lượng voucher");
+        }
         voucher1.setName(voucher.getName());
-        voucher1.setImage(voucher.getImage());
+        voucher1.setEffectFrom(voucher.getEffectFrom());
+        voucher1.setEffectUntil(voucher.getEffectUntil());
+        voucher1.setQuantity(voucher.getQuantity());
+        voucher1.setIsTrash(voucher.getIsTrash());
+        voucher1.setDiscountType(voucher.getDiscountType());
+        voucher1.setDiscountValue(voucher.getDiscountValue());
+        voucher1.setIsAutoApply(voucher.getIsAutoApply());
+        voucher1.setLimitPerUser(voucher.getLimitPerUser());
         return voucherRepo.save(voucher1);
     }
 
     @Override
     public Voucher doDeleteById(Long aLong) {
-        voucherRepo.deleteById(aLong);
-        return null;
+        Voucher voucher = voucherRepo.findById(aLong).get();
+        voucher.setIsTrash(true);
+        return voucherRepo.save(voucher);
     }
 
     @Override
@@ -58,21 +117,100 @@ public class VoucherServiceImpl implements VoucherService{
 
     @Override
     public ResponseEntity<?> addVoucher(Voucher voucher) {
-        return null;
+        if (voucher.getName() == null || voucher.getName().equals("")) {
+            throw new RuntimeException("Tên voucher không được để trống");
+        }
+        if(voucher.getEffectFrom() == null){
+            throw new RuntimeException("Ngày bắt đầu không được để trống");
+        }
+        if(voucher.getEffectUntil() == null){
+            throw new RuntimeException("Ngày kết thúc không được để trống");
+        }
+        if(voucher.getEffectFrom().after(voucher.getEffectUntil())){
+            throw new RuntimeException("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+        }
+        if(voucher.getDiscountType() == null){
+            throw new RuntimeException("Giảm giá không được để trống");
+        }
+        if(voucher.getDiscountValue() == null){
+            throw new RuntimeException("Giá trị giảm giá không được để trống");
+        }
+        if(voucher.getDiscountValue() < 0){
+            throw new RuntimeException("Giá trị giảm giá không được nhỏ hơn 0");
+        }
+        if(voucher.getQuantity() == null){
+            throw new RuntimeException("Số lượng không được để trống");
+        }
+        if(voucher.getQuantity() < 0){
+            throw new RuntimeException("Số lượng không được nhỏ hơn 0");
+        }
+        if(voucher.getQuantity() > 100){
+            throw new RuntimeException("Số lượng không được lớn hơn 100");
+        }
+        if(voucher.getLimitPerUser() == null){
+            throw new RuntimeException("Số lượng cho mỗi người không được để trống");
+        }
+        if(voucher.getLimitPerUser() < 0){
+            throw new RuntimeException("Số lượng cho mỗi người không được nhỏ hơn 0");
+        }
+        if(voucher.getLimitPerUser() > 100){
+            throw new RuntimeException("Số lượng cho mỗi người không được lớn hơn 100");
+        }
+        if(voucher.getLimitPerUser() > voucher.getQuantity()){
+            throw new RuntimeException("Số lượng cho mỗi người không được lớn hơn số lượng voucher");
+        }
+        voucher.setStatus(VoucherConstant.ACTIVE);
+        if(voucherRepo.save(voucher) == null){
+            throw new RuntimeException("Thêm voucher thất bại");
+        }
+        Map result  = new HashMap();
+        result.put("message", "Thêm voucher thành công");
+        result.put("status", HttpStatus.OK.value());
+        return ResponseEntity.ok(result);
     }
 
     @Override
-    public VoucherResponse findVoucherByID(Long id) {
-        return null;
+    public Voucher findVoucherByID(Long id) {
+        Voucher voucher = voucherRepo.findById(id).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        return voucher;
     }
 
     @Override
     public void deleteVoucher(Long id) {
-
+        Voucher voucher = voucherRepo.findById(id).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        voucher.setIsTrash(true);
+        voucherRepo.save(voucher);
     }
 
     @Override
     public ResponseEntity<?> updateVoucher(Voucher voucher) {
-        return null;
+        voucherRepo.save(voucher);
+        return ResponseEntity.ok(voucher);
+    }
+
+    @Override
+    public Voucher findByCode(String code) {
+        return voucherRepo.findByCode(code).orElseThrow(
+                () -> new RuntimeException("Không tìm thấy voucher")
+        );
+    }
+
+    @Override
+    public List<Product> findProductByVoucherId(Long id) {
+        Voucher voucher = voucherRepo.findById(id).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        List<Product> products = voucher.getVoucherProductCategoryLinkList().stream().map(VoucherProductCategoryLink :: getProduct).collect(Collectors.toList());
+        if(products == null){
+            throw new RuntimeException("Không tìm thấy sản phẩm");
+        }
+        return products;
     }
 }

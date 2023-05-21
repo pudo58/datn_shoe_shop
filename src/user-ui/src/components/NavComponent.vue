@@ -1,7 +1,7 @@
 <template>
 	<nav class="navbar navbar-expand-lg  bg-secondary fixed-top">
 		<div class="container">
-			<router-link to="/" class="navbar-brand">Aboo Shop</router-link>
+			<router-link to="/home" class="navbar-brand">Aboo Shop</router-link>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
 			        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -9,16 +9,13 @@
 			<div class="collapse navbar-collapse " id="navbarNav">
 				<ul class="navbar-nav me-auto ">
 					<li class="nav-item">
-						<router-link to="/" class="nav-link">Trang chủ</router-link>
+						<router-link to="/home" class="nav-link">Trang chủ</router-link>
 					</li>
 					<li class="nav-item">
 						<router-link to="/product" class="nav-link">Sản phẩm</router-link>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Khuyến mãi</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Liên hệ</a>
+						<router-link to="/contact" class="nav-link">Liên hệ</router-link>
 					</li>
 				</ul>
 				<ul class="navbar-nav">
@@ -44,14 +41,14 @@
 						<div class="dropdown">
 							<button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown"
 							        aria-expanded="false">
-								{{ user?.username }}
+								Xin chào : {{ user?.username }}
 							</button>
 							<ul class="dropdown-menu">
 								<li>
 									<router-link to="/profile" class="dropdown-item">Thông tin tài khoản</router-link>
 								</li>
 								<li>
-									<router-link to="/history" class="dropdown-item">Lịch sử mua hàng</router-link>
+									<router-link to="/order" class="dropdown-item">Lịch sử mua hàng</router-link>
 								</li>
 								<li>
 									<router-link to="/cart" class="dropdown-item">

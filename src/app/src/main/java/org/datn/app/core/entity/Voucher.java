@@ -2,6 +2,7 @@ package org.datn.app.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.datn.app.util.GenerateString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,12 +25,10 @@ public class Voucher implements Serializable {
 
     private String description;
 
-    private String image;
-
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date effectFrom;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date effectUntil;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -47,6 +46,8 @@ public class Voucher implements Serializable {
 
     private Integer status;
 
+    private Boolean isTrash;
+
     @OneToMany(mappedBy = "voucher",targetEntity = Transaction.class)
     @JsonIgnore
     private List<Transaction> transactions = new ArrayList<>();
@@ -54,4 +55,11 @@ public class Voucher implements Serializable {
     @OneToMany(mappedBy = "voucher",targetEntity = VoucherProductCategoryLink.class)
     @JsonIgnore
     private List<VoucherProductCategoryLink> voucherProductCategoryLinkList = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+        this.isTrash = false;
+        this.code = GenerateString.generateString(10);
+    }
 }
