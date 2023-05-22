@@ -1,5 +1,6 @@
 import axios from "axios";
 import {toast} from "vue3-toastify";
+import router from "@/router";
 import {Pageable} from "@/core/model/core.base";
 import {Attribute, AttributeAddAllRequest, DeleteAttributeRequest} from "@/core/model/attribute.model";
 

@@ -113,13 +113,13 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="prePage">Previous</a>
+					<a class="page-link" role="button" @click.prevent="prePage()" :class="{'disabled' : page == 0}">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in voucherList?.totalPages">
-					<a class="page-link" href="#" @click="clickPage(item)">{{ item }}</a>
+					<a class="page-link" role="button" @click="clickPage(item)">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="nextPage()">Next</a>
+					<a class="page-link" role="button" @click.prevent="nextPage()" :class="{'disabled' : page == voucherList?.totalPages - 1}">Sau</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">
@@ -165,11 +165,9 @@ export default defineComponent({
 		deleteById(id: number) {
 			if (confirm("Bạn có chắc chắn muốn xóa?")) {
 				this.voucherService.delete(id).then((res) => {
-					if (res) {
-						toast.success("Xóa thành công");
-						this.getVoucher(this.page, this.size);
-					}
-				})
+					toast.success("Xóa thành công");
+					this.getVoucher(this.page, this.size);
+				});
 			}
 		},
 		onChange() {
@@ -198,7 +196,7 @@ export default defineComponent({
 			}
 		},
 		clickPage(page: number) {
-			this.page = page;
+			this.page = --page;
 			this.getVoucher(this.page, this.size);
 		},
 		formatDate(date: Date) {

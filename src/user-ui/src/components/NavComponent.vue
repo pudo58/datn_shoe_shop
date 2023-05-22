@@ -51,6 +51,9 @@
 									<router-link to="/order" class="dropdown-item">Lịch sử mua hàng</router-link>
 								</li>
 								<li>
+									<router-link to="/voucher" class="dropdown-item">Voucher</router-link>
+								</li>
+								<li>
 									<router-link to="/cart" class="dropdown-item">
 										Giỏ hàng
 									</router-link>

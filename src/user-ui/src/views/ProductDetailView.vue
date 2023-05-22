@@ -76,7 +76,7 @@
 						<div class="ratings d-flex flex-row align-items-center">
 							<div class="d-flex flex-row"><i class='bx bxs-star'></i> <i class='bx bxs-star'></i> <i
 								class='bx bxs-star'></i> <i class='bx bxs-star'></i> <i class='bx bx-star'></i></div>
-							<span>441 reviews</span></div>
+						</div>
 						<div class="buttons d-flex flex-row mt-5 gap-3">
 							<button type="button" class="btn btn-dark" @click.prevent="addToCart()">Thêm vào giỏ hàng</button>
 						</div>

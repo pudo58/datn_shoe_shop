@@ -22,7 +22,7 @@ export class Voucher{
     status?: number;
     isTrash?: boolean;
 
-     public static getDiscountTypeText(discountType: number){
+    public static getDiscountTypeText(discountType: number){
         if(discountType == Voucher.DISCOUNT_TYPE_PERCENT){
             return "Phần trăm";
         }else if(discountType == Voucher.DISCOUNT_TYPE_MONEY){
@@ -37,10 +37,4 @@ export class Voucher{
             return "Không hoạt động";
         }
     }
-}
-
-export class VoucherLinkRequest{
-    voucherId?: number;
-    productIdList?: number[];
-    categoryIdList?: number[];
 }

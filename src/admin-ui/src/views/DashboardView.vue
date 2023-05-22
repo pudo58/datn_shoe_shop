@@ -34,10 +34,10 @@
 						   id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
 							<img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30"
 							     class="rounded-circle">
-							<span class="d-none d-sm-inline mx-1">loser</span>
+							<span class="d-none d-sm-inline mx-1">Admin</span>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-							<li><a class="dropdown-item" href="#">Sign out</a></li>
+							<li><a class="dropdown-item" @click.prevent="logout()">Đăng xuất</a></li>
 						</ul>
 					</div>
 				</div>
@@ -74,7 +74,9 @@ export default defineComponent({
 				{name: 'cart', show: false, label: 'Quản lý đơn hàng', routerLink: '/admin/order'},
 				{name:'voucher', show: false, label: 'Quản lý voucher', routerLink: '/admin/voucher'},
 				{name: 'attribute', show: false, label: 'Quản lý thuộc tính', routerLink: '/admin/attribute'},
-			]
+			],
+			userCurrent: {
+			}
 		}
 	},
 	created() {
@@ -84,6 +86,10 @@ export default defineComponent({
 		init() {
 
 		},
+		logout() {
+			this.$router.push('/login');
+			localStorage.removeItem('access_token');
+		}
 	}
 
 })

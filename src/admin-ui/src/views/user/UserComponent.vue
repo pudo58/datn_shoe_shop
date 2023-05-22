@@ -96,13 +96,13 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="getUser(page--,size)">Previous</a>
+					<a class="page-link" @click.prevent="getUser(page--,size)" :class="{'disabled' : page == 0}">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in userList?.totalPages">
 					<a class="page-link" href="#" @click="getUser(item-1,size)">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="getUser(page++,size)">Next</a>
+					<a class="page-link" href="#" @click.prevent="getUser(page++,size)" :class="{'disabled' : page == userList?.totalPages - 1}">Sau</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">

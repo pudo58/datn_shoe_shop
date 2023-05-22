@@ -60,7 +60,7 @@ public class BrandController {
     }
 
     @GetMapping("/getByName/{name}")
-    public List<Brand> getPublisherByName(@PathVariable String name){
+    public Brand getPublisherByName(@PathVariable String name){
         return brandService.findByName(name);
     }
 }

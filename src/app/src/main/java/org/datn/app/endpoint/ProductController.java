@@ -60,6 +60,11 @@ public class ProductController {
         return productService.findByFilter(model);
     }
 
+    @PostMapping(value = "/findByFilterLike")
+    public Page<Product> findByFilterLike(@RequestBody ProductSearchRequest model) {
+        return productService.findByFilterLike(model);
+    }
+
     @GetMapping("/findByBrand/{id}")
     public List<Product> findByBrandId(@PathVariable Long id) {
         return productService.findByBrandId(id);
@@ -68,6 +73,11 @@ public class ProductController {
     @GetMapping("/findTop10")
     public List<Product> findTop10ByOrderByIdDesc() {
         return productService.findTop10ByOrderByIdDesc();
+    }
+
+    @GetMapping("/findByName/{name}")
+    public List<Product> findByName(@PathVariable String name) {
+        return productService.findByName(name);
     }
 
     @ExceptionHandler(RuntimeException.class)

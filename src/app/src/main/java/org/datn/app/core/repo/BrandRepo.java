@@ -18,5 +18,5 @@ public interface BrandRepo extends JpaRepository<Brand,Long> {
     List<Brand> findAll();
 
     @Query("select b from Brand b where b.isTrash = false and b.name = ?1")
-    List<Brand> findByName(String name);
+    Brand findByName(String name);
 }

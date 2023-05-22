@@ -29,8 +29,8 @@ export class ProductService {
         }
     }
 
-    async update(product: Product) {
-        const response = await axios.put(this.url + "update", product);
+    async update(id: number, product: Product) {
+        const response = await axios.put(this.url + "update/" + id, product);
         try {
             if (response.data !== null) {
                 toast.success("Cập nhật sản phẩm thành công");
@@ -77,4 +77,10 @@ export class ProductService {
         return response.data;
     }
 
+    async findByName(name: string) :Promise<Product[]> {
+        const response = await axios.get(this.url + "findByName/" + name);
+        return response.data;
+    }
+
 }
+

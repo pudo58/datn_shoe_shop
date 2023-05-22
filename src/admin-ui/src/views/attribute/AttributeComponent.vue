@@ -59,13 +59,13 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="getAttribute(page--,size)">Previous</a>
+					<a class="page-link" @click.prevent="getAttribute(page--,size)" :class="{'disabled' : page == 0}">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in attributeList?.totalPages">
 					<a class="page-link" href="#" @click="getAttribute(item-1,size)">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="getAttribute(page++,size)">Next</a>
+					<a class="page-link" href="#" @click.prevent="getAttribute(page++,size)" :class="{'disabled' : page == attributeList?.totalPages - 1}">Sau</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">

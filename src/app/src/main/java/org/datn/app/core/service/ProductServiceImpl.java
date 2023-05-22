@@ -55,6 +55,8 @@ public class ProductServiceImpl implements ProductService {
         product1.setPrice(product.getPrice());
         product1.setDiscount(product.getDiscount());
         product1.setName(product.getName());
+        product1.setModel(product.getModel());
+        product1.setMaterial(product.getMaterial());
         return productRepo.save(product1);
     }
 
@@ -270,6 +272,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<Product> findByFilter(ProductSearchRequest model) {
         String keyword = model.getKeyword();
+        if(keyword == ""){
+            keyword = null;
+        }
         List<Long> brandIdList = model.getBrandIdList();
         List<Long> categoryIdList = model.getCategoryIdList();
         List<Long> colorIdList = model.getColorIdList();
@@ -285,6 +290,30 @@ public class ProductServiceImpl implements ProductService {
         }
         Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
         Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList,attributeIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
+        return productPage;
+    }
+
+    @Override
+    public Page<Product> findByFilterLike(ProductSearchRequest model) {
+        String keyword = model.getKeyword();
+        if(keyword == ""){
+            keyword = null;
+        }
+        List<Long> brandIdList = model.getBrandIdList();
+        List<Long> categoryIdList = model.getCategoryIdList();
+        List<Long> colorIdList = model.getColorIdList();
+        List<String> materialList = model.getMaterialList();
+        List<String> modelList = model.getModelList();
+        List<Long> sizeIdList = model.getSizeIdList();
+        List<Long> attributeIdList = model.getAttributeIdList();
+        if (model.getPage() == null) {
+            model.setPage(0);
+        }
+        if (model.getSize() == null) {
+            model.setSize(30);
+        }
+        Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
+        Page<Product> productPage = this.productRepo.findByFilterLike(keyword, brandIdList, categoryIdList,attributeIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
         return productPage;
     }
 
@@ -312,5 +341,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findTop10ByOrderByIdDesc() {
         return productRepo.findTop10ByOrderByIdDesc();
+    }
+
+    @Override
+    public List<Product> findByName(String name) {
+        List<Product> productList = productRepo.findAll((root, query, builder) -> {
+            return builder.like(root.get("name"), "%" + name + "%");
+        });
+        return productList;
     }
 }

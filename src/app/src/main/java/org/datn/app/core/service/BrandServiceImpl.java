@@ -54,12 +54,12 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Brand> findByName(String name) {
-        List brandList = brandRepo.findByName(name);
-        if(brandList.size() == 0){
+    public Brand findByName(String name) {
+        Brand brand = brandRepo.findByName(name);
+        if(brand == null){
             return null;
         }
-        return brandList;
+        return brand;
     }
 
     @Override

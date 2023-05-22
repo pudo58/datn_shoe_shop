@@ -55,13 +55,13 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="getBrand(page--,size)">Previous</a>
+					<a class="page-link" @click.prevent="getBrand(page--,size)" :class="{'disabled' : page == 0}">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in brandList?.totalPages">
 					<a class="page-link" href="#" @click="getBrand(item-1,size)">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="getBrand(page++,size)">Next</a>
+					<a class="page-link" href="#" @click.prevent="getBrand(page++,size)" :class="{'disabled' : page == brandList?.totalPages - 1}">Sau</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">
@@ -113,19 +113,20 @@ export default defineComponent({
 				})
 			}
 		},
-		getEmit(brand: Brand) {
-			this.brandList.content?.push(brand);
-		},
 		onChange() {
 			this.getBrand(this.page, this.size);
 		},
-		async findByName() {
+		findByName() {
 			if (this.name == null || this.name == '')
-				await this.getBrand(this.page, this.size);
-			const res = await this.brandService.findByName(this.name);
-			if (res) {
-				this.brandList.content?.push(res);
-			}
+				 this.getBrand(this.page, this.size);
+			this.brandService.findByName(this.name).then((res) => {
+				console.log(this.brandList.content)
+				if (res) {
+					this.brandList.content = [];
+					this.brandList.content?.push(res);
+				}
+			});
+
 		}
 	},
 	created() {

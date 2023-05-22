@@ -154,6 +154,19 @@ const routes: Array<RouteRecordRaw> = [
             requiresAuth: true
         }
     },
+    {
+        path: '/voucher',
+        name: 'VoucherComponent',
+        component: () => import('../views/VoucherView.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
+    },
 ]
 
 const router = createRouter({

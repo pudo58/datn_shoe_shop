@@ -7,8 +7,13 @@
 	<div class="container">
 		<form class="form-control mb-3" @submit.prevent="findAllOrderStatistical()">
 			<div class="row d-flex justify-content-start mb-3">
+				<label class="form-label col-sm-4">Từ khóa tìm kiếm</label>
+				<input type="text" class="form-control-sm col-sm-8" v-model="model.keyword">
+			</div>
+			<div class="row d-flex justify-content-start mb-3">
 				<label class="form-label col-sm-4">Chọn trạng thái</label>
 				<select class="form-control-sm col-sm-8" v-model="model.status">
+					<option value="">Tất cả</option>
 					<option v-for="item in ORDER_STATUS_LIST" :value="item.value">{{item.label}}</option>
 				</select>
 			</div>
@@ -62,11 +67,11 @@
 	</div>
 	<nav aria-label="Page navigation example">
 		<ul class="pagination">
-			<li class="page-item"><a class="page-link" href="#" @click.prevent="prePage()">Previous</a></li>
+			<li class="page-item"><a class="page-link" href="#" @click.prevent="prePage()" :class="{'disabled' : page == 0}">Trước</a></li>
 			<li class="page-item" v-for="(item,index) in orderPage.totalPages">
 				<a class="page-link" href="#" @click.prevent="clickPage(item-1)">{{item}}</a>
 			</li>
-			<li class="page-item"><a class="page-link" href="#" @click.prevent="nextPage()">Next</a></li>
+			<li class="page-item"><a class="page-link" href="#" @click.prevent="nextPage()" :class="{'disabled' : page == orderPage.totalPages - 1}">Sau</a></li>
 		</ul>
 	</nav>
 </template>

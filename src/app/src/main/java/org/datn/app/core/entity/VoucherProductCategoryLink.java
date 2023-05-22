@@ -1,6 +1,8 @@
 package org.datn.app.core.entity;
 
 import lombok.Data;
+import org.datn.app.constant.VoucherConstant;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -31,4 +33,10 @@ public class VoucherProductCategoryLink implements java.io.Serializable {
     private Date created;
 
     private Integer status;
+
+    @PrePersist
+    public void prePersist() {
+        this.created = new Date();
+        this.status = VoucherConstant.ACTIVE;
+    }
 }

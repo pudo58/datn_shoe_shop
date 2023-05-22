@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -71,6 +72,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> findAllByStatus(OrderStatisticalDto model) {
         Pageable pageable = Pageable.ofSize(model.getSize()).withPage(model.getPage());
+        if(model.getKeyword() != null && model.getKeyword().equals("")){
+            model.setKeyword(null);
+        }
         if(model.getFromDate() == null){
             model.setFromDate(new Date(0));
         }
@@ -81,7 +85,28 @@ public class OrderServiceImpl implements OrderService {
         if(model.getFromDate().compareTo(model.getToDate()) > 0){
             throw new RuntimeException("Ngày bắt đầu không thể lớn hơn ngày kết thúc");
         }
-        Page<Order> orderPage = orderRepo.findAllByStatus(model.getStatus(), model.getFromDate(), model.getToDate(), pageable);
+        Page<Order> orderPage = orderRepo.findAll((root, query, builder) -> {
+            final List<Predicate> predicates = new ArrayList();
+            if(model.getKeyword() != null){
+                predicates.add(builder.or(
+                        builder.like(root.get("code"), "%" + model.getKeyword() + "%"),
+                        builder.like(root.get("address"), "%" + model.getKeyword() + "%"),
+                        builder.like(root.get("phoneNumber"), "%" + model.getKeyword() + "%"),
+                        builder.like(root.get("name"), "%" + model.getKeyword() + "%"),
+                        builder.like(root.get("email"), "%" + model.getKeyword() + "%")
+                ));
+            }
+            if(model.getStatus() != null){
+                predicates.add(builder.equal(root.get("status"), model.getStatus()));
+            }
+            if(model.getFromDate() != null){
+                predicates.add(builder.greaterThanOrEqualTo(root.get("created"), model.getFromDate()));
+            }
+            if(model.getToDate() != null){
+                predicates.add(builder.lessThanOrEqualTo(root.get("created"), model.getToDate()));
+            }
+            return builder.and(predicates.toArray(new Predicate[0]));
+        }, pageable);
         return orderPage;
     }
 
@@ -96,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderConstant.DELIVERING);
         orderRepo.save(order);
         Map response = new HashMap();
-        response.put("message", "Giao hàng thành công");
+        response.put("message", "Đơn hàng đang tiến hành giao");
         response.put("status", HttpStatus.OK.value());
         return ResponseEntity.ok(response);
 
@@ -179,9 +204,9 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Email không đúng định dạng");
         }
         // regex kiểm tra định dạng số điện thoại
-        if(!model.getPhoneNumber().matches("^[0-9]{10}+$")){
-            throw new RuntimeException("Số điện thoại không đúng định dạng");
-        }
+//        if(!model.getPhoneNumber().matches("^[0-9]{10}+$")){
+//            throw new RuntimeException("Số điện thoại không đúng định dạng");
+//        }
         order.setAddress(model.getAddress());
         order.setPhoneNumber(model.getPhoneNumber());
         order.setName(model.getName());
@@ -350,4 +375,5 @@ public class OrderServiceImpl implements OrderService {
     public Page<Order> findAllByUserId(Long userId, Pageable pageable) {
         return orderRepo.findAllByUserId(userId, pageable);
     }
+
 }

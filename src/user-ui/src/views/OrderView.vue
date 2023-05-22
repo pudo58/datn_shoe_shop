@@ -188,6 +188,11 @@ export default defineComponent({
 					this.orderRequest.name = this.order.name;
 					this.orderRequest.email = this.order.email;
 					this.orderRequest.paymentMethod = this.order.paymentMethod;
+					if(this.orderRequest.paymentMethod == PaymentMethod.BANK_TRANSFER){
+						this.isShowQRCode = true;
+					}else{
+						this.isShowQRCode = false;
+					}
 				}
 			});
 		}

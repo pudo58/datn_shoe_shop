@@ -58,6 +58,7 @@ export const ORDER_STATUS_LIST = [
 ];
 
 export class OrderStatisticalDto{
+    keyword?: string;
     brandId? : number;
     categoryId?: number;
     status?:number;

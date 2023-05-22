@@ -93,11 +93,17 @@ export class UserService {
             });
 
             if (response.data !== null && response.data !== undefined) {
-                localStorage.setItem("access_token", response.data.data);
-                localStorage.setItem("user", JSON.stringify(this.userCurrent));
-                toast.success("Đăng nhập thành công");
-                router.push("/");
-                return true;
+                if(response.data.role == "ROLE_ADMIN") {
+                    localStorage.setItem("access_token", response.data?.access_token);
+                    localStorage.setItem("user", JSON.stringify(this.userCurrent));
+                    toast.success("Đăng nhập thành công");
+                    router.push("/");
+                    return true;
+                }else{
+                    toast.error("Tài khoản không có quyền truy cập");
+                    router.push("/login");
+                    return false;
+                }
             } else {
                 toast.error(response.data.message);
                 return false;

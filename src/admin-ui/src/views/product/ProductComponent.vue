@@ -5,7 +5,7 @@
 	<hr>
 	<div class="row">
 		<div class="input-group mb-3 col">
-			<input type="text" class="form-control" placeholder="Mời bạn nhập tên hãng sản xuất" v-model="name">
+			<input type="text" class="form-control" placeholder="Mời bạn nhập tên sản phẩm" v-model="name">
 			<button class="btn btn-outline-secondary" type="button" id="button-addon2" @click.prevent="findByName()">
 				<i class="bi bi-search"></i>
 				Tìm kiếm
@@ -70,10 +70,10 @@
 					   :class="{disabled : disablePrev}" role="button">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in productList?.totalPages">
-					<a class="page-link" href="#" @click="findAll(item-1,size)" role="button">{{ item }}</a>
+					<a class="page-link"  @click="findAll(item-1,size)" role="button">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a role="button" class="page-link" href="#" @click.prevent="findAll(page++,size)"
+					<a role="button" class="page-link" @click.prevent="findAll(page++,size)"
 					   :class="{disabled : disableNext}">Sau</a>
 				</li>
 			</ul>
@@ -144,6 +144,13 @@ export default defineComponent({
 				this.productList.content?.splice(this.productList.content?.findIndex((item) => item.id === id), 1);
 			})
 		},
+		findByName() {
+			this.productService.findByName(this.name).then((res) => {
+				if(this.productList){
+					this.productList.content = res;
+				}
+			})
+		}
 	},
 	created() {
 		this.findAll(this.page, this.size);

@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface VoucherProductCategoryLinkRepo extends JpaRepository<VoucherProductCategoryLink, Long> {
     List<VoucherProductCategoryLink> findAllByVoucherIdIn(List<Long> voucherIdList);
+
+    VoucherProductCategoryLink findByVoucherIdAndProductId(Long voucherId, Long productId);
+
+    VoucherProductCategoryLink findByVoucherIdAndCategoryId(Long voucherId, Long categoryId);
 }

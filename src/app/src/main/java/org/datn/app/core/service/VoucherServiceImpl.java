@@ -2,11 +2,9 @@ package org.datn.app.core.service;
 
 import lombok.RequiredArgsConstructor;
 import org.datn.app.constant.VoucherConstant;
-import org.datn.app.core.entity.Product;
-import org.datn.app.core.entity.Voucher;
-import org.datn.app.core.entity.VoucherProductCategoryLink;
+import org.datn.app.core.entity.*;
 import org.datn.app.core.entity.extend.VoucherResponse;
-import org.datn.app.core.repo.VoucherRepo;
+import org.datn.app.core.repo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VoucherServiceImpl implements VoucherService {
     private final VoucherRepo voucherRepo;
+    private final ProductRepo productRepo;
+    private final VoucherProductCategoryLinkRepo voucherProductCategoryLinkRepo;
+    private final CategoryRepo categoryRepo;
+    private final VoucherAccountLinkDao voucherAccountLinkDao;
+    private final UserRepo userRepo;
 
     @Override
     public Voucher doInsert(Voucher voucher) {
@@ -207,10 +211,130 @@ public class VoucherServiceImpl implements VoucherService {
         if(voucher == null){
             throw new RuntimeException("Không tìm thấy voucher");
         }
-        List<Product> products = voucher.getVoucherProductCategoryLinkList().stream().map(VoucherProductCategoryLink :: getProduct).collect(Collectors.toList());
-        if(products == null){
+        List<Product> productList = new ArrayList<>();
+        for(VoucherProductCategoryLink item : voucher.getVoucherProductCategoryLinkList()){
+            if(item.getProduct() != null){
+                productList.add(item.getProduct());
+            }
+        }
+        if(productList == null){
             throw new RuntimeException("Không tìm thấy sản phẩm");
         }
-        return products;
+        return productList;
+    }
+
+    @Override
+    public List<Category> findCategoryByVoucherId(Long id) {
+        Voucher voucher = voucherRepo.findById(id).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        List<Category> categoryList = new ArrayList<>();
+       for(VoucherProductCategoryLink item : voucher.getVoucherProductCategoryLinkList()){
+              if(item.getCategory() != null){
+                  categoryList.add(item.getCategory());
+              }
+       }
+        if(categoryList == null){
+            throw new RuntimeException("Không tìm thấy sản phẩm");
+        }
+        return categoryList;
+    }
+
+    @Override
+    public Voucher addVoucherToProduct(Long voucherId, List<Long> productId) {
+        Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        for(Long id : productId){
+            VoucherProductCategoryLink voucherProductCategoryLink = new VoucherProductCategoryLink();
+            voucherProductCategoryLink.setVoucher(voucher);
+            voucherProductCategoryLink.setCategory(null);
+            voucherProductCategoryLink.setProduct(productRepo.findById(id).orElseThrow(
+                    () -> new RuntimeException("Không tìm thấy sản phẩm")
+            ));
+            voucherProductCategoryLinkRepo.save(voucherProductCategoryLink);
+        }
+        return voucher;
+    }
+
+    @Override
+    public Voucher addVoucherToCategory(Long voucherId, List<Long> categoryId) {
+        Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        for(Long id : categoryId){
+            VoucherProductCategoryLink voucherProductCategoryLink = new VoucherProductCategoryLink();
+            voucherProductCategoryLink.setVoucher(voucher);
+            voucherProductCategoryLink.setCategory(categoryRepo.findById(id).orElseThrow(
+                    () -> new RuntimeException("Không tìm thấy danh mục")
+            ));
+            voucherProductCategoryLink.setProduct(null);
+            voucherProductCategoryLinkRepo.save(voucherProductCategoryLink);
+        }
+        return voucher;
+    }
+
+    @Override
+    public void deleteVoucherProduct(Long voucherId, Long productId) {
+        Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        VoucherProductCategoryLink voucherProductCategoryLink = voucherProductCategoryLinkRepo.findByVoucherIdAndProductId(voucherId, productId);
+        if(voucherProductCategoryLink == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        voucherProductCategoryLinkRepo.delete(voucherProductCategoryLink);
+    }
+
+    @Override
+    public void deleteVoucherCategory(Long voucherId, Long categoryId) {
+        Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        VoucherProductCategoryLink voucherProductCategoryLink = voucherProductCategoryLinkRepo.findByVoucherIdAndCategoryId(voucherId, categoryId);
+        if(voucherProductCategoryLink == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        voucherProductCategoryLinkRepo.delete(voucherProductCategoryLink);
+    }
+
+    @Override
+    public List<User> findAllByVoucherId(Long userId) {
+        List<User> userList = new ArrayList<>();
+        for(VoucherAccountLink item : voucherAccountLinkDao.findAllByVoucherId(userId)){
+            userList.add(item.getUser());
+        }
+        return userList;
+    }
+
+    @Override
+    public Voucher addVoucherToUser(Long voucherId, List<Long> userId) {
+        Voucher voucher = voucherRepo.findById(voucherId).orElse(null);
+        if(voucher == null){
+            throw new RuntimeException("Không tìm thấy voucher");
+        }
+        for(Long id : userId){
+            VoucherAccountLink voucherAccountLink = new VoucherAccountLink();
+            voucherAccountLink.setVoucher(voucher);
+            voucherAccountLink.setUser(userRepo.findById(id).orElseThrow(
+                    () -> new RuntimeException("Không tìm thấy người dùng")
+            ));
+            voucherAccountLinkDao.save(voucherAccountLink);
+        }
+        return voucher;
+    }
+
+    @Override
+    public List<Voucher> findAllByUserId(Long userId) {
+        List<Voucher> voucherList = new ArrayList<>();
+        for(VoucherAccountLink item : voucherAccountLinkDao.findAllByUserId(userId)){
+            voucherList.add(item.getVoucher());
+        }
+        return voucherList;
     }
 }

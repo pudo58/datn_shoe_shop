@@ -71,13 +71,13 @@
 		<nav class="col">
 			<ul class="pagination">
 				<li class="page-item">
-					<a class="page-link" @click.prevent="findAll()">Previous</a>
+					<a class="page-link" @click.prevent="prePage()" :class="{'disabled' : page == 0}">Trước</a>
 				</li>
 				<li class="page-item" v-for="item in orderPage?.totalPages">
-					<a class="page-link" href="#" @click="findAll()">{{ item }}</a>
+					<a class="page-link"  @click="changePage(item)">{{ item }}</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" href="#" @click.prevent="findAll()">Next</a>
+					<a class="page-link" @click.prevent="nextPage()"  :class="{'disabled' : page == orderPage?.totalPages - 1}">Sau</a>
 				</li>
 			</ul>
 			<div class="p-2 col pagination">
@@ -127,6 +127,24 @@ export default defineComponent({
 			this.orderService.delivery(id).then(res => {
 				this.findAll();
 			})
+		},
+		prePage() {
+			if (this.page > 0) {
+				this.page--;
+				this.findAll();
+			}
+		},
+		nextPage() {
+			if(this.orderPage && this.orderPage.totalPages){
+				if (this.page < this.orderPage?.totalPages - 1) {
+					this.page++;
+					this.findAll();
+				}
+			}
+		},
+		changePage(page: number) {
+			this.page = --page;
+			this.findAll();
 		},
 	},
 	created() {

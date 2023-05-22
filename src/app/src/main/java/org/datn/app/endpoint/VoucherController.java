@@ -1,6 +1,10 @@
 package org.datn.app.endpoint;
 
 import lombok.RequiredArgsConstructor;
+import org.datn.app.core.dto.VoucherLinkRequest;
+import org.datn.app.core.entity.Category;
+import org.datn.app.core.entity.Product;
+import org.datn.app.core.entity.User;
 import org.datn.app.core.entity.Voucher;
 import org.datn.app.core.service.VoucherService;
 import org.springframework.http.HttpStatus;
@@ -53,6 +57,41 @@ public class VoucherController {
     @GetMapping("/findByCode/{code}")
     public Voucher findByCode(@PathVariable String code) {
         return voucherService.findByCode(code);
+    }
+
+    @GetMapping("/findProductByVoucherId/{id}")
+    public List<Product> findProductByVoucherId(@PathVariable Long id) {
+        return voucherService.findProductByVoucherId(id);
+    }
+
+    @GetMapping("/findCategoryByVoucherId/{id}")
+    public List<Category> findCategoryByVoucherId(@PathVariable Long id) {
+        return voucherService.findCategoryByVoucherId(id);
+    }
+
+    @GetMapping("/findAllByVoucherId/{voucherId}")
+    public List<User> findAllByVoucherId(@PathVariable Long voucherId) {
+        return voucherService.findAllByVoucherId(voucherId);
+    }
+
+    @PostMapping("/addVoucherToProduct")
+    public Voucher addVoucherToProduct(@RequestBody VoucherLinkRequest model) {
+        return voucherService.addVoucherToProduct(model.getVoucherId(), model.getProductIdList());
+    }
+
+    @PostMapping("/addVoucherToCategory")
+    public Voucher addVoucherToCategory(@RequestBody VoucherLinkRequest model) {
+        return voucherService.addVoucherToCategory(model.getVoucherId(), model.getCategoryIdList());
+    }
+
+    @PostMapping("/addVoucherToUser")
+    public Voucher addVoucherToUser(@RequestBody VoucherLinkRequest model) {
+        return voucherService.addVoucherToUser(model.getVoucherId(), model.getUserIdList());
+    }
+
+    @GetMapping("/findAllByUserId/{userId}")
+    public List<Voucher> findAllByUserId(@PathVariable Long userId) {
+        return voucherService.findAllByUserId(userId);
     }
 
     @ExceptionHandler(RuntimeException.class)

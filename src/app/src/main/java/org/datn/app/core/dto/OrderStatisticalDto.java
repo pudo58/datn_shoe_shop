@@ -10,6 +10,7 @@ import java.util.Date;
 public class OrderStatisticalDto {
     private Integer brandId;
     private Integer categoryId;
+    private String keyword;
     private Integer status;
     private Date fromDate;
     private Date toDate;

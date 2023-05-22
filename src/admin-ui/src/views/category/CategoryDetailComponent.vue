@@ -159,6 +159,7 @@ export default defineComponent({
 		addCategory() {
 			if (this.id !== 0 && !isNaN(this.id)) {
 				this.categoryService.update(this.category).then((res) => {
+					this.$router.push('/admin/category');
 					toast.success("Cập nhật thành công");
 					return;
 				});

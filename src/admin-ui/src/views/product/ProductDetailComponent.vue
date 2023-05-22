@@ -56,12 +56,12 @@
 						(*)</label>
 					<div class="col-sm-5">
 						<select id="category" class="form-select-sm form-control" v-model="productDto.categoryId"
-						        @change.prevent="changeCategoryCombo()">
+						        @change.prevent="changeCategoryCombo()" :disabled="isUpdate">
 							<option v-for="(item,index) in categoryList" :value="item.id">{{ item.name }}</option>
 						</select>
 					</div>
 				</div>
-				<template v-if="attributeList && attributeList?.length > 0">
+				<template v-if="attributeList && attributeList?.length > 0 && !isUpdate">
 					<div class="form-group row mb-3 align-items-start d-flex justify-content-center"
 					     v-for="(item,index) in attributeList">
 						<label :for="item.name"
@@ -92,12 +92,12 @@
 					<label for="brand" class="col-sm-2 control-label fw-bold align-self-center text-start">Hãng
 						(*)</label>
 					<div class="col-sm-5">
-						<select id="brand" class="form-select-sm form-control" v-model="productDto.brandId">
+						<select id="brand" class="form-select-sm form-control" v-model="productDto.brandId" :disabled="isUpdate">
 							<option v-for="(item,index) in brandList" :value="item.id">{{ item.name }}</option>
 						</select>
 					</div>
 				</div>
-				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center" v-if="!isUpdate">
 					<label class="col-sm-3 control-label fw-bold align-self-center text-center mb-1">Kích cỡ
 						(*)</label>
 					<div class="col-sm-6 form-check form-check-inline">
@@ -183,19 +183,24 @@ export default defineComponent({
 			return value.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
 		},
 		onSubmit($event: any) {
-			this.sizeListSelected.length = this.quantityList.length;
-			this.sizeListSelected.forEach((item, index) => {
-				let sizeDto = new SizeDto();
-				sizeDto.size = item;
-				sizeDto.quantity = this.quantityList[index];
-				this.productDto.sizeList?.push(sizeDto);
-			});
-			this.productDto.attributeValues = this.attributeValues;
-			this.productService.save(this.productDto).then((res) => {
-				let file = $event.target[2].files[0];
-				this.productService.addImage(res.product.id, file).then((res) => {
+			if(!this.isUpdate){
+				this.sizeListSelected.length = this.quantityList.length;
+				this.sizeListSelected.forEach((item, index) => {
+					let sizeDto = new SizeDto();
+					sizeDto.size = item;
+					sizeDto.quantity = this.quantityList[index];
+					this.productDto.sizeList?.push(sizeDto);
 				});
-			});
+				this.productDto.attributeValues = this.attributeValues;
+				this.productService.save(this.productDto).then((res) => {
+					let file = $event.target[2].files[0];
+					this.productService.addImage(res.product.id, file).then((res) => {
+					});
+				});
+			}else{
+				this.productService.update(this.id,this.productDto).then((res) => {
+				});
+			}
 		},
 		getCategoryList() {
 			this.categoryService.findAllCategory().then((res) => {
@@ -234,6 +239,8 @@ export default defineComponent({
 			this.isUpdate = true;
 			this.productService.findById(this.id).then((res) => {
 				this.productDto = res;
+				this.productDto.categoryId = res.category.id;
+				this.productDto.brandId = res.brand.id;
 			});
 		}
 		const sizeDto = new SizeDto();

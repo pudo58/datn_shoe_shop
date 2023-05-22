@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BrandService extends ServiceCore<Brand,Long> {
     @Query("select p from Brand p where p.name = ?1")
-    List<Brand> findByName(String name);
+    Brand findByName(String name);
 
     List<BrandResponse> findAllData();
 }
