@@ -13,6 +13,7 @@
 				<th>Hình thức thanh toán</th>
 				<th>Trạng thái</th>
 				<th>Hành động</th>
+				<th>Xem đơn hàng</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -44,6 +45,11 @@
 					<button v-if="item.status === Order.DELIVERING" title="Đã nhận được hàng" class="btn btn-warning"
 					        @click.prevent="receivedOrder(item.id)">
 						<i class="bi bi-bag-check"></i>
+					</button>
+				</td>
+				<td>
+					<button class="btn btn-primary" @click.prevent="$router.push('/order/' + item.id)">
+						<i class="bi bi-eye-fill"></i>
 					</button>
 				</td>
 			</tr>

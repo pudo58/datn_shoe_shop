@@ -129,6 +129,19 @@ const routes: Array<RouteRecordRaw> = [
         }
     },
     {
+        path: '/order/:id',
+        name: 'OrderDetail',
+        component: () => import('../views/OrderDetailComponent.vue'),
+        meta: {
+            showTitle: true,
+            showFooter: true,
+            showCarousel: true,
+            showHeader: false,
+            showNav: true,
+            requiresAuth: true
+        }
+    },
+    {
         path: '/contact',
         name: 'Contact',
         component: () => import('../views/ContactView.vue'),
