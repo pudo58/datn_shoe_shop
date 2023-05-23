@@ -15,6 +15,7 @@
 						<th>STT</th>
 						<th>Tên sản phẩm</th>
 						<th>Số lượng</th>
+						<th>Giới tính</th>
 						<th>Thành tiền</th>
 					</tr>
 					</thead>
@@ -28,6 +29,9 @@
 						</td>
 						<td>
 							{{ item?.quantity }}
+						</td>
+						<td>
+							{{Product.getGender( item?.productDetail?.product?.gender )}}
 						</td>
 						<td>
 							{{ item?.price }}
@@ -44,6 +48,7 @@
 import {defineComponent} from "vue";
 import {OrderService} from "@/core/service/order.service";
 import {Order} from "@/core/model/order.model";
+import {Product} from "@/core/model/product.model";
 
 export default defineComponent({
 	name: "OrderDetailComponent",
@@ -52,7 +57,8 @@ export default defineComponent({
 			orderPage: {} as any,
 			id: Number(this.$route.params.id as string),
 			orderService: new OrderService(),
-			Order: Order
+			Order: Order,
+			Product : Product
 		}
 	},
 	methods: {

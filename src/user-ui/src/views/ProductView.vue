@@ -54,6 +54,22 @@
 						</div>
 					</div>
 				</div>
+				<div class="processor p-2">
+					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
+						Giới tính</h6></div>
+					<div class="d-flex justify-content-between mt-2">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" :value="1"
+							       v-model="productSearchRequest.gender" @change.prevent="onChange()" name="gender">
+							<label class="form-check-label"> Nam </label>
+								<br>
+							<input class="form-check-input" type="radio" :value="0"
+							       v-model="productSearchRequest.gender" @change.prevent="onChange()" name="gender">
+							<label class="form-check-label"> Nữ </label>
+
+						</div>
+					</div>
+				</div>
 				<div class="brand p-2">
 					<div class="heading d-flex justify-content-between align-items-center"><h6 class="text-uppercase">
 						Hãng sản
@@ -98,7 +114,7 @@
 						<ul class="pagination">
 							<li class="page-item">
 								<a class="page-link" href="#" aria-label="Previous"
-								   @click.prevent="getProductList(page--,size)">
+								   @click.prevent="getProductList(page--,size)" :class="{'disabled' : page == 0}">
 									<span aria-hidden="true">&laquo;</span>
 								</a>
 							</li>
@@ -108,7 +124,7 @@
 							</li>
 							<li class="page-item">
 								<a class="page-link" href="#" aria-label="Next"
-								   @click.prevent="getProductList(page++,size)">
+								   @click.prevent="getProductList(page++,size)"  :class="{'disabled' : page == productList.totalPages - 1}">
 									<span aria-hidden="true">&raquo;</span>
 								</a>
 							</li>

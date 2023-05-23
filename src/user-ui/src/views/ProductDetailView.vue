@@ -38,6 +38,9 @@
 							Kiểu dáng : <span class="fw-bold">{{ product?.model }}</span>
 						</div>
 						<div class="text-start">
+							Giới tính : <span class="fw-bold">{{ Product.getGender(product?.gender) }}</span>
+						</div>
+						<div class="text-start">
 							Chất liệu : <span class="fw-bold">{{ product?.material }}</span>
 						</div>
 						<div v-if="product?.productDetailList?.length > 0" class="text-start">
@@ -93,7 +96,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {ProductDetail} from "@/core/model/product-detail.model";
-import {ProductResponse} from "@/core/model/product.model";
+import {Product, ProductResponse} from "@/core/model/product.model";
 import {ProductService} from "@/core/service/product.service";
 import {CartService} from "@/core/service/cart.service";
 import {toast} from "vue3-toastify";
@@ -103,6 +106,7 @@ export default defineComponent({
 	data() {
 		return {
 			productId: this.$route.params.id as string,
+			Product: Product,
 			product: new ProductResponse(),
 			productService: new ProductService(),
 			productDetailList: new Array<ProductDetail>(),

@@ -106,14 +106,27 @@ public class ProductServiceImpl implements ProductService {
         // Tạo sản phẩm
         Product product = new Product();
         try {
-            product.setName(productDTO.getName());
-            product.setPrice(productDTO.getPrice());
+            if(productDTO.getName() != null && productDTO.getName().length() > 0){
+                product.setName(productDTO.getName());
+            }
+            try{
+                product.setPrice(productDTO.getPrice());
+            }catch (Exception e){
+                throw new RuntimeException("Giá sản phẩm không hợp lệ");
+            }
+            if(product.getDiscount() != null){
+                product.setDiscount(productDTO.getDiscount());
+            }
             product.setDiscount(productDTO.getDiscount());
             product.setDescription(productDTO.getDescription());
             product.setCategory(category);
+            if(product.getGender() != null){
+                product.setGender(productDTO.getGender());
+            }
             product.setMaterial(productDTO.getMaterial());
             product.setModel(productDTO.getModel());
             product.setStatus(ProductConstant.EFFECT);
+            product.setGender(productDTO.getGender());
             product.setBrand(brand);
         } catch (RuntimeException e) {
             throw new RuntimeException("có lỗi xảy ra khi thêm sản phẩm");
@@ -289,7 +302,7 @@ public class ProductServiceImpl implements ProductService {
             model.setSize(30);
         }
         Pageable pageable = PageRequest.of(model.getPage(), model.getSize());
-        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList,attributeIdList, colorIdList, materialList, modelList, sizeIdList, pageable);
+        Page<Product> productPage = this.productRepo.findByFilter(keyword, brandIdList, categoryIdList,attributeIdList, colorIdList, materialList, modelList, sizeIdList,model.getGender(), pageable);
         return productPage;
     }
 
@@ -331,6 +344,7 @@ public class ProductServiceImpl implements ProductService {
         productResponse.setCategory(product.getCategory());
         productResponse.setMaterial(product.getMaterial());
         productResponse.setModel(product.getModel());
+        productResponse.setGender(product.getGender());
         productResponse.setProductDetailList(productDetailRepo.findByProductId(id));
         productResponse.setAttributeDataList(product.getAttributeData());
         productResponse.setImageThumbnail(product.getImageThumbnail());
@@ -340,7 +354,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findTop10ByOrderByIdDesc() {
-        return productRepo.findTop10ByOrderByIdDesc();
+        List<Product> productList = productRepo.findTop10ByOrderByIdDesc();
+        if(productList.size() > 10){
+            productList = productList.subList(0,10);
+        }
+        return productList;
     }
 
     @Override

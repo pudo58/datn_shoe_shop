@@ -126,6 +126,16 @@
 						          v-model="productDto.description"></textarea>
 					</div>
 				</div>
+				<div class="form-group row mb-3 align-items-start d-flex justify-content-center">
+					<label for="gender" class="col-sm-2 control-label fw-bold align-self-center text-start">Giới tính
+						(*)</label>
+					<div class="col-sm-5">
+						<select id="gender" class="form-select-sm form-control" v-model="productDto.gender">
+							<option value="1">Nam</option>
+							<option value="0">Nữ</option>
+						</select>
+					</div>
+				</div>
 				<hr>
 				<div class="form-group row mb-3">
 					<div class="col-sm-offset-3 col-sm-9">

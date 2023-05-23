@@ -50,6 +50,9 @@
 					<span v-if="item.status === 2 " class="badge bg-danger" role="button">Hết hàng</span>
 				</td>
 				<td>
+					{{Product.getGender(item.gender)}}
+				</td>
+				<td>
 					<button class="btn btn-success btn-sm m-1"
 					        @click.prevent="$router.push('/admin/product/' + item.id)">
 						<i class="bi bi-pencil-fill"></i>
@@ -107,6 +110,7 @@ export default defineComponent({
 			isUpdate: false as boolean,
 			disablePrev: false as boolean,
 			disableNext: false as boolean,
+			Product : Product,
 			columns: [
 				'STT',
 				'Tên sản phẩm',
@@ -117,6 +121,7 @@ export default defineComponent({
 				'Mô tả',
 				'Hãng sản xuất',
 				'Trạng thái',
+				'Giới tính',
 				'Chức năng'
 			]
 		}

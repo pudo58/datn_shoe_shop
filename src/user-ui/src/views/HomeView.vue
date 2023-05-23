@@ -1,6 +1,7 @@
 <template>
-	<div class="container row mb-5">
-		<p class="h1">Top 10 sản phẩm mới nhất</p>
+	<br><br><br>
+	<p class="h1">Top 10 sản phẩm mới nhất</p>
+	<div class="container-fluid row mb-5">
 		<div v-if="productList?.length === 0" class="text-dark h3"> Không có sản phẩm </div>
 		<div class="col-md-4" v-for="item in productList">
 			<div class="product py-4"><span class="off bg-success" v-if="item?.discount">{{ item.discount }} % OFF</span>
@@ -58,21 +59,6 @@ body {
 	background-color: #eeeeee;
 }
 
-.processor {
-	background-color: #fff;
-	margin-top: 5px;
-	border-bottom: 1px solid #eee
-}
-
-.brand {
-	background-color: #fff;
-	border-bottom: 1px solid #eee
-}
-
-.type {
-	background-color: #fff
-}
-
 .product {
 	padding: 10px;
 	background-color: #fff;
@@ -89,12 +75,6 @@ body {
 	top: 0;
 	left: 0;
 	z-index: 999;
-}
-
-.spinner-center {
-	top: 50%;
-	left: 50%;
-	position: absolute;
 }
 
 .about span {
@@ -145,5 +125,11 @@ button:active {
 	width: 100%;
 	height: 200px;
 	object-fit: cover;
+}
+.container{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
 }
 </style>

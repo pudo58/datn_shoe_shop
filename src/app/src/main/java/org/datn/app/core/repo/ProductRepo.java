@@ -43,9 +43,10 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
             "AND (COALESCE(:materialList) IS NULL OR p.material IN (:materialList)) " +
             "AND (COALESCE(:modelList) IS NULL OR p.model IN (:modelList)) " +
             "AND (COALESCE(:sizeIdList) IS NULL OR pd.size_id IN (:sizeIdList)) " +
-            "AND  c.is_trash = FALSE", nativeQuery = true)
+            "AND (:gender IS NULL OR p.gender = :gender) " +
+            "AND  c.is_trash = FALSE  ORDER BY p.created_date DESC", nativeQuery = true)
     @QueryHints(value = {@QueryHint(name = "org.hibernate.cacheable", value = "true")})
-    Page<Product> findByFilter(String keyword, List<Long> brandIdList, List<Long> categoryIdList, List<Long> attributeIdList, List<Long> colorIdList, List<String> materialList, List<String> modelList, List<Long> sizeIdList, Pageable pageable);
+    Page<Product> findByFilter(String keyword, List<Long> brandIdList, List<Long> categoryIdList, List<Long> attributeIdList, List<Long> colorIdList, List<String> materialList, List<String> modelList, List<Long> sizeIdList,Integer gender, Pageable pageable);
 
 
     @Query(value = "SELECT DISTINCT p.* FROM products p " +

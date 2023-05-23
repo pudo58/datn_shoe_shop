@@ -40,6 +40,8 @@ public class Product implements Serializable {
 
     private Integer status;
 
+    private Integer gender;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 

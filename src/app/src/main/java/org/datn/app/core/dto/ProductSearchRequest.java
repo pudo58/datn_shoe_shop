@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 public class ProductSearchRequest {
     private String keyword;
+    private Integer gender;
     private List<Long> brandIdList;
     private List<Long> categoryIdList;
     private List<Long> attributeIdList;
