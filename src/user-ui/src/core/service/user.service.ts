@@ -86,7 +86,7 @@ export class UserService {
                     localStorage.setItem("user", JSON.stringify(this.userCurrent));
                     localStorage.setItem("userId", <string>this.userCurrent.id?.toString());
                     toast.success("Đăng nhập thành công");
-                    router.push("/");
+                    router.push("/home");
                     return true;
                 }else{
                     toast.error(response.data.message);
